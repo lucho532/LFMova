@@ -13,17 +13,21 @@
   list-style: none;
 }
 
-/* Aviso de lo que se está moviendo: se queda pegado arriba para verlo mientras se busca la zona de destino. */
+/* Aviso de lo que se está moviendo: fijo abajo para verlo (y poder cancelar) mientras se busca la zona de
+   destino. No se usa "sticky" porque html y body recortan el desborde horizontal y eso lo desactiva. */
 .lista-zonas__aviso {
-  position: sticky;
-  top: 72px;
-  z-index: 5;
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 15;
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 12px;
   padding: 10px 14px;
   border: 1px solid var(--accent-border);
   border-radius: 12px;
