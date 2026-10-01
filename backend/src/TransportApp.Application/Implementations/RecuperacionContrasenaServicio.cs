@@ -57,7 +57,7 @@ public class RecuperacionContrasenaServicio : IRecuperacionContrasenaServicio
         await _servicioCorreo.EnviarAsync(
             usuario.Email,
             usuario.NombreCompleto,
-            "Restablece tu contraseña de TransportApp",
+            "Restablece tu contraseña de LFMova",
             $"<p>Hola {usuario.NombreCompleto},</p>"
                 + "<p>Restablece tu contraseña haciendo clic en el siguiente enlace:</p>"
                 + $"<p><a href=\"{enlace}\">Restablecer mi contraseña</a></p>"
@@ -76,9 +76,9 @@ public class RecuperacionContrasenaServicio : IRecuperacionContrasenaServicio
         await _servicioCorreo.EnviarAsync(
             usuarioInvitado.Email,
             usuarioInvitado.NombreCompleto,
-            "Te invitaron a TransportApp",
+            "Te invitaron a LFMova",
             $"<p>Hola {usuarioInvitado.NombreCompleto},</p>"
-                + $"<p>Fuiste invitado {contextoInvitacion} en TransportApp. Establece tu contraseña haciendo clic en el siguiente enlace:</p>"
+                + $"<p>Fuiste invitado {contextoInvitacion} en LFMova. Establece tu contraseña haciendo clic en el siguiente enlace:</p>"
                 + $"<p><a href=\"{enlace}\">Establecer mi contraseña</a></p>"
                 + "<p>Este enlace vence en 48 horas.</p>");
     }

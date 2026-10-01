@@ -17,7 +17,7 @@ export function TarjetaAutenticacion({ titulo, subtitulo, children }: Propiedade
   return (
     <main className="tarjeta-autenticacion">
       <section className="tarjeta-autenticacion__tarjeta">
-        <p className="tarjeta-autenticacion__marca">TransportApp</p>
+        <p className="tarjeta-autenticacion__marca">LFMova</p>
         <h1 className="tarjeta-autenticacion__titulo">{titulo}</h1>
         {subtitulo && <p className="tarjeta-autenticacion__subtitulo">{subtitulo}</p>}
         {children}

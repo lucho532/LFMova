@@ -150,9 +150,9 @@ public class RegistroServicio : IRegistroServicio
         await _servicioCorreo.EnviarAsync(
             usuario.Email!,
             usuario.NombreCompleto,
-            "Confirma tu cuenta de TransportApp",
+            "Confirma tu cuenta de LFMova",
             $"<p>Hola {usuario.NombreCompleto},</p>"
-                + "<p>Gracias por registrarte en TransportApp. Confirma tu cuenta haciendo clic en el siguiente enlace:</p>"
+                + "<p>Gracias por registrarte en LFMova. Confirma tu cuenta haciendo clic en el siguiente enlace:</p>"
                 + $"<p><a href=\"{enlace}\">Confirmar mi cuenta</a></p>"
                 + "<p>Este enlace vence en 48 horas. Si tú no creaste esta cuenta, ignora este mensaje.</p>");
 

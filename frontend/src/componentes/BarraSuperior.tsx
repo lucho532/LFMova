@@ -41,7 +41,10 @@ export function BarraSuperior() {
   return (
     <header className="barra-superior">
       <div className="barra-superior__identidad">
-        <span className="barra-superior__marca">TransportApp</span>
+        <span className="barra-superior__marca">
+          <img src="/favicon.svg" alt="" className="barra-superior__logo" />
+          LFMova
+        </span>
         {empresas.length > 0 && <span className="barra-superior__empresa">{empresas.join(' · ')}</span>}
       </div>
       <div className="barra-superior__acciones">

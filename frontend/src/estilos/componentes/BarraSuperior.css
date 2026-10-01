@@ -14,6 +14,9 @@
 }
 
 .barra-superior__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -86,4 +89,10 @@
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.barra-superior__logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
 }

@@ -144,9 +144,9 @@ public class InvitacionEmpresaServicio : IInvitacionEmpresaServicio
         await _servicioCorreo.EnviarAsync(
             destino,
             nombreDestino,
-            $"{invitador.NombreCompleto} te invita a unirte a {empresa.Nombre} en TransportApp",
+            $"{invitador.NombreCompleto} te invita a unirte a {empresa.Nombre} en LFMova",
             $"<p>{saludo}</p>"
-                + $"<p><strong>{invitador.NombreCompleto}</strong> te invita a formar parte de <strong>{empresa.Nombre}</strong> en TransportApp.</p>"
+                + $"<p><strong>{invitador.NombreCompleto}</strong> te invita a formar parte de <strong>{empresa.Nombre}</strong> en LFMova.</p>"
                 + $"<p><a href=\"{enlace}\">Ver la invitación</a></p>"
                 + "<p>Si todavía no tienes cuenta, podrás crearla desde ese mismo enlace. La invitación vence en 7 días. "
                 + "Si no conoces a quien te invita, ignora este mensaje: nadie tendrá acceso a tus datos sin que aceptes.</p>");

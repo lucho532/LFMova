@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen(opciones =>
 {
     opciones.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "TransportApp API",
+        Title = "LFMova API",
         Version = "v1",
         Description = "Plataforma de gestión y operación de transporte empresarial multiempresa. Todas las fechas/horas se manejan en UTC (ver AGENTS.md §41)."
     });

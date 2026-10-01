@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.transportapp.app',
-  appName: 'TransportApp',
+  appName: 'LFMova',
   webDir: 'dist',
   server: {
     // La app corre en http (no https) para poder llamar al backend de desarrollo por HTTP plano sin

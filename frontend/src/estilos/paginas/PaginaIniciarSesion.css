@@ -29,7 +29,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url('/ChatGPT Image 18 sept 2026, 23_08_13.png') center 42% / 115% auto no-repeat;
+  background: url('/favicon.svg') center 42% / 62% auto no-repeat;
   mix-blend-mode: multiply;
   opacity: 0.12;
   pointer-events: none;

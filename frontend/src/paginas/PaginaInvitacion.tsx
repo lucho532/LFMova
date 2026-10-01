@@ -63,7 +63,7 @@ export function PaginaInvitacion() {
       {detalle && (
         <div className="pagina-invitacion">
           <p className="pagina-invitacion__texto">
-            <strong>{detalle.nombreInvitador}</strong> te invita a formar parte de <strong>{detalle.nombreEmpresa}</strong> en TransportApp.
+            <strong>{detalle.nombreInvitador}</strong> te invita a formar parte de <strong>{detalle.nombreEmpresa}</strong> en LFMova.
           </p>
 
           {aceptada ? (

@@ -64,7 +64,7 @@ export function PaginaRestablecerContrasena() {
   }
 
   return (
-    <TarjetaAutenticacion titulo="Establecer contraseña" subtitulo="Elige la contraseña con la que vas a ingresar a TransportApp.">
+    <TarjetaAutenticacion titulo="Establecer contraseña" subtitulo="Elige la contraseña con la que vas a ingresar a LFMova.">
       <form className="pagina-restablecer-contrasena__formulario" onSubmit={alEnviar}>
         <CampoFormulario
           id="nuevaContrasena"
