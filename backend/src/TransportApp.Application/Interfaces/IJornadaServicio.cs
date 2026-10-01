@@ -16,13 +16,6 @@ public interface IJornadaServicio
     /// </summary>
     Task<JornadaDto> CrearAsync(int empresaId, CrearJornadaDto datos);
 
-    /// <summary>
-    /// Obtiene una jornada por su identificador, validando que pertenezca a
-    /// la empresa indicada. Devuelve <c>null</c> si no existe o no pertenece
-    /// a esa empresa.
-    /// </summary>
-    Task<JornadaDto?> ObtenerPorIdAsync(int empresaId, int jornadaId);
-
     /// <summary>Obtiene todas las jornadas de la empresa indicada.</summary>
     Task<List<JornadaDto>> ObtenerPorEmpresaAsync(int empresaId);
 

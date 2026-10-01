@@ -255,17 +255,6 @@ public class JornadaServicioTests
     }
 
     [Fact]
-    public async Task ObtenerPorIdAsync_DevuelveNulo_CuandoLaJornadaEsDeOtraEmpresa()
-    {
-        var servicio = CrearServicio(new JornadaRepositorioFalso(), new ServicioRepositorioFalso());
-        var jornada = await servicio.CrearAsync(1, new CrearJornadaDto { FechaOperativa = new DateOnly(2026, 1, 20) });
-
-        var resultado = await servicio.ObtenerPorIdAsync(2, jornada.JornadaId);
-
-        Assert.Null(resultado);
-    }
-
-    [Fact]
     public async Task PublicarAsync_PublicaLosServiciosAsignados()
     {
         var servicioRepo = new ServicioRepositorioFalso();

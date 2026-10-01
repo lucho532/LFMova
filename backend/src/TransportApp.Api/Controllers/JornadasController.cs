@@ -44,51 +44,6 @@ public class JornadasController : ControllerBase
         return Ok(await _servicioServicio.ObtenerPendientesDeProgramacionAsync(empresaId, desde));
     }
 
-    /// <summary>Crea una jornada para la empresa. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPost]
-    public async Task<ActionResult<JornadaDto>> CrearAsync(int empresaId, CrearJornadaDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            var jornada = await _jornadaServicio.CrearAsync(empresaId, datos);
-            return CreatedAtAction(nameof(ObtenerPorIdAsync), new { empresaId, jornadaId = jornada.JornadaId }, jornada);
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>Consulta las jornadas de la empresa. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpGet]
-    public async Task<ActionResult<List<JornadaDto>>> ObtenerPorEmpresaAsync(int empresaId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        return Ok(await _jornadaServicio.ObtenerPorEmpresaAsync(empresaId));
-    }
-
-    /// <summary>Consulta una jornada concreta de la empresa.</summary>
-    [HttpGet("{jornadaId:int}")]
-    public async Task<ActionResult<JornadaDto>> ObtenerPorIdAsync(int empresaId, int jornadaId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        var jornada = await _jornadaServicio.ObtenerPorIdAsync(empresaId, jornadaId);
-        return jornada is null ? NotFound() : Ok(jornada);
-    }
-
     /// <summary>
     /// Publica la jornada. Solo un coordinador de esa empresa puede hacerlo.
     /// </summary>

@@ -62,18 +62,6 @@ public class JornadaServicio : IJornadaServicio
     }
 
     /// <inheritdoc />
-    public async Task<JornadaDto?> ObtenerPorIdAsync(int empresaId, int jornadaId)
-    {
-        var jornada = await _jornadaRepositorio.ObtenerPorIdAsync(jornadaId);
-        if (jornada is null || !ReglasMultiempresa.JornadaPerteneceAEmpresa(jornada, empresaId))
-        {
-            return null;
-        }
-
-        return JornadaMapper.AJornadaDto(jornada);
-    }
-
-    /// <inheritdoc />
     public async Task<List<JornadaDto>> ObtenerPorEmpresaAsync(int empresaId)
     {
         var jornadas = await _jornadaRepositorio.ObtenerPorEmpresaAsync(empresaId);

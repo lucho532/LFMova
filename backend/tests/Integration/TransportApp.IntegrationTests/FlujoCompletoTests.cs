@@ -147,7 +147,7 @@ public class FlujoCompletoTests
         });
 
         // --- Jornada (coordinador) ---
-        var jornada = await PostAsync<CrearJornadaDto, JornadaDto>(cliente, $"/api/empresas/{empresa.EmpresaId}/jornadas", new CrearJornadaDto { FechaOperativa = fecha });
+        var jornada = await alcance.ServiceProvider.GetRequiredService<IJornadaServicio>().CrearAsync(empresa.EmpresaId, new CrearJornadaDto { FechaOperativa = fecha });
 
         // --- Servicio, con unidad asignada desde su creación (coordinador) ---
         var servicio = await PostAsync<CrearServicioDto, ServicioDto>(cliente, $"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/servicios", new CrearServicioDto
