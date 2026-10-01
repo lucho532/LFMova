@@ -1,0 +1,42 @@
+.pagina-empresas__buscador {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pagina-empresas__buscador input {
+  width: 100%;
+  max-width: 560px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.pagina-empresas__buscador input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.pagina-empresas__secundario {
+  margin-top: 2px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.tabla-datos a.pagina-empresas__sin-coordinador {
+  color: var(--error);
+  font-size: 13px;
+}
+
+.pagina-empresas__acciones {
+  width: 1%;
+  white-space: nowrap;
+}

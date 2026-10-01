@@ -1,0 +1,24 @@
+.boton-primario {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.boton-primario:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.boton-primario:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.boton-primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

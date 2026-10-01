@@ -1,0 +1,227 @@
+.campana-notificaciones {
+  position: relative;
+}
+
+.campana-notificaciones__boton {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.campana-notificaciones__boton:hover {
+  border-color: var(--accent);
+}
+
+.campana-notificaciones__contador {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--error);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.campana-notificaciones__panel {
+  position: fixed;
+  top: 64px;
+  right: 12px;
+  z-index: 20;
+  width: min(360px, calc(100vw - 24px));
+  /* El ancho incluye el relleno y el borde: sin esto, en un celular angosto el panel medía más que la
+     pantalla y se salía por el borde izquierdo. */
+  box-sizing: border-box;
+  max-height: min(70vh, calc(100vh - 80px));
+  overflow-y: auto;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.campana-notificaciones__panel h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.campana-notificaciones__panel ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.campana-notificaciones__panel li button {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+/* Nueva: fondo azul, barra lateral, punto y título en negrita. Leída: fondo neutro y más tenue. */
+.campana-notificaciones__nueva button {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  opacity: 1;
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.campana-notificaciones__nueva button::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.campana-notificaciones__panel li button strong {
+  font-weight: 500;
+}
+
+.campana-notificaciones__nueva button strong {
+  font-weight: 800;
+}
+
+.campana-notificaciones__panel li span {
+  color: var(--text);
+}
+
+.campana-notificaciones__panel li small,
+.campana-notificaciones__vacio {
+  color: var(--text);
+  font-size: 12px;
+}
+
+/* Respuestas del pasajero: verde si confirma, rojo si avisa que no asistirá (tanto en la lista como en el letrero emergente). */
+.campana-notificaciones__tipo--verde button {
+  border-color: var(--exito-border);
+  background: var(--exito-bg);
+  color: var(--exito);
+  box-shadow: inset 4px 0 0 var(--exito);
+}
+
+.campana-notificaciones__tipo--verde button::after {
+  background: var(--exito);
+}
+
+.campana-notificaciones__tipo--rojo button {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error);
+  box-shadow: inset 4px 0 0 var(--error);
+}
+
+.campana-notificaciones__tipo--rojo button::after {
+  background: var(--error);
+}
+
+/* Mensaje de chat nuevo: azul (mismo tono que "nueva", pero con su propia clase para distinguirlo en el letrero emergente). */
+.campana-notificaciones__tipo--azul button {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.campana-notificaciones__tipo--azul button::after {
+  background: var(--accent);
+}
+
+.campana-notificaciones__panel li.campana-notificaciones__tipo--verde span,
+.campana-notificaciones__panel li.campana-notificaciones__tipo--rojo span,
+.campana-notificaciones__panel li.campana-notificaciones__tipo--azul span {
+  color: inherit;
+}
+
+.campana-notificaciones__avisos {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+  z-index: 1000;
+  display: grid;
+  gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+}
+
+.campana-notificaciones__aviso {
+  display: flex;
+  align-items: stretch;
+  border-radius: 14px;
+  /* Fondo opaco (no el tinte translúcido "*-bg" que se usa dentro de la app): este letrero flota sobre
+     contenido cualquiera de la página, así que necesita verse bien sin importar qué haya detrás. */
+  background: var(--bg);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.campana-notificaciones__aviso.campana-notificaciones__tipo--verde {
+  border-left: 4px solid var(--exito);
+  color: var(--exito);
+}
+
+.campana-notificaciones__aviso.campana-notificaciones__tipo--rojo {
+  border-left: 4px solid var(--error);
+  color: var(--error);
+}
+
+.campana-notificaciones__aviso.campana-notificaciones__tipo--azul {
+  border-left: 4px solid var(--accent);
+  color: var(--accent);
+}
+
+.campana-notificaciones__aviso-cuerpo {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.campana-notificaciones__aviso-cuerpo strong {
+  font-size: 15px;
+}
+
+.campana-notificaciones__aviso-cuerpo span {
+  font-size: 13px;
+}
+
+.campana-notificaciones__aviso-cerrar {
+  padding: 0 14px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}

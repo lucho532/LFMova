@@ -1,0 +1,59 @@
+.grafica-barras {
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.grafica-barras h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+}
+
+.grafica-barras__vacio {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.grafica-barras__cuerpo {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 180px;
+}
+
+.grafica-barras__columna {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+  height: 100%;
+}
+
+.grafica-barras__barra {
+  width: 100%;
+  max-width: 44px;
+  min-height: 0;
+  border-radius: 8px 8px 3px 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-border));
+}
+
+.grafica-barras__valor {
+  color: var(--text-h);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.grafica-barras__etiqueta {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,89 @@
+.barra-superior {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 6px;
+  flex: 0 0 auto;
+  min-height: 60px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.barra-superior__marca {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-h);
+}
+
+.barra-superior__acciones {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+}
+
+.barra-superior__usuario {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+  max-width: 220px;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.barra-superior__nombre {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-h);
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barra-superior__rol {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 520px) {
+  .barra-superior {
+    padding: 8px 12px;
+  }
+
+  .barra-superior__acciones {
+    gap: 6px;
+  }
+
+  .barra-superior__usuario {
+    flex: 1 0 100%;
+    max-width: 100%;
+  }
+}
+
+.barra-superior__identidad {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-right: auto;
+  line-height: 1.15;
+}
+
+.barra-superior__empresa {
+  max-width: 46vw;
+  overflow: hidden;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

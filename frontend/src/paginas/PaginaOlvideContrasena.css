@@ -1,0 +1,5 @@
+.pagina-olvide-contrasena__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

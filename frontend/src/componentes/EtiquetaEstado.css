@@ -1,0 +1,18 @@
+.etiqueta-estado {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.etiqueta-estado--activa {
+  color: #1a7f37;
+  background: rgba(26, 127, 55, 0.12);
+}
+
+.etiqueta-estado--inactiva {
+  color: var(--text);
+  background: var(--code-bg);
+}

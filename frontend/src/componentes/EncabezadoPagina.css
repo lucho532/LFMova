@@ -1,0 +1,32 @@
+.encabezado-pagina {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.encabezado-pagina h1 {
+  margin: 0 0 6px;
+  text-align: left;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.encabezado-pagina p {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.encabezado-pagina__acciones {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  /* Si un subtítulo largo hace que las acciones caigan a su propia línea (el contenedor tiene
+     flex-wrap), este margen las empuja al borde derecho de esa línea en vez de dejarlas colgando
+     a la izquierda; cuando cabe todo en una sola línea, "justify-content: space-between" ya las
+     pone a la derecha y este margen no cambia nada. */
+  margin-left: auto;
+}

@@ -1,0 +1,69 @@
+.lista-empleados {
+  display: grid;
+  gap: 16px;
+}
+
+.lista-empleados__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Buscador con lupa: filtra al escribir, sin botón aparte. */
+.lista-empleados__lupa {
+  display: flex;
+  flex: 1 1 280px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.lista-empleados__lupa:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.lista-empleados__lupa input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  color: var(--text-h);
+  font: inherit;
+  outline: none;
+}
+
+.lista-empleados__total {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.lista-empleados__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.lista-empleados__celda-accion {
+  width: 140px;
+  text-align: right;
+}
+
+.lista-empleados__sin-resultados {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.lista-empleados__sin-resultados p {
+  margin: 0;
+}
+
+.lista-empleados__detalle td {
+  background: var(--code-bg);
+}

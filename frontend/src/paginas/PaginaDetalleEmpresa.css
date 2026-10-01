@@ -1,0 +1,62 @@
+.pagina-detalle-empresa__titulo-seccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 32px 0 14px;
+}
+
+.pagina-detalle-empresa__titulo-seccion h2 {
+  margin: 0;
+}
+
+.pagina-detalle-empresa__celda-accion {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.pagina-detalle-empresa__nota {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pagina-detalle-empresa__formulario {
+  margin-top: 16px;
+}
+
+.pagina-detalle-empresa__accesos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 640px) {
+  .pagina-detalle-empresa__accesos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pagina-detalle-empresa__accesos a {
+  display: block;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.pagina-detalle-empresa__accesos a:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}

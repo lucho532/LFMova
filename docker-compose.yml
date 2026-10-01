@@ -1,0 +1,46 @@
+# Entorno reproducible de desarrollo/integración: API + PostgreSQL (ver
+# plan.md §45). El frontend se ejecuta por separado (ver frontend/README.md),
+# fuera de este compose, según la decisión ya documentada en plan.md §57.
+#
+# Uso: copiar .env.example a .env, completar los valores y ejecutar
+# `docker compose up --build`.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-transportapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?La variable POSTGRES_PASSWORD es obligatoria. Ver .env.example}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      # 5433 en el host para no chocar con un PostgreSQL local ya instalado
+      # (p. ej. el usado para desarrollo fuera de Docker).
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-transportapp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: src/TransportApp.Api/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__TransportAppDb: Host=postgres;Port=5432;Database=${POSTGRES_DB:-transportapp};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD}
+      Jwt__ClaveSecreta: ${JWT_CLAVE_SECRETA:?La variable JWT_CLAVE_SECRETA es obligatoria. Ver .env.example}
+      Jwt__Emisor: ${JWT_EMISOR:-TransportApp}
+      Jwt__Audiencia: ${JWT_AUDIENCIA:-TransportApp}
+      Jwt__ExpiracionMinutos: ${JWT_EXPIRACION_MINUTOS:-60}
+      Cors__OrigenesPermitidos__0: ${CORS_ORIGEN_FRONTEND:-http://localhost:5173}
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:

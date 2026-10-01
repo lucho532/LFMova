@@ -1,0 +1,43 @@
+.ventana-chat {
+  width: min(92vw, 420px);
+  max-height: 85vh;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+}
+
+.ventana-chat::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.ventana-chat__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ventana-chat__cabecera strong {
+  font-size: 16px;
+}
+
+.ventana-chat__cerrar {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.ventana-chat .chat-pasajero {
+  margin-top: 8px;
+}
+
+.ventana-chat .chat-pasajero__mensajes {
+  max-height: min(50vh, 360px);
+}

@@ -1,0 +1,182 @@
+.panel-crear-ruta-pegado {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-crear-ruta-pegado h2 {
+  margin-top: 0;
+}
+
+.panel-crear-ruta-pegado__caja {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+  border: 2px dashed var(--accent-border);
+  border-radius: 18px;
+  background: var(--accent-bg);
+}
+
+.panel-crear-ruta-pegado__tipo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.panel-crear-ruta-pegado__tipo-etiqueta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.panel-crear-ruta-pegado__tipo-opciones {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  height: 42px;
+}
+
+.panel-crear-ruta-pegado__tipo-opciones label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-h);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.panel-crear-ruta-pegado__tipo-opciones input[type='radio'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.panel-crear-ruta-pegado__acciones-esqueleto {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Esqueleto: una columna del Excel por fila (selector del dato + botón para quitarla), en una sola lista
+   ordenada. En dos columnas no cabían el selector y el botón y se montaban unos sobre otros. */
+.panel-crear-ruta-pegado__columna-esqueleto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: end;
+  gap: 8px;
+}
+
+.panel-crear-ruta-pegado__columna-esqueleto .selector-formulario {
+  min-width: 0;
+}
+
+.panel-crear-ruta-pegado__columna-esqueleto select {
+  width: 100%;
+  min-width: 0;
+}
+
+.panel-crear-ruta-pegado__quitar-columna {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.panel-crear-ruta-pegado__quitar-columna:hover {
+  border-color: var(--error-border);
+  color: var(--error);
+}
+
+.panel-crear-ruta-pegado__agregar-columna {
+  grid-column: 1 / -1;
+}
+
+.panel-crear-ruta-pegado__agregar-columna button {
+  width: 100%;
+}
+
+.panel-crear-ruta-pegado__esqueleto-actual {
+  color: var(--text);
+  font-size: 13px;
+  margin: 8px 0 16px;
+}
+
+.panel-crear-ruta-pegado__cambiar-esqueleto {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.panel-crear-ruta-pegado__pegado {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.panel-crear-ruta-pegado__pegado label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.panel-crear-ruta-pegado__pegado textarea {
+  height: 130px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  resize: none;
+}
+
+.panel-crear-ruta-pegado__pegado textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.panel-crear-ruta-pegado__conteo {
+  margin: 0;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.panel-crear-ruta-pegado__resultado {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+}
+
+.panel-crear-ruta-pegado__resultado summary {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.panel-crear-ruta-pegado__resultado p {
+  margin: 4px 0;
+  padding-left: 8px;
+  color: var(--text);
+  font-size: 13px;
+}

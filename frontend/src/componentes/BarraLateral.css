@@ -1,0 +1,60 @@
+.barra-lateral {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 236px;
+  gap: 6px;
+  padding: 28px 14px;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.barra-lateral__enlace {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.barra-lateral__icono {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.barra-lateral__enlace:hover {
+  background: var(--accent-bg);
+  color: var(--text-h);
+  transform: translateX(2px);
+}
+
+.barra-lateral__enlace--activo {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 14px -6px var(--accent);
+}
+
+.barra-lateral__enlace--activo:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .barra-lateral {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 12px;
+  }
+
+  .barra-lateral__enlace {
+    flex: 0 0 auto;
+  }
+}

@@ -1,0 +1,23 @@
+.inicio-coordinador__graficas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.inicio-coordinador__vacio {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  border: 1px dashed var(--accent-border);
+  border-radius: 14px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+}
+
+@media (max-width: 860px) {
+  .inicio-coordinador__graficas {
+    grid-template-columns: 1fr;
+  }
+}

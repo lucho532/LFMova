@@ -1,0 +1,80 @@
+.campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.campo-formulario label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.campo-formulario input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo-formulario input:disabled {
+  background: var(--code-bg);
+  color: var(--text);
+  cursor: not-allowed;
+}
+
+.campo-formulario input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.campo-formulario input[type='date'] {
+  cursor: pointer;
+}
+
+.campo-formulario input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.campo-formulario__contrasena {
+  position: relative;
+  display: flex;
+}
+
+.campo-formulario__contrasena input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.campo-formulario__ojo {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.campo-formulario__ojo:hover:not(:disabled) {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.campo-formulario__ojo:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

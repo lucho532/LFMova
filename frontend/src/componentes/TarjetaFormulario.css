@@ -1,0 +1,28 @@
+.tarjeta-formulario {
+  display: grid;
+  gap: 16px;
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.tarjeta-formulario--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tarjeta-formulario--2 > .mensaje-alerta,
+.tarjeta-formulario--2 > button {
+  grid-column: 1 / -1;
+}
+
+.tarjeta-formulario > button {
+  justify-self: start;
+}
+
+@media (max-width: 640px) {
+  .tarjeta-formulario--2 {
+    grid-template-columns: 1fr;
+  }
+}

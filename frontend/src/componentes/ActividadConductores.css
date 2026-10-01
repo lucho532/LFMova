@@ -1,0 +1,66 @@
+.actividad-conductores__totales {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.actividad-conductores__numero {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.actividad-conductores__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.actividad-conductores__detalle td {
+  background: var(--code-bg);
+}
+
+.actividad-conductores__detalle ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+
+.actividad-conductores__fila-inactiva {
+  opacity: 0.6;
+}
+
+.actividad-conductores__etiqueta-inactivo {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.actividad-conductores__celda-eliminar {
+  width: 100px;
+  text-align: right;
+}
+
+.actividad-conductores__boton-eliminar {
+  border: none;
+  background: transparent;
+  color: var(--error);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.actividad-conductores__boton-eliminar:hover {
+  opacity: 0.7;
+}
+
+.actividad-conductores__boton-reactivar {
+  border: 1px solid var(--exito-border);
+  background: var(--exito-bg);
+  color: var(--exito);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}

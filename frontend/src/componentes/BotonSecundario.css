@@ -1,0 +1,21 @@
+.boton-secundario {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.boton-secundario:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+.boton-secundario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

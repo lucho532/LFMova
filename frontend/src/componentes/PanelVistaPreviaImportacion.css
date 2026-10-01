@@ -1,0 +1,270 @@
+.vista-previa-importacion {
+  display: grid;
+  gap: 14px;
+}
+
+.vista-previa-importacion__resumen {
+  margin: 0;
+  color: var(--text);
+}
+
+.vista-previa-importacion__avisos {
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  background: var(--accent-bg);
+  padding: 10px 14px;
+}
+
+.vista-previa-importacion__avisos summary {
+  cursor: pointer;
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.vista-previa-importacion__avisos[open] summary {
+  margin-bottom: 8px;
+}
+
+.vista-previa-importacion__aviso {
+  margin: 0;
+  padding: 6px 0;
+  color: var(--text-h);
+}
+
+.vista-previa-importacion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.vista-previa-importacion__servicio h3 {
+  margin: 0;
+}
+
+.vista-previa-importacion__sin-sede {
+  color: var(--error);
+  font-weight: 500;
+}
+
+.vista-previa-importacion__servicio--sin-asignar {
+  border: 1px solid var(--error-border);
+  border-radius: 10px;
+  background: var(--error-bg);
+  padding: 12px 14px;
+}
+
+/* Ya se envió al conductor (Enviar Rutas o después): toda la tarjeta se pinta de verde. */
+.vista-previa-importacion__servicio--enviado {
+  border: 1px solid var(--exito-border);
+  border-radius: 10px;
+  background: var(--exito-bg);
+  padding: 12px 14px;
+}
+
+/* El conductor ya inició la ruta: toda la tarjeta se pinta de naranja mientras está en curso. */
+.vista-previa-importacion__servicio--en-curso {
+  border: 1px solid var(--advertencia-border);
+  border-radius: 10px;
+  background: var(--advertencia-bg);
+  padding: 12px 14px;
+}
+
+.vista-previa-importacion__etiqueta-en-curso {
+  color: var(--advertencia);
+  font-weight: 700;
+}
+
+.vista-previa-importacion__sin-asignar {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.vista-previa-importacion__conductor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.vista-previa-importacion__reasignar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.vista-previa-importacion__fila-arrastrable {
+  cursor: grab;
+  user-select: none;
+}
+
+.vista-previa-importacion__tarjeta-arrastre {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  opacity: 0.92;
+  will-change: transform;
+}
+
+.vista-previa-importacion__tarjeta-arrastre td {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-h);
+  white-space: nowrap;
+  border-bottom: none;
+}
+
+.vista-previa-importacion__fila-arrastrable:active {
+  cursor: grabbing;
+}
+
+.vista-previa-importacion__servicio--destino-valido {
+  outline: 2px dashed var(--exito-border);
+  outline-offset: 4px;
+  background: var(--exito-bg);
+  border-radius: 10px;
+}
+
+.vista-previa-importacion__servicio--destino-invalido {
+  opacity: 0.55;
+}
+
+.vista-previa-importacion__celda-mover {
+  width: 84px;
+  padding: 0 !important;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.vista-previa-importacion__mover {
+  position: relative;
+  display: inline-block;
+}
+
+.vista-previa-importacion__boton-mover,
+.vista-previa-importacion__boton-editar,
+.vista-previa-importacion__boton-eliminar {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.vista-previa-importacion__boton-mover {
+  color: var(--accent);
+}
+
+.vista-previa-importacion__boton-mover:hover {
+  color: var(--text-h);
+}
+
+.vista-previa-importacion__boton-editar {
+  color: var(--text);
+}
+
+.vista-previa-importacion__boton-editar:hover {
+  color: var(--accent);
+}
+
+.vista-previa-importacion__boton-eliminar {
+  color: var(--error);
+}
+
+.vista-previa-importacion__boton-eliminar:hover {
+  opacity: 0.7;
+}
+
+.vista-previa-importacion__modal-editar {
+  width: min(92vw, 460px);
+  padding: 24px 26px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.vista-previa-importacion__modal-editar::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.vista-previa-importacion__modal-editar h2 {
+  margin: 0 0 8px;
+}
+
+.vista-previa-importacion__modal-nota {
+  margin: 0 0 18px;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.vista-previa-importacion__form-editar {
+  display: grid;
+  gap: 14px;
+}
+
+.vista-previa-importacion__modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Se renderiza en un portal (document.body) con posición fija calculada en JS (ver alternarMenuMover):
+   así nunca queda recortado por el scroll o el overflow de la tarjeta de la ruta ni de la tabla, y no
+   hace falta scrollear dentro de la ruta para ver todos los conductores. top/bottom/right vienen por
+   estilo inline según haya espacio arriba o abajo del botón. */
+.vista-previa-importacion__menu-mover {
+  position: fixed;
+  z-index: 30;
+  display: grid;
+  gap: 2px;
+  min-width: 220px;
+  /* Solo como resguardo ante una lista extremadamente larga: con la cantidad normal de conductores no
+     se activa y no hace falta scrollear para ver el menú completo. */
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.vista-previa-importacion__menu-mover button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--text-h);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.vista-previa-importacion__menu-mover button:hover {
+  background: var(--accent-bg);
+}
+
+.vista-previa-importacion__menu-mover-separador {
+  height: 1px;
+  margin: 4px 2px;
+  background: var(--border);
+}

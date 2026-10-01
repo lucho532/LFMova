@@ -1,0 +1,17 @@
+.panel-asignar-coordinador {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.panel-asignar-coordinador__invitacion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.panel-asignar-coordinador__invitacion > button {
+  align-self: flex-start;
+}

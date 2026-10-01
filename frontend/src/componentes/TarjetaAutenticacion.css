@@ -1,0 +1,65 @@
+.tarjeta-autenticacion {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+.tarjeta-autenticacion__tarjeta {
+  width: min(100%, 460px);
+  padding: 32px 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  text-align: left;
+  animation: entrada-tarjeta 0.4s ease both;
+}
+
+@keyframes entrada-tarjeta {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tarjeta-autenticacion__marca {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tarjeta-autenticacion__titulo {
+  margin: 0 0 8px;
+  text-align: left;
+  font-size: 26px;
+}
+
+.tarjeta-autenticacion__subtitulo {
+  margin: 0 0 24px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tarjeta-autenticacion__volver {
+  display: inline-block;
+  margin-top: 22px;
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.tarjeta-autenticacion__volver:hover {
+  color: var(--accent);
+}

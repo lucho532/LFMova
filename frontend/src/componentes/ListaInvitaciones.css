@@ -1,0 +1,46 @@
+.lista-invitaciones {
+  margin-top: 28px;
+}
+
+.lista-invitaciones h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.lista-invitaciones__sin-dato,
+.lista-invitaciones__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.lista-invitaciones__estado {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lista-invitaciones__estado--pendiente {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.lista-invitaciones__estado--aceptada {
+  background: var(--exito-bg);
+  color: var(--exito);
+}
+
+.lista-invitaciones__estado--vencida {
+  background: var(--code-bg);
+  color: var(--text);
+}
+
+.lista-invitaciones__celda-accion {
+  width: 140px;
+  text-align: right;
+}
+
+.lista-invitaciones__detalle td {
+  background: var(--code-bg);
+}

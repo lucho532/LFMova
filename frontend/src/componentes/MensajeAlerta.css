@@ -1,0 +1,20 @@
+.mensaje-alerta {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.mensaje-alerta--error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.mensaje-alerta--exito {
+  border-color: var(--exito-border);
+  background: var(--exito-bg);
+  color: var(--exito);
+}

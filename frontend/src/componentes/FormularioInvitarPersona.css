@@ -1,0 +1,27 @@
+.formulario-invitar-persona {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.formulario-invitar-persona__ayuda {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.formulario-invitar-persona__campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .formulario-invitar-persona__campos {
+    grid-template-columns: 1fr;
+  }
+}

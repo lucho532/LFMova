@@ -1,0 +1,24 @@
+.indicador-carga {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  opacity: 0.85;
+  animation: indicador-carga-girar 0.7s linear infinite;
+}
+
+@keyframes indicador-carga-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicador-carga {
+    animation-duration: 1.6s;
+  }
+}

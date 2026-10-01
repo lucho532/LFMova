@@ -1,0 +1,48 @@
+.pagina-nueva-empresa {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pagina-nueva-empresa__encabezado {
+  margin-bottom: 32px;
+}
+
+.pagina-nueva-empresa__encabezado h1 {
+  margin: 0 0 6px;
+  text-align: left;
+}
+
+.pagina-nueva-empresa__subtitulo {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.pagina-nueva-empresa__formulario {
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.pagina-nueva-empresa__campos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pagina-nueva-empresa__error {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 14px;
+}

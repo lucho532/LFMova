@@ -1,0 +1,32 @@
+.pagina-invitacion {
+  display: grid;
+  gap: 14px;
+}
+
+.pagina-invitacion__texto {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.pagina-invitacion__nota {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* Enlace con aspecto de botón principal (para ir a registrarse o a iniciar sesión). */
+.pagina-invitacion__boton {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.pagina-invitacion__boton:hover {
+  opacity: 0.9;
+}

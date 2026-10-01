@@ -1,0 +1,42 @@
+.barrios-sin-zona {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--error-border);
+  border-radius: 10px;
+  background: var(--error-bg);
+}
+
+.barrios-sin-zona h3 {
+  margin: 0;
+  color: var(--error);
+  font-size: 15px;
+}
+
+.barrios-sin-zona__ayuda {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 13px;
+}
+
+.barrios-sin-zona__lista {
+  display: grid;
+  gap: 8px;
+}
+
+.barrios-sin-zona__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.barrios-sin-zona__nombre {
+  min-width: 140px;
+  align-self: center;
+  font-weight: 600;
+  color: var(--text-h);
+}

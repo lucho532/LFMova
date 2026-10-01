@@ -1,0 +1,114 @@
+/* Un único recuadro centrado; la imagen de la app va dentro de él como marca de agua. */
+.pagina-inicio-sesion {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 66px);
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+.pagina-inicio-sesion__cuadro {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 440px;
+  padding: 36px 32px 28px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--bg);
+  box-shadow: 0 24px 60px -20px rgba(15, 23, 42, 0.35);
+  text-align: left;
+}
+
+/* Marca de agua: el logo de la app centrado y muy tenue detrás del formulario. */
+.pagina-inicio-sesion__cuadro::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url('/ChatGPT Image 18 sept 2026, 23_08_13.png') center 42% / 115% auto no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.pagina-inicio-sesion__cabecera {
+  margin-bottom: 22px;
+}
+
+.pagina-inicio-sesion__titulo {
+  margin: 0 0 6px;
+  color: var(--text-h);
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.pagina-inicio-sesion__subtitulo {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.pagina-inicio-sesion__formulario {
+  display: grid;
+  gap: 16px;
+}
+
+.pagina-inicio-sesion__formulario > button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.pagina-inicio-sesion__error {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--error-border);
+  border-radius: 10px;
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 14px;
+}
+
+.pagina-inicio-sesion__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.pagina-inicio-sesion__enlaces a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pagina-inicio-sesion__enlaces a:hover {
+  text-decoration: underline;
+}
+
+/* Tema oscuro: se invierte la imagen (fondo blanco → negro) para que sea una marca de agua tenue y no un bloque blanco. */
+:root[data-theme='dark'] .pagina-inicio-sesion__cuadro::before {
+  filter: invert(1) hue-rotate(180deg);
+  mix-blend-mode: screen;
+  opacity: 0.1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pagina-inicio-sesion__cuadro::before {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
+    opacity: 0.1;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagina-inicio-sesion__cuadro {
+    padding: 28px 20px 22px;
+  }
+}

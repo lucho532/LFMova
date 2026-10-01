@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Permite tráfico HTTP (sin cifrar) solo hacia la IP local del backend de desarrollo. Android bloquea
+  el tráfico en texto plano por defecto desde Android 9; esto lo habilita únicamente para esa IP, no
+  para el resto de la app, mientras se prueba contra el backend en la red local (sin HTTPS todavía).
+  Cuando el backend tenga un dominio con HTTPS real, este archivo y la referencia en el manifest se
+  pueden quitar.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">192.168.1.12</domain>
+    </domain-config>
+</network-security-config>

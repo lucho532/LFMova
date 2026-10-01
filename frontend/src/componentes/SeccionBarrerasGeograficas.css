@@ -1,0 +1,42 @@
+.seccion-barreras-geograficas__ayuda {
+  color: var(--text);
+  font-size: 14px;
+  margin: -4px 0 16px;
+}
+
+.seccion-barreras-geograficas__formulario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.seccion-barreras-geograficas__formulario > *:not(button) {
+  flex: 1;
+  min-width: 160px;
+}
+
+.seccion-barreras-geograficas__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.seccion-barreras-geograficas__lista li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.seccion-barreras-geograficas__motivo {
+  color: var(--text);
+  font-size: 14px;
+}

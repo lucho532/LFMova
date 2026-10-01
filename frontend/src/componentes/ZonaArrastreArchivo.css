@@ -1,0 +1,40 @@
+.zona-arrastre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 36px 24px;
+  border: 2px dashed var(--accent-border);
+  border-radius: 18px;
+  background: var(--accent-bg);
+  color: var(--text);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.zona-arrastre:hover,
+.zona-arrastre:focus-visible,
+.zona-arrastre--encima {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.zona-arrastre--encima {
+  background: var(--accent-border);
+}
+
+.zona-arrastre--con-archivo {
+  border-style: solid;
+}
+
+.zona-arrastre strong {
+  color: var(--text-h);
+  font-size: 17px;
+}
+
+.zona-arrastre__icono {
+  font-size: 34px;
+  line-height: 1;
+}

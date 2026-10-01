@@ -1,0 +1,91 @@
+.chat-pasajero {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.chat-pasajero__mensajes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  margin: 0;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-pagina);
+  list-style: none;
+}
+
+.chat-pasajero__mensajes li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.chat-pasajero__mensajes time {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.chat-pasajero__propio {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+}
+
+.chat-pasajero__ajeno {
+  align-self: flex-start;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.chat-pasajero__mensajes .chat-pasajero__vacio {
+  max-width: none;
+  align-self: center;
+  color: var(--text);
+}
+
+.chat-pasajero__solo-lectura {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 13px;
+  text-align: center;
+}
+
+.chat-pasajero__formulario {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chat-pasajero__formulario input {
+  flex: 1 1 160px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.chat-pasajero__dia {
+  align-self: center;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}

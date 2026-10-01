@@ -1,0 +1,13 @@
+.panel-mi-vehiculo__tarjeta {
+  margin-bottom: 16px;
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.panel-mi-vehiculo__vacio {
+  color: var(--text);
+  font-size: 14px;
+}

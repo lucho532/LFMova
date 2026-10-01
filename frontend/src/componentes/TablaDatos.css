@@ -1,0 +1,52 @@
+.tabla-datos {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.tabla-datos table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-datos th,
+.tabla-datos td {
+  padding: 14px 20px;
+  font-size: 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabla-datos thead th {
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tabla-datos tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-datos tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.tabla-datos a {
+  color: var(--text-h);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tabla-datos a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.tabla-datos tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--code-bg) 45%, transparent);
+}

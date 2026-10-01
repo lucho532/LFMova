@@ -1,0 +1,60 @@
+.pagina-detalle-sede {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pagina-detalle-sede__volver {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.pagina-detalle-sede__volver:hover {
+  color: var(--accent);
+}
+
+.pagina-detalle-sede__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.pagina-detalle-sede__estado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagina-detalle-sede__error {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.pagina-detalle-sede__formulario {
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.pagina-detalle-sede__campos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}

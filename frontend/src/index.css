@@ -1,0 +1,143 @@
+:root {
+  --text: #5b6472;
+  --text-h: #0f172a;
+  --bg: #fff;
+  --bg-pagina: #f4f7fb;
+  --border: #e2e8f0;
+  --code-bg: #eef2f8;
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.08);
+  --accent-border: rgba(37, 99, 235, 0.4);
+  --error: #b42318;
+  --error-bg: #fff4f4;
+  --error-border: #f0a5a5;
+  --exito: #067647;
+  --exito-bg: #ecfdf3;
+  --exito-border: #a6e2c0;
+  --advertencia: #b45309;
+  --advertencia-bg: #fffbeb;
+  --advertencia-border: #fcd34d;
+  --shadow:
+    rgba(15, 23, 42, 0.08) 0 10px 15px -3px, rgba(15, 23, 42, 0.04) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg-pagina);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --text: #9aa4b2;
+    --text-h: #f1f5f9;
+    --bg: #1a1d27;
+    --bg-pagina: #10121a;
+    --border: #2c3140;
+    --code-bg: #212533;
+    --accent: #60a5fa;
+    --accent-bg: rgba(96, 165, 250, 0.14);
+    --accent-border: rgba(96, 165, 250, 0.5);
+    --error: #fca5a5;
+    --error-bg: rgba(248, 113, 113, 0.12);
+    --error-border: rgba(248, 113, 113, 0.45);
+    --exito: #86efac;
+    --exito-bg: rgba(74, 222, 128, 0.12);
+    --exito-border: rgba(74, 222, 128, 0.45);
+    --advertencia: #fbbf24;
+    --advertencia-bg: rgba(251, 191, 36, 0.14);
+    --advertencia-border: rgba(251, 191, 36, 0.45);
+    --shadow:
+      rgba(0, 0, 0, 0.5) 0 10px 15px -3px, rgba(0, 0, 0, 0.3) 0 4px 6px -2px;
+  }
+}
+
+/* Tema oscuro forzado por el botón de la esquina superior derecha, sin importar la preferencia del sistema. */
+:root[data-theme='dark'] {
+  --text: #9aa4b2;
+  --text-h: #f1f5f9;
+  --bg: #1a1d27;
+  --bg-pagina: #10121a;
+  --border: #2c3140;
+  --code-bg: #212533;
+  --accent: #60a5fa;
+  --accent-bg: rgba(96, 165, 250, 0.14);
+  --accent-border: rgba(96, 165, 250, 0.5);
+  --error: #fca5a5;
+  --error-bg: rgba(248, 113, 113, 0.12);
+  --error-border: rgba(248, 113, 113, 0.45);
+  --exito: #86efac;
+  --exito-bg: rgba(74, 222, 128, 0.12);
+  --exito-border: rgba(74, 222, 128, 0.45);
+  --advertencia: #fbbf24;
+  --advertencia-bg: rgba(251, 191, 36, 0.14);
+  --advertencia-border: rgba(251, 191, 36, 0.45);
+  --shadow:
+    rgba(0, 0, 0, 0.5) 0 10px 15px -3px, rgba(0, 0, 0, 0.3) 0 4px 6px -2px;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg-pagina);
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 32px;
+  letter-spacing: -0.6px;
+  margin: 0;
+}
+
+h2 {
+  font-size: 18px;
+  line-height: 130%;
+  letter-spacing: -0.2px;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}

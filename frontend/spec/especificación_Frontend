@@ -1,0 +1,1828 @@
+# Especificación del Frontend
+
+## Plataforma de Transporte Empresarial
+
+---
+
+## 1. Propósito
+
+Este documento define la especificación funcional, visual y de navegación del frontend de la Plataforma de Transporte Empresarial.
+
+El frontend consumirá el backend/API existente y proporcionará las interfaces necesarias para que cada tipo de usuario pueda ejecutar las operaciones que el backend autorice.
+
+El frontend **no constituye la fuente de verdad del negocio**.
+
+La API continúa siendo responsable de:
+
+* Autenticación.
+* Autorización.
+* Aislamiento entre empresas.
+* Validaciones de negocio.
+* Estados.
+* Transiciones.
+* Reglas de asignación.
+* Reglas de planificación.
+* Protección de información.
+* Integridad de datos.
+
+La Constitución establece expresamente que ocultar una funcionalidad en React u otro frontend no constituye una medida de seguridad suficiente. La API debe validar la autorización y las reglas de negocio.
+
+---
+
+# 2. Principios del frontend
+
+El frontend debe respetar completamente la Constitución del proyecto.
+
+La prioridad será:
+
+```text
+Claridad
+    ↓
+Correctitud
+    ↓
+Seguridad
+    ↓
+Mantenibilidad
+    ↓
+Escalabilidad
+```
+
+La interfaz debe ser moderna y agradable, pero no debe introducir complejidad innecesaria.
+
+La Constitución establece que la simplicidad y mantenibilidad tienen prioridad sobre la cantidad de tecnologías utilizadas.
+
+---
+
+# 3. Identidad visual
+
+## 3.1. Color principal
+
+El color principal de toda la aplicación será el **azul**.
+
+El azul debe representar:
+
+* Transporte.
+* Tecnología.
+* Confianza.
+* Seguridad.
+* Organización.
+* Profesionalismo.
+
+Debe utilizarse principalmente en:
+
+* Botones principales.
+* Elementos seleccionados.
+* Navegación activa.
+* Indicadores importantes.
+* Iconos destacados.
+* Enlaces.
+* Componentes de interacción.
+
+No se debe convertir toda la interfaz en una superficie azul.
+
+La interfaz debe utilizar fondos neutros y superficies claras/oscuras para mantener buena legibilidad.
+
+---
+
+# 4. Tema claro y oscuro
+
+La aplicación ya dispone de un selector para cambiar entre:
+
+```text
+☀ Tema claro
+🌙 Tema oscuro
+```
+
+Esta funcionalidad debe conservarse.
+
+El cambio de tema debe afectar a toda la aplicación.
+
+Debe aplicarse de forma coherente a:
+
+* Login.
+* Dashboard.
+* Menús.
+* Formularios.
+* Tablas.
+* Tarjetas.
+* Modales.
+* Alertas.
+* Estados.
+* Navegación.
+* Pantallas móviles.
+
+No se debe implementar ningún componente que funcione correctamente únicamente en un tema.
+
+El selector de tema debe permanecer disponible en las pantallas autenticadas.
+
+---
+
+# 5. Experiencia general
+
+La aplicación tendrá dos grandes contextos:
+
+```text
+                    Aplicación
+                        │
+             ┌──────────┴──────────┐
+             │                     │
+          Público               Autenticado
+             │                     │
+           Login          Interfaz según rol
+```
+
+El usuario no autenticado solamente tendrá acceso a las pantallas públicas.
+
+Una vez autenticado, el frontend determinará la interfaz correspondiente al contexto autorizado por el backend.
+
+---
+
+# 6. Pantalla de Login
+
+La pantalla de login será una de las pantallas visualmente más cuidadas de la aplicación.
+
+## 6.1. Objetivo visual
+
+Debe transmitir inmediatamente:
+
+* Tecnología.
+* Transporte.
+* Confianza.
+* Profesionalismo.
+* Modernidad.
+
+Se utilizará una composición basada en azul.
+
+---
+
+## 6.2. Diseño
+
+La pantalla tendrá una estructura similar a:
+
+```text
+┌─────────────────────────────────────────────┐
+│                                             │
+│              IDENTIDAD APP                  │
+│                                             │
+│        ┌─────────────────────────┐          │
+│        │                         │          │
+│        │      Iniciar sesión     │          │
+│        │                         │          │
+│        │  Usuario                │          │
+│        │  [___________________]  │          │
+│        │                         │          │
+│        │  Contraseña             │          │
+│        │  [___________________]  │          │
+│        │                         │          │
+│        │      [ ENTRAR ]         │          │
+│        │                         │          │
+│        └─────────────────────────┘          │
+│                                             │
+│                    ☀ / 🌙                   │
+└─────────────────────────────────────────────┘
+```
+
+La tarjeta debe tener:
+
+* Bordes redondeados.
+* Sombra moderada.
+* Espaciado amplio.
+* Animación de entrada.
+* Campos claramente identificados.
+* Botón principal azul.
+
+---
+
+# 7. Animaciones del Login
+
+Se permiten animaciones profesionales y discretas.
+
+Por ejemplo:
+
+### Entrada
+
+La tarjeta puede aparecer mediante:
+
+```text
+opacity: 0 → 1
+transform: translateY(...)
+```
+
+### Botón
+
+Durante el envío:
+
+```text
+[ Iniciando sesión... ]
+```
+
+con indicador de carga.
+
+### Cambio de tema
+
+El cambio de tema debe realizarse mediante una transición suave.
+
+No utilizar animaciones excesivamente llamativas.
+
+La aplicación es una herramienta operativa, no una página publicitaria.
+
+---
+
+# 8. Estados del Login
+
+La pantalla debe contemplar:
+
+```text
+Inicial
+    ↓
+Formulario
+    ↓
+Validando
+    ↓
+Enviando
+    ↓
+ ┌───────────────┐
+ │               │
+Éxito          Error
+ │               │
+ ↓               ↓
+Aplicación     Mensaje
+```
+
+Debe existir tratamiento visual para:
+
+* Campos vacíos.
+* Datos inválidos.
+* Credenciales incorrectas.
+* Error de API.
+* API no disponible.
+* Sesión expirada.
+
+Nunca se debe dejar al usuario sin saber qué ocurrió.
+
+---
+
+# 9. Cierre de sesión
+
+Todas las páginas autenticadas deben tener un botón visible para:
+
+```text
+Cerrar sesión
+```
+
+Preferiblemente dentro del menú de usuario de la cabecera.
+
+La acción debe:
+
+1. Cerrar la sesión.
+2. Limpiar el estado de autenticación.
+3. Eliminar la información sensible almacenada localmente según la estrategia de autenticación.
+4. Evitar acceder nuevamente a las páginas privadas mediante navegación hacia atrás.
+5. Redirigir al Login.
+
+La pantalla de Login no tendrá botón de cerrar sesión.
+
+---
+
+# 10. Estructura general autenticada
+
+La aplicación utilizará una estructura común:
+
+```text
+┌───────────────────────────────────────────────────────────┐
+│ LOGO │ TÍTULO │                         ☀ 🌙 │ Usuario ▼ │
+├────────────────┬──────────────────────────────────────────┤
+│                │                                          │
+│ MENÚ           │                                          │
+│                │             CONTENIDO                    │
+│                │                                          │
+│                │                                          │
+│                │                                          │
+│                │                                          │
+│                │                                          │
+│                │                                          │
+└────────────────┴──────────────────────────────────────────┘
+```
+
+En escritorio:
+
+* Barra superior.
+* Menú lateral.
+* Área principal.
+
+En móvil:
+
+```text
+┌───────────────────────────────┐
+│ ☰  LOGO       🌙  Usuario     │
+├───────────────────────────────┤
+│                               │
+│       CONTENIDO               │
+│                               │
+└───────────────────────────────┘
+```
+
+El menú lateral se convierte en menú desplegable.
+
+---
+
+# 11. Componentes globales
+
+Debe existir un conjunto de componentes reutilizables.
+
+Conceptualmente:
+
+```text
+BarraSuperior
+MenuLateral
+SelectorTema
+MenuUsuario
+BotonCerrarSesion
+TarjetaResumen
+TablaDatos
+Formulario
+CampoFormulario
+BotonPrincipal
+BotonSecundario
+ModalConfirmacion
+MensajeError
+MensajeExito
+IndicadorCarga
+EtiquetaEstado
+Paginacion
+Selector
+Buscador
+Filtro
+```
+
+Los nombres del código deben respetar la Constitución y utilizar español cuando exista una denominación clara.
+
+---
+
+# 12. ADMINISTRADOR_PLATAFORMA
+
+El administrador tiene un contexto global.
+
+La Constitución establece que puede:
+
+* Crear empresas.
+* Gestionar configuración global.
+* Gestionar aspectos generales de la plataforma.
+
+No participa en la operación diaria de las empresas.
+
+Por tanto, su frontend debe ser diferente al del coordinador.
+
+---
+
+## 12.1. Menú
+
+```text
+Inicio
+
+Empresas
+
+Configuración global
+
+Mi cuenta
+
+Cerrar sesión
+```
+
+No deben aparecer:
+
+```text
+Empleados
+Conductores
+Jornadas
+Servicios
+Asignaciones
+Rutas
+Operación diaria
+```
+
+salvo que una futura especificación defina explícitamente alguna función global relacionada.
+
+---
+
+# 13. Dashboard del administrador
+
+Diseño:
+
+```text
+┌─────────────────────────────────────────────┐
+│ Dashboard                                   │
+├─────────────┬─────────────┬─────────────────┤
+│ Empresas    │ Activas     │ Información     │
+│             │             │ global          │
+└─────────────┴─────────────┴─────────────────┘
+
+Actividad / información global
+```
+
+Los indicadores deben proceder de la API.
+
+No se deben inventar estadísticas que el backend no proporcione.
+
+---
+
+# 14. Gestión de empresas
+
+Pantalla:
+
+```text
+Empresas
+
+[ Buscar empresa... ]       [ + Crear empresa ]
+
+┌───────────────────────────────────────────┐
+│ Empresa       Estado       Acciones       │
+├───────────────────────────────────────────┤
+│ Empresa A     Activa       Ver / Editar   │
+│ Empresa B     Activa       Ver / Editar   │
+│ Empresa C     Inactiva     Ver            │
+└───────────────────────────────────────────┘
+```
+
+Las acciones exactas dependerán de los endpoints existentes.
+
+---
+
+# 15. Crear empresa
+
+Formulario basado exclusivamente en el DTO real del backend.
+
+No agregar campos inventados.
+
+Después de crear la empresa, debe poder ejecutarse el flujo del primer coordinador si dicho endpoint existe.
+
+La Constitución establece que el administrador de plataforma participa en la creación de la empresa y asignación del primer coordinador.
+
+---
+
+# 16. COORDINADOR
+
+El coordinador tendrá la interfaz operativa principal.
+
+Pertenece a una única empresa y administra la operación de esa empresa.
+
+---
+
+# 17. Menú del coordinador
+
+```text
+Inicio
+
+OPERACIÓN
+├── Programaciones
+├── Jornadas
+├── Servicios
+├── Asignaciones
+└── Publicaciones
+
+PERSONAS
+├── Empleados
+└── Conductores
+
+INFRAESTRUCTURA
+└── Sedes
+
+IMPORTACIONES
+└── Excel
+
+CONFIGURACIÓN
+
+Mi cuenta
+
+Cerrar sesión
+```
+
+La estructura final debe adaptarse a las funcionalidades reales de la API.
+
+---
+
+# 18. Dashboard del coordinador
+
+El dashboard debe estar orientado a la operación.
+
+Ejemplo:
+
+```text
+┌────────────────────────────────────────────────┐
+│ Buenos días                                    │
+│ Empresa actual                                 │
+├─────────────┬─────────────┬────────────────────┤
+│ Empleados   │ Conductores │ Sedes              │
+├─────────────┼─────────────┼────────────────────┤
+│             │             │                    │
+├─────────────┴─────────────┴────────────────────┤
+│ OPERACIÓN                                      │
+│                                                │
+│ Próximos servicios                             │
+│                                                │
+│ Jornadas                                       │
+│                                                │
+│ Alertas / incidencias                          │
+└────────────────────────────────────────────────┘
+```
+
+La información debe proceder del backend.
+
+---
+
+# 19. Empleados
+
+## Lista
+
+```text
+Empleados
+
+[ Buscar... ] [ Filtros ]
+
+┌─────────────────────────────────────────────┐
+│ Nombre │ Cédula │ Sede │ Horario │ Estado  │
+├─────────────────────────────────────────────┤
+│ ...                                        │
+└─────────────────────────────────────────────┘
+```
+
+Acciones:
+
+* Consultar.
+* Actualizar.
+* Activar/desactivar.
+* Otras operaciones soportadas por la API.
+
+No debe existir:
+
+```text
+Transferir empleado
+Cambiar empresa
+Mover a otra empresa
+```
+
+La Constitución establece expresamente que el cambio de empresa se produce automáticamente durante la importación Excel y no mediante una operación manual del coordinador.
+
+---
+
+# 20. Ficha del empleado
+
+Debe mostrar:
+
+```text
+Empleado
+
+Información personal
+─────────────────────
+Nombre
+Cédula
+Teléfono
+
+Información actual
+─────────────────────
+Empresa
+Dirección
+Barrio
+Sede
+Horario
+Estado
+
+Información de transporte
+──────────────────────────
+Servicios
+Programaciones
+```
+
+La dirección actual del empleado debe distinguirse de las direcciones históricas almacenadas en los servicios.
+
+La Constitución establece que los datos históricos relevantes deben permanecer almacenados en el registro operativo correspondiente.
+
+---
+
+# 21. Conductores
+
+Pantalla:
+
+```text
+Conductores
+
+[ Buscar... ]
+
+┌───────────────────────────────────────────────┐
+│ Conductor │ Estado │ Vehículo │ Empresas     │
+├───────────────────────────────────────────────┤
+│ ...                                           │
+└───────────────────────────────────────────────┘
+```
+
+La ficha puede mostrar:
+
+* Datos del conductor.
+* Estado.
+* Vehículo.
+* Vinculaciones empresariales.
+* Información disponible para operación.
+
+La Constitución establece que el conductor puede trabajar con varias empresas mediante `VinculacionConductorEmpresa`.
+
+---
+
+# 22. Sedes
+
+Pantalla:
+
+```text
+Sedes
+
+[ Buscar... ]                    [ + Nueva sede ]
+
+┌──────────────────────────────────────────────┐
+│ Nombre │ Dirección │ Ciudad │ Estado         │
+├──────────────────────────────────────────────┤
+│ ...                                          │
+└──────────────────────────────────────────────┘
+```
+
+Formulario:
+
+```text
+Nombre
+Dirección
+Ciudad
+Barrio
+Latitud
+Longitud
+Activa
+```
+
+Estos campos corresponden al concepto definido por la Constitución.
+
+---
+
+# 23. Importación Excel
+
+Esta pantalla debe ser especialmente clara.
+
+```text
+┌──────────────────────────────────────────────┐
+│       IMPORTAR PROGRAMACIÓN                  │
+│                                              │
+│       Arrastra tu Excel aquí                 │
+│                o                             │
+│       [ Seleccionar archivo ]                │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+Después:
+
+```text
+Archivo:
+programacion.xlsx
+
+[ Validar ]
+
+Resultado
+
+✓ Registros válidos       120
+⚠ Advertencias              3
+✕ Errores                   2
+
+[ Importar ]
+```
+
+El frontend debe mostrar los resultados que entregue el backend.
+
+No implementar reglas alternativas.
+
+---
+
+# 24. Programaciones
+
+La pantalla permitirá consultar las programaciones disponibles.
+
+Debe mostrar claramente:
+
+* Fecha.
+* Fecha operativa cuando corresponda.
+* Horarios.
+* Empleados.
+* Sedes.
+* Información proporcionada por la API.
+
+La Constitución establece la importancia de diferenciar los conceptos temporales utilizados para agrupar la operación. El frontend debe respetar los nombres y significados del contrato real del backend.
+
+---
+
+# 25. Jornadas
+
+La interfaz debe representar:
+
+```text
+Jornada
+   │
+   └── UnidadOperativa
+           │
+           ├── Servicio
+           ├── Servicio
+           └── Servicio
+```
+
+Debe ser posible consultar:
+
+* Fecha operativa.
+* Unidad operativa.
+* Servicios.
+* Conductor.
+* Estado.
+
+Una jornada puede existir con un único servicio.
+
+---
+
+# 26. Servicios
+
+Lista:
+
+```text
+Servicios
+
+[ Fecha ] [ Tipo ] [ Estado ] [ Buscar ]
+
+┌─────────────────────────────────────────────┐
+│ Hora │ Tipo │ Sede │ Pasajeros │ Estado    │
+├─────────────────────────────────────────────┤
+│ ...                                         │
+└─────────────────────────────────────────────┘
+```
+
+Detalle:
+
+```text
+SERVICIO
+
+Información general
+───────────────────
+Tipo
+Fecha
+Hora programada
+Estado
+
+Ruta
+────
+Sede
+Dirección
+
+Unidad operativa
+────────────────
+Conductor
+Vehículo
+
+Pasajeros
+─────────
+[ Pasajero ]
+[ Pasajero ]
+[ Pasajero ]
+
+Incidencias
+───────────
+...
+```
+
+---
+
+# 27. Asignaciones
+
+Esta pantalla debe ser una herramienta visual para el coordinador.
+
+Debe representar el flujo definido:
+
+```text
+Autoasignar
+     ↓
+Propuesta
+     ↓
+Revisión
+     ↓
+Mover empleado
+     ↓
+Confirmar
+```
+
+La Constitución establece que el algoritmo genera recomendaciones y que el coordinador conserva la decisión final.
+
+Por tanto, la interfaz debe mostrar explícitamente:
+
+```text
+PROPUESTA DEL SISTEMA
+```
+
+y no:
+
+```text
+RUTA DEFINITIVA
+```
+
+hasta que el coordinador confirme.
+
+---
+
+# 28. Vista de planificación
+
+Una posible distribución:
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│ PLANIFICACIÓN                                           │
+│                                                         │
+│ [ Autoasignar ]                 [ Confirmar rutas ]     │
+├───────────────────┬─────────────────────────────────────┤
+│ SERVICIOS         │ DETALLE                             │
+│                   │                                     │
+│ Servicio 1        │ Servicio seleccionado               │
+│ Servicio 2        │                                     │
+│ Servicio 3        │ Pasajeros                           │
+│                   │                                     │
+│                   │ Orden de recogida                   │
+│                   │                                     │
+│                   │ Conductor                           │
+└───────────────────┴─────────────────────────────────────┘
+```
+
+El coordinador debe poder revisar y modificar la propuesta mediante las operaciones que soporte el backend.
+
+---
+
+# 29. Publicaciones
+
+Debe mostrar claramente el estado de publicación.
+
+Por ejemplo:
+
+```text
+Servicio
+
+Estado:
+● Pendiente de publicar
+
+[ Publicar ]
+```
+
+o:
+
+```text
+● Publicado
+```
+
+Los estados reales serán exclusivamente los definidos por la API.
+
+---
+
+# 30. CONDUCTOR
+
+La interfaz del conductor será diferente.
+
+Debe ser:
+
+* Simple.
+* Rápida.
+* Mobile-first.
+* Con botones grandes.
+* Con información estrictamente necesaria.
+
+La Constitución establece que el conductor solamente puede consultar y ejecutar los servicios que le correspondan.
+
+---
+
+# 31. Dashboard del conductor
+
+```text
+┌───────────────────────────────┐
+│ Mi jornada                    │
+├───────────────────────────────┤
+│                               │
+│ PRÓXIMO SERVICIO              │
+│                               │
+│ 23:45                         │
+│ ENTRADA                       │
+│ Sede Centro                   │
+│                               │
+│ 6 pasajeros                   │
+│                               │
+│ [ VER SERVICIO ]              │
+│                               │
+├───────────────────────────────┤
+│ Próximos                      │
+│ Finalizados                   │
+└───────────────────────────────┘
+```
+
+---
+
+# 32. Servicio del conductor
+
+Debe ser una pantalla operacional.
+
+```text
+┌───────────────────────────────┐
+│ ENTRADA                       │
+│ 23:45                         │
+│                               │
+│ Sede Centro                   │
+├───────────────────────────────┤
+│ PASAJEROS                     │
+│                               │
+│ ┌───────────────────────────┐ │
+│ │ Juan Pérez                │ │
+│ │ Carrera XX                │ │
+│ │                           │ │
+│ │ [ Llamar ] [ Chat ]       │ │
+│ │                           │ │
+│ │ Estado: Pendiente         │ │
+│ └───────────────────────────┘ │
+│                               │
+│ [ Registrar llegada ]        │
+│                               │
+│ [ Finalizar servicio ]       │
+└───────────────────────────────┘
+```
+
+---
+
+# 33. Ejecución del servicio
+
+Cuando la API lo soporte, el conductor podrá:
+
+* Confirmar servicio.
+* Indicar que no asistirá.
+* Consultar pasajeros.
+* Llamar.
+* Abrir chat individual.
+* Consultar ubicación.
+* Registrar llegada.
+* Registrar estados.
+* Registrar incidencias.
+* Adjuntar evidencia.
+* Finalizar servicio.
+
+La interfaz debe mostrar únicamente las acciones que el backend permita en el estado actual.
+
+---
+
+# 34. Temporizador
+
+Cuando el backend proporcione información de llegada/temporización:
+
+```text
+LLEGADA
+
+00:12:35
+```
+
+La interfaz debe reflejar el estado real.
+
+No crear un temporizador frontend que pretenda sustituir al estado del backend.
+
+---
+
+# 35. Finalización
+
+Para una entrada, el backend puede exigir determinadas condiciones antes de permitir finalizar.
+
+El frontend debe reflejar esas condiciones.
+
+Ejemplo:
+
+```text
+Finalización
+
+✓ Pasajeros gestionados
+✓ Ubicación registrada
+○ Condición pendiente
+
+[ Finalizar servicio ]
+```
+
+Si el botón está deshabilitado, debe explicarse por qué.
+
+La API continúa siendo la autoridad final.
+
+---
+
+# 36. Pasajeros
+
+Cada pasajero debe aparecer en una tarjeta compacta.
+
+```text
+┌──────────────────────────────┐
+│ Juan Pérez                   │
+│                              │
+│ 📍 Dirección de recogida     │
+│ 🏘 Barrio                    │
+│                              │
+│ Estado                       │
+│ ● Pendiente                  │
+│                              │
+│ [ Llamar ] [ Chat ]          │
+└──────────────────────────────┘
+```
+
+No mostrar información innecesaria de otros empleados.
+
+La Constitución establece que la información de otros empleados debe limitarse a lo estrictamente necesario para ejecutar el servicio.
+
+---
+
+# 37. Comunicación
+
+El sistema tendrá comunicación individual.
+
+```text
+Conductor
+     ↕
+Empleado
+```
+
+No se implementará chat grupal como comportamiento predeterminado.
+
+El usuario únicamente podrá acceder a conversaciones para las cuales tenga autorización.
+
+---
+
+# 38. Incidencias
+
+Cuando el backend lo soporte:
+
+```text
+Incidencias
+
+[ + Registrar incidencia ]
+
+┌─────────────────────────────┐
+│ Tipo                        │
+│ Descripción                 │
+│ Fecha                       │
+│ Estado                      │
+│ Evidencia                   │
+└─────────────────────────────┘
+```
+
+Los tipos y estados deben provenir del backend.
+
+No inventar categorías de negocio.
+
+---
+
+# 39. Evidencias
+
+Cuando exista soporte de API:
+
+```text
+Evidencia
+
+[ Tomar fotografía ]
+[ Seleccionar fotografía ]
+
+Archivo
+████████████████
+
+[ Guardar ]
+```
+
+Debe respetarse el contrato real de la API.
+
+---
+
+# 40. EMPLEADO
+
+La interfaz del empleado será la más sencilla.
+
+La Constitución establece que el empleado solamente debe poder consultar y gestionar su propia información y la información de transporte necesaria para él.
+
+---
+
+# 41. Dashboard del empleado
+
+```text
+┌────────────────────────────────┐
+│ Mi transporte                  │
+├────────────────────────────────┤
+│                                │
+│ PRÓXIMO SERVICIO               │
+│                                │
+│ 05:45                          │
+│ ENTRADA                        │
+│                                │
+│ Dirección de recogida          │
+│ Carrera XX                     │
+│                                │
+│ Sede Centro                    │
+│                                │
+│ [ VER DETALLE ]                │
+└────────────────────────────────┘
+```
+
+---
+
+# 42. Mis servicios
+
+```text
+Mis servicios
+
+PRÓXIMOS
+────────
+Servicio
+Fecha
+Hora
+Tipo
+Estado
+
+HISTÓRICOS
+──────────
+Servicio
+Fecha
+Hora
+Tipo
+Estado
+```
+
+El empleado no podrá consultar servicios de otros empleados.
+
+---
+
+# 43. Detalle del servicio del empleado
+
+Debe mostrar únicamente:
+
+* Fecha.
+* Hora.
+* Tipo.
+* Dirección de recogida.
+* Sede/destino.
+* Estado.
+* Información del conductor cuando esté autorizada.
+* Comunicación cuando esté autorizada.
+
+No debe mostrar información innecesaria de otros pasajeros.
+
+---
+
+# 44. Históricos
+
+El frontend debe respetar la diferencia entre:
+
+```text
+Información actual
+```
+
+y:
+
+```text
+Información histórica del servicio
+```
+
+Por ejemplo:
+
+```text
+Empleado.Direccion
+```
+
+representa la dirección actual.
+
+Mientras:
+
+```text
+ServicioPasajero.DireccionRecogida
+```
+
+representa la dirección utilizada específicamente en ese servicio.
+
+Por tanto, el frontend nunca debe sustituir la dirección histórica por la dirección actual del empleado.
+
+---
+
+# 45. Multiempresa
+
+El frontend debe respetar el aislamiento multiempresa.
+
+La Constitución establece que:
+
+* Toda operación debe respetar el aislamiento.
+* Un coordinador solamente puede acceder a información de su empresa.
+* Conocer un identificador de otra empresa no concede acceso.
+
+Por ello, el frontend:
+
+* Mostrará la empresa correspondiente al contexto autorizado.
+* No ofrecerá selectores arbitrarios de empresa.
+* No permitirá navegar intencionalmente a información de otra empresa.
+* No asumirá que cambiar un `EmpresaId` en una petición concede acceso.
+
+La protección real debe permanecer en backend.
+
+---
+
+# 46. Usuario con múltiples roles
+
+La Constitución permite que una misma persona pueda tener determinados roles en diferentes contextos.
+
+Por tanto, el frontend no debe asumir:
+
+```text
+1 usuario = 1 rol
+```
+
+La interfaz debe basarse en la información real entregada por el backend.
+
+Si el backend permite seleccionar un contexto/rol, la interfaz deberá proporcionar ese mecanismo.
+
+Si el backend no define todavía cómo seleccionar entre múltiples contextos, el frontend no debe inventar la regla.
+
+---
+
+# 47. Rutas protegidas
+
+Conceptualmente:
+
+```text
+                    Ruta
+                      │
+                ¿Autenticado?
+                 /          \
+               No            Sí
+               ↓              ↓
+             Login       ¿Autorizado?
+                           /       \
+                         No         Sí
+                         ↓           ↓
+                       Acceso     Página
+                       denegado
+```
+
+Esto es una protección de experiencia de usuario.
+
+La autorización real continúa siendo responsabilidad del backend.
+
+---
+
+# 48. Cliente API
+
+Debe existir una capa centralizada para comunicarse con el backend.
+
+Conceptualmente:
+
+```text
+Página
+  ↓
+ServicioFrontend
+  ↓
+ClienteAPI
+  ↓
+HTTP
+  ↓
+Backend
+```
+
+Las páginas no deben repetir código HTTP.
+
+El cliente debe centralizar:
+
+* URL base.
+* JWT.
+* Encabezados.
+* Errores.
+* Sesión expirada.
+* Respuestas.
+* Configuración común.
+
+---
+
+# 49. Contrato con Swagger
+
+La implementación debe comenzar revisando el Swagger/OpenAPI real del backend.
+
+Para cada pantalla:
+
+```text
+Pantalla
+   ↓
+Endpoint
+   ↓
+DTO entrada
+   ↓
+DTO respuesta
+   ↓
+Estados HTTP
+   ↓
+Errores
+```
+
+No se deben inventar endpoints.
+
+No se deben inventar DTOs.
+
+No se deben inventar propiedades.
+
+No se deben inventar estados.
+
+La Constitución exige que la API utilice DTOs, validación, autorización, manejo controlado de errores y Swagger/OpenAPI.
+
+---
+
+# 50. Manejo de errores
+
+Los errores deben ser comprensibles.
+
+No mostrar únicamente:
+
+```text
+500 Internal Server Error
+```
+
+Cuando la API proporcione un mensaje funcional, debe mostrarse de forma controlada.
+
+Ejemplo:
+
+```text
+No se pudo asignar el vehículo.
+
+El vehículo seleccionado ya está asignado a otro servicio.
+```
+
+El frontend no debe ocultar silenciosamente errores relevantes.
+
+---
+
+# 51. Estados de carga
+
+Todas las consultas deben tener:
+
+```text
+Cargando...
+```
+
+Estados:
+
+```text
+Cargando
+     ↓
+ ┌───┴────┐
+ ↓        ↓
+Datos    Error
+ ↓
+Sin datos
+```
+
+Ejemplo:
+
+```text
+No hay servicios para la fecha seleccionada.
+```
+
+Esto es preferible a mostrar una pantalla vacía.
+
+---
+
+# 52. Formularios
+
+Todos los formularios deben:
+
+* Tener etiquetas.
+* Identificar campos obligatorios.
+* Validar antes de enviar.
+* Mostrar errores.
+* Deshabilitar el botón durante el envío.
+* Evitar doble envío.
+* Mostrar resultado.
+* Mantener valores cuando ocurra un error recuperable.
+
+Las validaciones frontend son de experiencia de usuario.
+
+La validación definitiva continúa en backend.
+
+---
+
+# 53. Tablas
+
+Las tablas administrativas deben permitir:
+
+* Búsqueda.
+* Filtros cuando sean necesarios.
+* Ordenación cuando el backend lo soporte.
+* Paginación cuando corresponda.
+* Estados visuales.
+* Acciones contextuales.
+
+No colocar demasiadas columnas.
+
+En móvil:
+
+```text
+Tabla
+  ↓
+Tarjetas
+```
+
+o:
+
+```text
+Fila
+  ↓
+Detalle expandible
+```
+
+---
+
+# 54. Estados visuales
+
+No depender únicamente del color.
+
+Ejemplo:
+
+```text
+✓ Activo
+● Publicado
+! Pendiente
+× Error
+```
+
+Los colores pueden complementar los símbolos y textos.
+
+Esto permite una mejor accesibilidad tanto en tema claro como oscuro.
+
+---
+
+# 55. Responsive
+
+La aplicación será responsive desde el principio.
+
+### Coordinador
+
+Principalmente:
+
+* Escritorio.
+* Tablet.
+
+### Administrador
+
+Principalmente:
+
+* Escritorio.
+* Tablet.
+
+### Conductor
+
+Principalmente:
+
+* Teléfono.
+* Tablet.
+
+### Empleado
+
+* Teléfono.
+* Tablet.
+* Escritorio.
+
+La pantalla del conductor debe priorizar velocidad y facilidad de uso.
+
+---
+
+# 56. Diseño móvil del conductor
+
+La interfaz debe utilizar botones suficientemente grandes:
+
+```text
+┌────────────────────────────┐
+│                            │
+│       SERVICIO             │
+│                            │
+│ [      LLAMAR      ]       │
+│                            │
+│ [       CHAT       ]       │
+│                            │
+│ [ REGISTRAR LLEGADA ]      │
+│                            │
+│ [ FINALIZAR SERVICIO ]     │
+│                            │
+└────────────────────────────┘
+```
+
+No colocar acciones críticas como pequeños iconos difíciles de pulsar.
+
+---
+
+# 57. Animaciones generales
+
+Se permitirán animaciones para:
+
+* Entrada de páginas.
+* Apertura del menú.
+* Cambio de tema.
+* Modales.
+* Estados.
+* Carga.
+
+No utilizar animaciones permanentes.
+
+La operación del conductor debe ser prioritaria frente a la decoración.
+
+---
+
+# 58. Componentes de confirmación
+
+Para operaciones relevantes:
+
+```text
+¿Confirmar acción?
+
+Esta acción modificará la planificación.
+
+[ Cancelar ] [ Confirmar ]
+```
+
+No utilizar confirmaciones para acciones triviales.
+
+---
+
+# 59. Regla de no inventar
+
+Esta es una regla crítica.
+
+Si el frontend necesita algo que el backend no proporciona:
+
+```text
+NO:
+    inventar endpoint
+
+NO:
+    inventar DTO
+
+NO:
+    inventar propiedad
+
+NO:
+    inventar estado
+
+NO:
+    inventar regla de negocio
+```
+
+Debe hacerse:
+
+```text
+Identificar problema
+       ↓
+Documentarlo
+       ↓
+Detener esa parte
+       ↓
+Solicitar decisión
+```
+
+Esto sigue directamente la regla de la Constitución para Claude Code.
+
+---
+
+# 60. No duplicar lógica de negocio
+
+No implementar en frontend:
+
+* Algoritmos alternativos de asignación.
+* Cálculos que sustituyan al backend.
+* Reglas de capacidad.
+* Reglas de empresa.
+* Reglas de estados.
+* Reglas de autorización.
+* Reglas de transferencia.
+* Reglas de planificación.
+
+El frontend presenta y ejecuta las operaciones proporcionadas por la API.
+
+---
+
+# 61. Pruebas
+
+Debe existir una estrategia de pruebas frontend para:
+
+```text
+Login
+Cerrar sesión
+Tema claro/oscuro
+Protección de rutas
+Roles
+Formularios
+Validaciones
+Errores
+Estados de carga
+Integración API
+Operaciones críticas
+```
+
+Las pruebas no deben considerar que ocultar un botón equivale a seguridad.
+
+---
+
+# 62. Trazabilidad
+
+Cada funcionalidad frontend debe poder relacionarse con:
+
+```text
+Requisito
+    ↓
+Especificación
+    ↓
+Plan
+    ↓
+Tarea
+    ↓
+Página/componente
+    ↓
+Endpoint
+    ↓
+Prueba
+```
+
+Esto mantiene el principio de trazabilidad definido por la Constitución.
+
+---
+
+# 63. Definición de terminado
+
+Una funcionalidad frontend no estará terminada únicamente porque se vea correctamente.
+
+Debe verificarse:
+
+* Diseño.
+* Responsive.
+* Tema claro.
+* Tema oscuro.
+* Integración API.
+* Autenticación.
+* Autorización.
+* Manejo de errores.
+* Validaciones.
+* Estados de carga.
+* Pruebas.
+* No regresión.
+
+Esto mantiene el principio de definición de terminado establecido por la Constitución.
+
+---
+
+# 64. Pantallas mínimas
+
+## ADMINISTRADOR_PLATAFORMA
+
+```text
+Login
+Dashboard
+Empresas
+Crear empresa
+Detalle empresa
+Configuración global
+Mi cuenta
+Cerrar sesión
+```
+
+## COORDINADOR
+
+```text
+Login
+Dashboard
+Empleados
+Detalle empleado
+Conductores
+Detalle conductor
+Sedes
+Detalle sede
+Importación Excel
+Programaciones
+Jornadas
+Servicios
+Detalle servicio
+Asignaciones
+Planificación
+Publicaciones
+Incidencias
+Mi cuenta
+Cerrar sesión
+```
+
+## CONDUCTOR
+
+```text
+Login
+Mi jornada
+Mis servicios
+Detalle servicio
+Pasajeros
+Ejecución del servicio
+Incidencias
+Evidencias
+Chat individual
+Mi cuenta
+Cerrar sesión
+```
+
+## EMPLEADO
+
+```text
+Login
+Mi transporte
+Mis servicios
+Detalle servicio
+Chat individual
+Mi cuenta
+Cerrar sesión
+```
+
+La lista definitiva dependerá de los endpoints reales disponibles en el backend.
+
+---
+
+# 65. Criterios de aceptación globales
+
+El frontend se considerará terminado cuando:
+
+* El login funcione contra la API real.
+* La autenticación JWT funcione según el contrato real.
+* Las rutas privadas estén protegidas.
+* El cierre de sesión funcione.
+* El tema claro funcione.
+* El tema oscuro funcione.
+* El selector de tema se conserve.
+* Cada rol tenga su propia experiencia.
+* El administrador no tenga interfaz de operación empresarial.
+* El coordinador pueda operar su empresa.
+* El conductor pueda ejecutar sus servicios.
+* El empleado pueda consultar su transporte.
+* El coordinador pueda utilizar la importación Excel.
+* El coordinador pueda revisar las propuestas de planificación.
+* El coordinador conserve la decisión final sobre las propuestas.
+* El conductor tenga una interfaz mobile-first.
+* El empleado tenga una interfaz sencilla.
+* Las conversaciones sean individuales.
+* Los históricos no sean reemplazados por información actual.
+* El frontend respete el aislamiento multiempresa.
+* Los errores del backend se muestren correctamente.
+* No existan endpoints inventados.
+* No existan DTOs inventados.
+* No existan reglas de negocio inventadas.
+* La aplicación sea responsive.
+* La aplicación funcione correctamente en ambos temas.
+* Las pruebas relevantes pasen.
+* No existan regresiones.
+
+---
+
+# 66. Principio final
+
+El frontend debe ser:
+
+```text
+Moderno
+    +
+Agradable
+    +
+Rápido
+    +
+Claro
+    +
+Responsive
+    +
+Seguro
+```
+
+pero siempre subordinado a:
+
+```text
+Constitución
+      ↓
+Backend
+      ↓
+API
+      ↓
+Frontend
+```
+
+El frontend **no debe decidir qué está permitido**.
+
+El frontend debe proporcionar la mejor experiencia posible para ejecutar aquello que el backend realmente permite.
+
+La solución visualmente más atractiva no será necesariamente la más compleja.
+
+La solución preferida será aquella que consiga una interfaz profesional y moderna manteniendo:
+
+```text
+Claridad
+    ↓
+Correctitud
+    ↓
+Seguridad
+    ↓
+Mantenibilidad
+    ↓
+Escalabilidad
+```
+
+Fin de la especificación.

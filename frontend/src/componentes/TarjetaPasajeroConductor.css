@@ -1,0 +1,187 @@
+.tarjeta-pasajero-conductor {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  list-style: none;
+}
+
+/* El pasajero ya confirmó su asistencia: toda la tarjeta se pinta de verde, visible aunque esté colapsada. */
+.tarjeta-pasajero-conductor--confirmado {
+  border-color: var(--exito-border);
+  background: var(--exito-bg);
+}
+
+.tarjeta-pasajero-conductor p {
+  margin: 6px 0 0;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.tarjeta-pasajero-conductor__cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-h);
+  font-size: 18px;
+}
+
+.tarjeta-pasajero-conductor__resumen {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tarjeta-pasajero-conductor__resumen-direccion {
+  display: block;
+  margin-top: 2px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tarjeta-pasajero-conductor__orden {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__estado {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tarjeta-pasajero-conductor__contacto,
+.tarjeta-pasajero-conductor__acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.tarjeta-pasajero-conductor__boton,
+.tarjeta-pasajero-conductor__accion {
+  min-height: 52px;
+  padding: 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 12px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarjeta-pasajero-conductor__boton-chat {
+  position: relative;
+}
+
+.tarjeta-pasajero-conductor__insignia {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: var(--error);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.tarjeta-pasajero-conductor__accion {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+}
+
+.tarjeta-pasajero-conductor__accion--secundaria {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.tarjeta-pasajero-conductor__accion:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tarjeta-pasajero-conductor__acciones > :first-child:nth-last-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.tarjeta-pasajero-conductor__datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin: 10px 0 0;
+}
+
+.tarjeta-pasajero-conductor__datos dt {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tarjeta-pasajero-conductor__datos dd {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.tarjeta-pasajero-conductor__datos a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.tarjeta-pasajero-conductor__mover {
+  margin-right: 4px;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__letrero {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__letrero--verde {
+  border: 1px solid var(--exito-border);
+  background: var(--exito-bg);
+  color: var(--exito);
+}
+
+.tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__letrero--rojo {
+  border: 1px solid var(--error-border);
+  background: var(--error-bg);
+  color: var(--error);
+}

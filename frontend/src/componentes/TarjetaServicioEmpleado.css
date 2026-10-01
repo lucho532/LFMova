@@ -1,0 +1,135 @@
+.tarjeta-servicio-empleado {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  list-style: none;
+}
+
+/* Ya confirmaste tu asistencia: toda la tarjeta se pinta de verde. */
+.tarjeta-servicio-empleado--confirmado {
+  border-color: var(--exito-border);
+  background: var(--exito-bg);
+}
+
+.tarjeta-servicio-empleado p {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.tarjeta-servicio-empleado__cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-h);
+  font-size: 17px;
+}
+
+.tarjeta-servicio-empleado__botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.tarjeta-servicio-empleado__boton {
+  min-height: 48px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tarjeta-servicio-empleado__boton:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tarjeta-servicio-empleado__boton-chat {
+  position: relative;
+}
+
+.tarjeta-servicio-empleado__insignia {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: var(--error);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.tarjeta-servicio-empleado__boton--confirmado {
+  border-color: #15803d;
+  background: #15803d;
+  color: #fff;
+}
+
+.tarjeta-servicio-empleado__boton--confirmado:hover:not(:disabled) {
+  color: #fff;
+}
+
+.tarjeta-servicio-empleado__boton--no-asistira {
+  border-color: #b91c1c;
+  background: #b91c1c;
+  color: #fff;
+}
+
+.tarjeta-servicio-empleado__boton--no-asistira:hover:not(:disabled) {
+  color: #fff;
+}
+
+.tarjeta-servicio-empleado__boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tarjeta-servicio-empleado__conductor {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent-border);
+  border-radius: 12px;
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.tarjeta-servicio-empleado__conductor-etiqueta {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tarjeta-servicio-empleado__conductor a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.tarjeta-servicio-empleado__aviso-chat {
+  color: var(--text);
+  font-size: 13px;
+}
+
+.tarjeta-servicio-empleado p.tarjeta-servicio-empleado__tiempos {
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.tarjeta-servicio-empleado__tiempos b {
+  color: var(--accent);
+}

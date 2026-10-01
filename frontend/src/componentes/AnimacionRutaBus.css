@@ -1,0 +1,55 @@
+.animacion-ruta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0 0 32px;
+}
+
+.animacion-ruta__casa,
+.animacion-ruta__edificio {
+  flex: 0 0 auto;
+}
+
+.animacion-ruta__carretera {
+  position: relative;
+  flex: 1 1 auto;
+  height: 28px;
+  border-top: 2px dashed var(--border);
+}
+
+.animacion-ruta__bus {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+  animation: recorrer-ruta 3.2s ease-in-out infinite;
+}
+
+@keyframes recorrer-ruta {
+  0% {
+    left: 0%;
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animacion-ruta__bus {
+    animation: none;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+}

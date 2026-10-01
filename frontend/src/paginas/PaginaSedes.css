@@ -1,0 +1,108 @@
+.pagina-sedes {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.pagina-sedes__encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.pagina-sedes__encabezado h1 {
+  margin: 0 0 6px;
+  text-align: left;
+}
+
+.pagina-sedes__subtitulo {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.boton-primario-enlace {
+  display: inline-block;
+  padding: 11px 18px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.boton-primario-enlace:hover {
+  opacity: 0.9;
+}
+
+.pagina-sedes__error {
+  margin: 0 0 24px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.pagina-sedes__estado {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.pagina-sedes__enlace {
+  color: var(--text-h);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pagina-sedes__enlace:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.pagina-sedes__tabla-envoltorio {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.pagina-sedes__tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pagina-sedes__tabla th,
+.pagina-sedes__tabla td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.pagina-sedes__tabla thead th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  background: var(--code-bg);
+}
+
+.pagina-sedes__tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.pagina-sedes__celda-accion {
+  width: 1%;
+  white-space: nowrap;
+}

@@ -1,0 +1,149 @@
+/* Dos fuentes para armar rutas, una al lado de la otra: subir un Excel o pegar filas copiadas de uno. El recuadro punteado de cada una empieza justo debajo del título, sin nada en medio, para que las dos cajas coincidan visualmente a la misma altura; la fecha de "Cargar Excel" va embebida en su propio título (no en un campo aparte que desalinee las cajas). */
+.pagina-importar-excel__fuentes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 860px) {
+  .pagina-importar-excel__fuentes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pagina-importar-excel__fuente {
+  display: flex;
+  flex-direction: column;
+}
+
+.pagina-importar-excel__fuente h2 {
+  margin-top: 0;
+}
+
+.pagina-importar-excel__fuente .zona-arrastre {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Campo de fecha embebido en "Cargar Excel para el día …": se ve como parte del título, no como un campo
+   de formulario aparte, pero sigue siendo el mismo <input type="date"> nativo y editable. */
+.pagina-importar-excel__fecha-excel-inline {
+  border: none;
+  border-bottom: 2px solid var(--accent-border);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.pagina-importar-excel__fecha-excel-inline:hover,
+.pagina-importar-excel__fecha-excel-inline:focus-visible {
+  border-bottom-color: var(--accent);
+  outline: none;
+}
+
+.pagina-importar-excel__fecha-excel-inline::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.programacion-acciones {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0 24px;
+}
+
+.programacion-acciones__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.programacion-acciones__nota {
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* Menú "Más acciones" (deshacer reparto / eliminar todo), debajo del botón de repartir. */
+.programacion-acciones__menu {
+  position: relative;
+  width: fit-content;
+}
+
+.programacion-acciones__menu-lista {
+  position: absolute;
+  z-index: 5;
+  top: 100%;
+  left: 0;
+  display: grid;
+  gap: 2px;
+  min-width: 260px;
+  margin-top: 4px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.programacion-acciones__menu-lista button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--text-h);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.programacion-acciones__menu-lista button:hover:not(:disabled) {
+  background: var(--accent-bg);
+}
+
+.programacion-acciones__menu-lista button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.programacion-acciones__avisos {
+  margin-top: 8px;
+}
+
+.programacion-acciones__avisos summary {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.programacion-acciones__avisos p.programacion-acciones__nota {
+  margin: 4px 0;
+  padding-left: 8px;
+}
+
+/* Botón "Enviar Rutas": la acción más importante de la pantalla, grande, a la izquierda y justo debajo del
+   título (el encabezado ya deja su propio espacio abajo, por eso sube un poco). */
+.pagina-importar-excel__enviar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: -12px 0 28px;
+}
+
+.pagina-importar-excel__boton-enviar {
+  padding: 16px 28px;
+  border-radius: 12px;
+  font-size: 16px;
+  box-shadow: var(--shadow);
+}
+
+.pagina-importar-excel__enviar-nota {
+  color: var(--text);
+  font-size: 12px;
+}

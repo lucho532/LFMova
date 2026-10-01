@@ -1,0 +1,15 @@
+<Project>
+
+  <!--
+    Convenciones comunes a todos los proyectos de la solución (src y tests),
+    según docs/sdd/03-architecture/plan.md y AGENTS.md.
+    Cada proyecto puede añadir configuración adicional propia en su .csproj.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+</Project>

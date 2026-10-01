@@ -1,0 +1,41 @@
+.selector-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.selector-formulario label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.selector-formulario select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.selector-formulario select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+/* Colorea cada opción según disponibilidad (ver OpcionSelector.disponible): el navegador limita cuánto
+   se puede estilizar un <option>, pero el color de fondo/texto sí se respeta en los navegadores usados. */
+.selector-formulario__opcion--disponible {
+  background-color: var(--exito-bg);
+  color: var(--exito);
+}
+
+.selector-formulario__opcion--ocupada {
+  background-color: var(--error-bg);
+  color: var(--error);
+}

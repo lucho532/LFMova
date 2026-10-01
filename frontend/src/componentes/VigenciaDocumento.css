@@ -1,0 +1,13 @@
+.vigencia-documento {
+  white-space: nowrap;
+}
+
+.vigencia-documento--vencido {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.vigencia-documento--proximo {
+  color: var(--accent);
+  font-weight: 600;
+}

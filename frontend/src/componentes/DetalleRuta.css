@@ -1,0 +1,151 @@
+.detalle-ruta {
+  width: min(92vw, 640px);
+  max-height: 86vh;
+  padding: 24px 26px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.detalle-ruta::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.detalle-ruta__encabezado h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.detalle-ruta__sub {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.detalle-ruta__ejecucion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.detalle-ruta__ejecucion a {
+  color: var(--accent);
+}
+
+.detalle-ruta__sin-ubicacion {
+  color: var(--text);
+  font-style: italic;
+}
+
+.detalle-ruta__hora-estado {
+  color: var(--text);
+  font-weight: 400;
+}
+
+.detalle-ruta__lista {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.detalle-ruta__pasajero {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.detalle-ruta__pasajero--resaltado {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.detalle-ruta__fila {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.detalle-ruta__estado {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.detalle-ruta__boton-incidencias {
+  margin-top: 8px;
+  border: none;
+  background: transparent;
+  color: var(--advertencia);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.detalle-ruta__incidencias {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 10px;
+  border-left: 3px solid var(--advertencia-border);
+  background: var(--advertencia-bg);
+  border-radius: 0 8px 8px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.detalle-ruta__incidencia {
+  font-size: 13px;
+  color: var(--text-h);
+  display: grid;
+  gap: 6px;
+}
+
+.detalle-ruta__descripcion {
+  margin: 0;
+  color: var(--text);
+}
+
+.detalle-ruta__foto img {
+  max-width: 220px;
+  border-radius: 8px;
+  display: block;
+}
+
+.detalle-ruta__foto button {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 13px;
+}
+
+.detalle-ruta__acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.detalle-ruta__cerrar {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 14px;
+}

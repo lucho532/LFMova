@@ -1,0 +1,90 @@
+.rutas-empresa__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rutas-empresa__pestana {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rutas-empresa__pestana:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.rutas-empresa__pestana--activa {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.rutas-empresa__pestana--activa:hover {
+  color: #fff;
+}
+
+.rutas-empresa__fechas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.rutas-empresa__total {
+  margin: 0 0 0 auto;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.rutas-empresa__fila {
+  cursor: pointer;
+}
+
+.rutas-empresa__fila:hover {
+  background: var(--accent-bg);
+}
+
+.rutas-empresa__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.rutas-empresa__sin-unidad {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.rutas-empresa__celda-eliminar {
+  width: 40px;
+  text-align: right;
+}
+
+.rutas-empresa__boton-eliminar {
+  border: none;
+  background: transparent;
+  color: var(--error);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.rutas-empresa__boton-eliminar:hover {
+  opacity: 0.7;
+}
+
+.rutas-empresa__ayuda {
+  margin-top: 14px;
+  color: var(--text);
+  font-size: 13px;
+}
