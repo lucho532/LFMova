@@ -11,11 +11,6 @@ export function crearMacroZona(empresaId: number, datos: DatosMacroZona, token: 
   return solicitarApi<MacroZona>(`/api/empresas/${empresaId}/macro-zonas`, { metodo: 'POST', cuerpo: datos, token })
 }
 
-/** Consume PUT /api/empresas/{empresaId}/macro-zonas/{macroZonaId}. Requiere rol COORDINADOR de esa empresa. */
-export function actualizarMacroZona(empresaId: number, macroZonaId: number, datos: DatosMacroZona, token: string): Promise<void> {
-  return solicitarApi<void>(`/api/empresas/${empresaId}/macro-zonas/${macroZonaId}`, { metodo: 'PUT', cuerpo: datos, token })
-}
-
 /** Consume POST /api/empresas/{empresaId}/macro-zonas/{macroZonaId}/activar. Requiere rol COORDINADOR de esa empresa. */
 export function activarMacroZona(empresaId: number, macroZonaId: number, token: string): Promise<void> {
   return solicitarApi<void>(`/api/empresas/${empresaId}/macro-zonas/${macroZonaId}/activar`, { metodo: 'POST', token })

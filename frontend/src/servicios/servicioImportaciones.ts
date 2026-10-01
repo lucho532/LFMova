@@ -1,5 +1,4 @@
 import type {
-  DatosAgregarEmpleadoManual,
   DatosRutaPegada,
   DatosRutaVacia,
   PlantillaColumnasPegado,
@@ -55,15 +54,6 @@ export function crearRutaVacia(empresaId: number, datos: DatosRutaVacia, token: 
  */
 export function crearRutaPegada(empresaId: number, datos: DatosRutaPegada, token: string): Promise<ResultadoImportacion> {
   return solicitarApi<ResultadoImportacion>(`/api/empresas/${empresaId}/importaciones/ruta-pegada`, { metodo: 'POST', cuerpo: datos, token })
-}
-
-/**
- * Consume POST /api/empresas/{empresaId}/importaciones/empleado-manual: agrega a mano un pasajero de
- * última hora que no venía en el Excel a una ruta ya creada. Si esa ruta ya tiene conductor asignado, se
- * le notifica que su ruta cambió.
- */
-export function agregarEmpleadoManual(empresaId: number, datos: DatosAgregarEmpleadoManual, token: string): Promise<ResultadoImportacion> {
-  return solicitarApi<ResultadoImportacion>(`/api/empresas/${empresaId}/importaciones/empleado-manual`, { metodo: 'POST', cuerpo: datos, token })
 }
 
 /**

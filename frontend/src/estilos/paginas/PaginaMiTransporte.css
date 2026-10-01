@@ -88,20 +88,6 @@
   list-style: none;
 }
 
-.pagina-mi-transporte__servicio {
-  padding: 16px 18px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg);
-  box-shadow: var(--shadow);
-}
-
-.pagina-mi-transporte__detalle {
-  margin-top: 4px;
-  color: var(--text);
-  font-size: 14px;
-}
-
 .pagina-mi-transporte__pestanas {
   display: flex;
   gap: 8px;

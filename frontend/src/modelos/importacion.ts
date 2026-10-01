@@ -70,16 +70,6 @@ export interface DatosRutaVacia {
   unidadOperativaId: number
 }
 
-/** Refleja AgregarEmpleadoManualDto (TransportApp.Application): agrega a mano un pasajero de última hora a una ruta ya creada. */
-export interface DatosAgregarEmpleadoManual {
-  servicioId: number
-  cedula: string
-  nombreCompleto: string
-  celular: string
-  direccion: string
-  barrio: string
-}
-
 /** Un pasajero de una fila pegada, ya separado en sus campos; refleja FilaPasajeroPegadoDto (TransportApp.Application). */
 export interface FilaPasajeroPegado {
   cedula: string

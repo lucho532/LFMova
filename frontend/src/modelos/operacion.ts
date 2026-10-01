@@ -21,13 +21,6 @@ export interface DatosProgramacion {
   barrioRecogida: string
 }
 
-/** Refleja JornadaDto (TransportApp.Application). */
-export interface Jornada {
-  jornadaId: number
-  empresaId: number
-  fechaOperativa: string
-}
-
 /** Refleja DeshacerRepartoDto (TransportApp.Application). */
 export interface DeshacerReparto {
   serviciosEliminados: number
@@ -82,13 +75,3 @@ export interface ServicioPasajero {
   barrioEmpleado: string
 }
 
-/** Refleja PropuestaPlanificacionDto (TransportApp.Application). */
-export interface PropuestaPlanificacion {
-  servicioId: number
-  ordenPropuesto: { servicioPasajeroId: number; empleadoId: number; orden: number; distanciaALaSedeKm: number | null }[]
-  horaLimiteLlegadaSede: string | null
-  horaSugeridaInicioRecogida: string | null
-  distanciaDesdeServicioAnteriorKm: number | null
-  distanciaHaciaServicioSiguienteKm: number | null
-  advertencias: string[]
-}

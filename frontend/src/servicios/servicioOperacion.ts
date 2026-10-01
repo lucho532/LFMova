@@ -2,9 +2,7 @@ import type {
   DatosProgramacion,
   DeshacerReparto,
   EliminarRastro,
-  Jornada,
   Programacion,
-  PropuestaPlanificacion,
   Servicio,
   ServicioPasajero,
 } from '../modelos/operacion'
@@ -37,11 +35,6 @@ export function actualizarProgramacion(empresaId: number, id: number, datos: Dat
 }
 
 // --- Jornadas ---
-
-/** Consume GET /api/empresas/{empresaId}/jornadas. */
-export function obtenerJornadas(empresaId: number, token: string): Promise<Jornada[]> {
-  return solicitarApi<Jornada[]>(`${base(empresaId)}/jornadas`, { token })
-}
 
 /** Consume POST /api/empresas/{empresaId}/jornadas/{jornadaId}/publicar. */
 export function publicarJornada(empresaId: number, jornadaId: number, token: string): Promise<void> {
@@ -76,29 +69,14 @@ export function obtenerServiciosPendientes(empresaId: number, desde: string, tok
   return solicitarApi<Servicio[]>(`${base(empresaId)}/jornadas/servicios-pendientes?desde=${desde}`, { token })
 }
 
-/** Consume GET .../jornadas/{jornadaId}/servicios. */
-export function obtenerServicios(empresaId: number, jornadaId: number, token: string): Promise<Servicio[]> {
-  return solicitarApi<Servicio[]>(`${base(empresaId)}/jornadas/${jornadaId}/servicios`, { token })
-}
-
 /** Consume GET .../jornadas/{jornadaId}/servicios/{servicioId}: un servicio concreto, con sus horas y ubicación reales. */
 export function obtenerServicio(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<Servicio> {
   return solicitarApi<Servicio>(rutaServicio(empresaId, jornadaId, servicioId), { token })
 }
 
-/** Consume POST .../servicios/{servicioId}/cambiar-estado. */
-export function cambiarEstadoServicio(empresaId: number, jornadaId: number, servicioId: number, nuevoEstado: number, token: string): Promise<void> {
-  return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/cambiar-estado`, { metodo: 'POST', cuerpo: { nuevoEstado }, token })
-}
-
 /** Consume POST .../servicios/{servicioId}/asignar-unidad. */
 export function asignarUnidad(empresaId: number, jornadaId: number, servicioId: number, unidadOperativaId: number, token: string): Promise<void> {
   return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/asignar-unidad`, { metodo: 'POST', cuerpo: { unidadOperativaId }, token })
-}
-
-/** Consume POST .../servicios/{servicioId}/retirar-unidad. */
-export function retirarUnidad(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<void> {
-  return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/retirar-unidad`, { metodo: 'POST', token })
 }
 
 /**
@@ -115,11 +93,6 @@ export function despublicarServicio(empresaId: number, jornadaId: number, servic
  */
 export function eliminarServicio(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<void> {
   return solicitarApi<void>(rutaServicio(empresaId, jornadaId, servicioId), { metodo: 'DELETE', token })
-}
-
-/** Consume GET .../servicios/{servicioId}/propuesta-planificacion: solo una recomendación de lectura. */
-export function obtenerPropuestaPlanificacion(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<PropuestaPlanificacion> {
-  return solicitarApi<PropuestaPlanificacion>(`${rutaServicio(empresaId, jornadaId, servicioId)}/propuesta-planificacion`, { token })
 }
 
 // --- Pasajeros del servicio ---

@@ -174,12 +174,6 @@
   font-weight: 700;
 }
 
-.tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__letrero--verde {
-  border: 1px solid var(--exito-border);
-  background: var(--exito-bg);
-  color: var(--exito);
-}
-
 .tarjeta-pasajero-conductor p.tarjeta-pasajero-conductor__letrero--rojo {
   border: 1px solid var(--error-border);
   background: var(--error-bg);
