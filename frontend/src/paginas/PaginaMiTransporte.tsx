@@ -15,7 +15,7 @@ import {
 } from '../servicios/servicioEmpleadoPropio'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
 import { EstadoServicio } from '../modelos/enumeraciones'
-import './PaginaMiTransporte.css'
+import '../estilos/paginas/PaginaMiTransporte.css'
 
 /**
  * Pantalla inicial de cualquier persona que no es administradora ni

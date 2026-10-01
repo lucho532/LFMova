@@ -1,5 +1,5 @@
 import { useTema } from '../contexto/useTema'
-import './BotonTema.css'
+import '../estilos/componentes/BotonTema.css'
 
 /**
  * Botón fijo en la esquina superior derecha para alternar entre tema claro y

@@ -1,5 +1,5 @@
 import { useAutenticacion } from '../contexto/useAutenticacion'
-import './BotonCerrarSesion.css'
+import '../estilos/componentes/BotonCerrarSesion.css'
 
 /**
  * Botón fijo, junto al de tema, para cerrar la sesión actual. Solo se

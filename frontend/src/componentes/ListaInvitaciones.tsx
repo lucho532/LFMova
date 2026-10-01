@@ -9,7 +9,7 @@ import { BotonSecundario } from './BotonSecundario'
 import { MensajeAlerta } from './MensajeAlerta'
 import { PanelCambiarRolPersona } from './PanelCambiarRolPersona'
 import { TablaDatos } from './TablaDatos'
-import './ListaInvitaciones.css'
+import '../estilos/componentes/ListaInvitaciones.css'
 
 interface PropiedadesListaInvitaciones {
   empresaId: number

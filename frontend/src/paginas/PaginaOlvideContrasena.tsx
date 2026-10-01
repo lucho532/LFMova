@@ -5,7 +5,7 @@ import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { TarjetaAutenticacion } from '../componentes/TarjetaAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { solicitarRecuperacion } from '../servicios/servicioAutenticacion'
-import './PaginaOlvideContrasena.css'
+import '../estilos/paginas/PaginaOlvideContrasena.css'
 
 /**
  * Solicita el enlace para restablecer la contraseña. La API responde igual

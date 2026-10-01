@@ -1,5 +1,5 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import './App.css'
+import './estilos/App.css'
 import { BarraLateral } from './componentes/BarraLateral'
 import { BarraSuperior } from './componentes/BarraSuperior'
 import { ProveedorAutenticacion } from './contexto/ContextoAutenticacion'

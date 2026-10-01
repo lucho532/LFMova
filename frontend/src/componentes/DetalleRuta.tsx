@@ -3,7 +3,7 @@ import { EstadoPasajero, NOMBRES_ESTADO_PASAJERO, NOMBRES_ESTADO_SERVICIO, NOMBR
 import type { Servicio, ServicioPasajero } from '../modelos/operacion'
 import { obtenerIncidenciasRuta, obtenerPasajeros, obtenerServicio, obtenerUrlFotoEvidenciaRuta, type IncidenciaRuta } from '../servicios/servicioOperacion'
 import { MensajeAlerta } from './MensajeAlerta'
-import './DetalleRuta.css'
+import '../estilos/componentes/DetalleRuta.css'
 
 /** Mismo orden que el enum TipoIncidencia del backend (ver HerramientasPasajero.tsx). */
 const TIPOS_INCIDENCIA = [

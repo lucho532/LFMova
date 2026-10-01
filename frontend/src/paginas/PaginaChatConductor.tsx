@@ -10,7 +10,7 @@ import { ErrorApi } from '../servicios/clienteHttp'
 import { enviarMensaje, obtenerMensajes } from '../servicios/servicioConductorPropio'
 import { obtenerPasajeros } from '../servicios/servicioOperacion'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
-import './PaginaChat.css'
+import '../estilos/paginas/PaginaChat.css'
 
 /**
  * Chat del conductor con un pasajero (a donde lleva una notificación): datos

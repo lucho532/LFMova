@@ -8,7 +8,7 @@ import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servici
 import { CronometroEspera } from './CronometroEspera'
 import { HerramientasPasajero } from './HerramientasPasajero'
 import { ModalConfirmacion } from './ModalConfirmacion'
-import './TarjetaPasajeroConductor.css'
+import '../estilos/componentes/TarjetaPasajeroConductor.css'
 
 /** El enlace de una notificación de chat termina en el servicioPasajeroId de esa conversación. */
 function esMensajeDelPasajero(enlace: string | null, servicioPasajeroId: number): boolean {

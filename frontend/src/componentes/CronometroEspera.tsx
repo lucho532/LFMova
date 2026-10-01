@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './CronometroEspera.css'
+import '../estilos/componentes/CronometroEspera.css'
 
 /** Tiempo máximo de espera orientativo al pasajero (spec.md §25: aproximadamente 2 minutos). */
 export const ESPERA_MAXIMA_SEGUNDOS = 120

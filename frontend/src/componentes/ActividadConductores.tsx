@@ -11,7 +11,7 @@ import { BotonSecundario } from './BotonSecundario'
 import { MensajeAlerta } from './MensajeAlerta'
 import { ModalConfirmacion } from './ModalConfirmacion'
 import { VigenciaDocumento } from './VigenciaDocumento'
-import './ActividadConductores.css'
+import '../estilos/componentes/ActividadConductores.css'
 
 interface PropiedadesActividadConductores {
   empresaId: number

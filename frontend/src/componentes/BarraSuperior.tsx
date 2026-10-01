@@ -6,7 +6,7 @@ import { etiquetaDelRolPrincipal, obtenerNombreDelToken, obtenerRolesDelToken } 
 import { BotonCerrarSesion } from './BotonCerrarSesion'
 import { CampanaNotificaciones } from './CampanaNotificaciones'
 import { BotonTema } from './BotonTema'
-import './BarraSuperior.css'
+import '../estilos/componentes/BarraSuperior.css'
 
 /**
  * Barra superior fija de toda la aplicación: marca a la izquierda; a la

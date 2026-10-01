@@ -7,7 +7,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { DetalleInvitacion } from '../modelos/invitacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { aceptarInvitacion, obtenerDetalleInvitacion } from '../servicios/servicioInvitaciones'
-import './PaginaInvitacion.css'
+import '../estilos/paginas/PaginaInvitacion.css'
 
 /**
  * Destino del enlace de invitación a una empresa (`?token=`). Muestra quién

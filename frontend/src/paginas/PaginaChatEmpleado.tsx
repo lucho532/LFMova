@@ -7,7 +7,7 @@ import type { ServicioDelEmpleado } from '../modelos/servicioEmpleado'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { enviarMensajeAlConductor, obtenerMensajesConConductor, obtenerMisServicios } from '../servicios/servicioEmpleadoPropio'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
-import './PaginaChat.css'
+import '../estilos/paginas/PaginaChat.css'
 
 /** Chat del empleado con su conductor (a donde lleva una notificación de mensaje). */
 export function PaginaChatEmpleado() {

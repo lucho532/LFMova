@@ -9,7 +9,7 @@ import type { UnidadDeTrabajo } from '../modelos/conductor'
 import type { Servicio } from '../modelos/operacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerMisServiciosConductor, obtenerMisUnidades } from '../servicios/servicioConductorPropio'
-import './PaginaMiJornada.css'
+import '../estilos/paginas/PaginaMiJornada.css'
 
 const ESTADOS_CERRADOS: number[] = [EstadoServicio.FINALIZADO, EstadoServicio.CANCELADO]
 

@@ -7,7 +7,7 @@ import type { DatosConfirmacion } from '../servicios/servicioEmpleadoPropio'
 import { VentanaChat } from './VentanaChat'
 import { CronometroEspera } from './CronometroEspera'
 import { MensajeAlerta } from './MensajeAlerta'
-import './TarjetaServicioEmpleado.css'
+import '../estilos/componentes/TarjetaServicioEmpleado.css'
 
 /** Las horas reales llegan en UTC; se muestran en la hora local del dispositivo. */
 function horaLocal(iso: string | null): string {

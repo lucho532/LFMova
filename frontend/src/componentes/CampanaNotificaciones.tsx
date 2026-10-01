@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { useNotificaciones } from '../contexto/useNotificaciones'
 import type { Notificacion } from '../modelos/notificacion'
-import './CampanaNotificaciones.css'
+import '../estilos/componentes/CampanaNotificaciones.css'
 
 /**
  * Confirmaciones y llegada del conductor en verde; avisos de que no asistirá y de ruta no iniciada en rojo;

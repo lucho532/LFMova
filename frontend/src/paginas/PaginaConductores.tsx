@@ -10,7 +10,7 @@ import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { CrearVehiculoDatos } from '../modelos/conductor'
 import { ErrorApi } from '../servicios/clienteHttp'
-import './PaginaConductores.css'
+import '../estilos/paginas/PaginaConductores.css'
 import {
   crearConductor,
   vincularConductor,

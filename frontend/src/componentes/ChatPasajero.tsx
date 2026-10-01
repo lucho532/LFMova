@@ -5,7 +5,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
 import { RespuestasRapidas } from './RespuestasRapidas'
 import { MensajeAlerta } from './MensajeAlerta'
-import './ChatPasajero.css'
+import '../estilos/componentes/ChatPasajero.css'
 
 interface PropiedadesChatPasajero {
   miUsuarioId: number | null

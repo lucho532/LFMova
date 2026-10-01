@@ -8,7 +8,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Sede } from '../modelos/sede'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { activarSede, actualizarSede, desactivarSede, obtenerSede } from '../servicios/servicioSedes'
-import './PaginaDetalleSede.css'
+import '../estilos/paginas/PaginaDetalleSede.css'
 
 /**
  * Muestra y permite editar los datos de una sede, y activarla o

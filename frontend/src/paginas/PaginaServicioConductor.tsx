@@ -28,7 +28,7 @@ import {
 } from '../servicios/servicioConductorPropio'
 import { obtenerPasajeros } from '../servicios/servicioOperacion'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
-import './PaginaServicioConductor.css'
+import '../estilos/paginas/PaginaServicioConductor.css'
 
 /** Ya no requiere acción del conductor: fue recogido, no se pudo recoger, avisó que no asistirá o se canceló. */
 const ESTADOS_GESTIONADOS: number[] = [EstadoPasajero.RECOGIDO, EstadoPasajero.NO_RECOGIDO, EstadoPasajero.NO_ASISTIRA, EstadoPasajero.CANCELADO]

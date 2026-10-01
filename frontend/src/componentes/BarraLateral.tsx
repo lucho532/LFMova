@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { obtenerRolesDelToken } from '../servicios/tokenJwt'
-import './BarraLateral.css'
+import '../estilos/componentes/BarraLateral.css'
 
 interface EnlaceMenu {
   ruta: string

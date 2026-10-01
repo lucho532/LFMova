@@ -21,7 +21,7 @@ import {
   reactivarCoordinador,
 } from '../servicios/servicioEmpresas'
 import { obtenerRolesDelToken } from '../servicios/tokenJwt'
-import './PaginaDetalleEmpresa.css'
+import '../estilos/paginas/PaginaDetalleEmpresa.css'
 
 /**
  * Ficha de una empresa. El administrador de plataforma ve los datos

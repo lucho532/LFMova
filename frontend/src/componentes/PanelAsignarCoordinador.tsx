@@ -6,7 +6,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { BuscadorPersona } from './BuscadorPersona'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './PanelAsignarCoordinador.css'
+import '../estilos/componentes/PanelAsignarCoordinador.css'
 
 interface PropiedadesPanelAsignarCoordinador {
   empresaId: number

@@ -1,4 +1,4 @@
-import './AnimacionRutaBus.css'
+import '../estilos/componentes/AnimacionRutaBus.css'
 
 /**
  * Decoración puramente visual: una carretera punteada entre una casa y un

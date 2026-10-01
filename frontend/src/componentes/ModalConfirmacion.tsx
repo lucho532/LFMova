@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
-import './ModalConfirmacion.css'
+import '../estilos/componentes/ModalConfirmacion.css'
 
 interface PropiedadesModalConfirmacion {
   abierto: boolean

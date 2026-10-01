@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react'
-import './BotonPrimario.css'
+import '../estilos/componentes/BotonPrimario.css'
 
 type PropiedadesBotonPrimario = ButtonHTMLAttributes<HTMLButtonElement>
 

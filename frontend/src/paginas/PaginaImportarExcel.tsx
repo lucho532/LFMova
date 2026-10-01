@@ -35,7 +35,7 @@ import {
   publicarJornada,
 } from '../servicios/servicioOperacion'
 import { obtenerSedes } from '../servicios/servicioSedes'
-import './PaginaImportarExcel.css'
+import '../estilos/paginas/PaginaImportarExcel.css'
 
 const MESES: Record<string, string> = {
   ENE: '01',

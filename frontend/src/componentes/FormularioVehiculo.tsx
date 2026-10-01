@@ -3,7 +3,7 @@ import type { CrearVehiculoDatos } from '../modelos/conductor'
 import { BotonPrimario } from './BotonPrimario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './FormularioVehiculo.css'
+import '../estilos/componentes/FormularioVehiculo.css'
 
 interface PropiedadesFormularioVehiculo {
   textoBoton: string

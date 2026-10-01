@@ -1,7 +1,7 @@
 import type { UnidadDeTrabajo } from '../modelos/conductor'
 import { EtiquetaEstado } from './EtiquetaEstado'
 import { VigenciaDocumento } from './VigenciaDocumento'
-import './TarjetaUnidadTrabajo.css'
+import '../estilos/componentes/TarjetaUnidadTrabajo.css'
 
 /**
  * Ficha de solo lectura de la unidad de trabajo de un conductor: su vehículo

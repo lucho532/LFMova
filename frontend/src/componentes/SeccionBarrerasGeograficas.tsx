@@ -6,7 +6,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './SeccionBarrerasGeograficas.css'
+import '../estilos/componentes/SeccionBarrerasGeograficas.css'
 
 interface PropiedadesSeccionBarrerasGeograficas {
   empresaId: number

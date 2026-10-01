@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { Mensaje } from '../modelos/mensaje'
 import { ChatPasajero } from './ChatPasajero'
-import './VentanaChat.css'
+import '../estilos/componentes/VentanaChat.css'
 
 interface PropiedadesVentanaChat {
   abierto: boolean

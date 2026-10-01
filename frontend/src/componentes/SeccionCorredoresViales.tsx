@@ -6,7 +6,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './SeccionCorredoresViales.css'
+import '../estilos/componentes/SeccionCorredoresViales.css'
 
 interface PropiedadesSeccionCorredoresViales {
   empresaId: number

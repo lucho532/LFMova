@@ -13,7 +13,7 @@ import { MensajeAlerta } from './MensajeAlerta'
 import { ModalConfirmacion } from './ModalConfirmacion'
 import { SelectorFormulario } from './SelectorFormulario'
 import { TablaDatos } from './TablaDatos'
-import './PanelVistaPreviaImportacion.css'
+import '../estilos/componentes/PanelVistaPreviaImportacion.css'
 
 interface PropiedadesPanelVistaPreviaImportacion {
   empresaId: number

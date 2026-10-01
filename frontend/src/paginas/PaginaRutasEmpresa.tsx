@@ -14,7 +14,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerPasajerosEmpresa, obtenerRutasEmpresa } from '../servicios/servicioEstadisticas'
 import { eliminarServicio } from '../servicios/servicioOperacion'
-import './PaginaRutasEmpresa.css'
+import '../estilos/paginas/PaginaRutasEmpresa.css'
 
 /** Una ruta ya finalizada (ejecutada de verdad) no se puede eliminar: es operación real, no se puede deshacer. */
 const ESTADOS_QUE_NO_SE_PUEDEN_ELIMINAR = new Set<number>([EstadoServicio.EN_CURSO, EstadoServicio.FINALIZADO])

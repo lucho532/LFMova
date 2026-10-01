@@ -6,7 +6,7 @@ import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { TarjetaAutenticacion } from '../componentes/TarjetaAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { restablecerContrasena } from '../servicios/servicioAutenticacion'
-import './PaginaRestablecerContrasena.css'
+import '../estilos/paginas/PaginaRestablecerContrasena.css'
 
 /**
  * Destino del enlace enviado por correo para establecer la contraseña: sirve

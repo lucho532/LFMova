@@ -6,7 +6,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
 import { SelectorFormulario } from './SelectorFormulario'
-import './PanelBarriosSinZona.css'
+import '../estilos/componentes/PanelBarriosSinZona.css'
 
 const OPCION_ZONA_NUEVA = '__nueva__'
 

@@ -6,7 +6,7 @@ import { actualizarVehiculo } from '../servicios/servicioConductores'
 import { obtenerMisUnidades } from '../servicios/servicioConductorPropio'
 import { FormularioVehiculo } from './FormularioVehiculo'
 import { MensajeAlerta } from './MensajeAlerta'
-import './PanelMiVehiculo.css'
+import '../estilos/componentes/PanelMiVehiculo.css'
 
 /**
  * Datos del vehículo del propio conductor, editables como sus datos

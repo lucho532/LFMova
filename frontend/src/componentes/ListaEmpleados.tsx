@@ -11,7 +11,7 @@ import { ListaInvitaciones } from './ListaInvitaciones'
 import { MensajeAlerta } from './MensajeAlerta'
 import { PanelCambiarRolPersona } from './PanelCambiarRolPersona'
 import { TablaDatos } from './TablaDatos'
-import './ListaEmpleados.css'
+import '../estilos/componentes/ListaEmpleados.css'
 
 interface PropiedadesListaEmpleados {
   empresaId: number

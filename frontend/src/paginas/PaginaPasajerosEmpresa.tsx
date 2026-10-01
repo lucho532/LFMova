@@ -9,7 +9,7 @@ import { NOMBRES_ESTADO_PASAJERO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe
 import type { PasajeroEmpresa } from '../modelos/estadisticas'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerPasajerosEmpresa } from '../servicios/servicioEstadisticas'
-import './PaginaRutasEmpresa.css'
+import '../estilos/paginas/PaginaRutasEmpresa.css'
 
 /**
  * Pasajeros de las rutas de la empresa: todos los asignados o solo los ya

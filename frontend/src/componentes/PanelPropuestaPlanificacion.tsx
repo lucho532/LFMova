@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { PropuestaPlanificacion, ServicioPasajero } from '../modelos/operacion'
 import { BotonSecundario } from './BotonSecundario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './PanelPropuestaPlanificacion.css'
+import '../estilos/componentes/PanelPropuestaPlanificacion.css'
 
 interface PropiedadesPanelPropuesta {
   pasajeros: ServicioPasajero[]

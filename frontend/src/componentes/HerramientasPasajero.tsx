@@ -5,7 +5,7 @@ import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
 import { ModalConfirmacion } from './ModalConfirmacion'
-import './HerramientasPasajero.css'
+import '../estilos/componentes/HerramientasPasajero.css'
 
 /** Tipos de incidencia que el conductor puede reportar (mismo orden que el enum TipoIncidencia del backend). */
 const TIPOS_INCIDENCIA = [

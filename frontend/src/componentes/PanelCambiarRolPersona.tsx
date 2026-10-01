@@ -8,7 +8,7 @@ import { asignarCoordinador } from '../servicios/servicioEmpresas'
 import { BotonPrimario } from './BotonPrimario'
 import { FormularioVehiculo } from './FormularioVehiculo'
 import { MensajeAlerta } from './MensajeAlerta'
-import './PanelCambiarRolPersona.css'
+import '../estilos/componentes/PanelCambiarRolPersona.css'
 
 interface PropiedadesPanelCambiarRolPersona {
   persona: Persona

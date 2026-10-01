@@ -8,7 +8,7 @@ import type { DetalleInvitacion } from '../modelos/invitacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { registrarse } from '../servicios/servicioAutenticacion'
 import { obtenerDetalleInvitacion } from '../servicios/servicioInvitaciones'
-import './PaginaCrearCuenta.css'
+import '../estilos/paginas/PaginaCrearCuenta.css'
 
 /**
  * Permite que cualquier persona cree su cuenta (correo, nombre, cédula,

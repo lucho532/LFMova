@@ -14,7 +14,7 @@ import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
 import { SelectorFormulario } from './SelectorFormulario'
 import { TarjetaFormulario } from './TarjetaFormulario'
-import './PanelCrearRutaPegado.css'
+import '../estilos/componentes/PanelCrearRutaPegado.css'
 
 interface PropiedadesPanelCrearRutaPegado {
   empresaId: number

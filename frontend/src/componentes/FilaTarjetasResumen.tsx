@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import './FilaTarjetasResumen.css'
+import '../estilos/componentes/FilaTarjetasResumen.css'
 
 /** Fila adaptable que reparte varias TarjetaResumen en columnas iguales. */
 export function FilaTarjetasResumen({ children }: { children: ReactNode }) {

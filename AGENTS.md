@@ -818,7 +818,9 @@ Mismo espíritu que §34 (no sobreingenierizar), aplicado al frontend:
 
 ## 42.3 CSS separado por componente/página
 
-Cada componente de `componentes/` y cada pantalla de `paginas/` tiene su propio archivo CSS (`NombreComponente.css`, junto al `.tsx` correspondiente e importado solo desde ahí), como ya se hizo con `BotonTema.tsx` / `BotonTema.css`.
+Cada componente de `componentes/` y cada pantalla de `paginas/` tiene su propio archivo CSS (`NombreComponente.css`), importado solo desde su `.tsx`.
+
+**Decisión vigente (2026-10-01):** los archivos CSS no van junto al `.tsx`, sino en una carpeta aparte que replica la estructura: `src/estilos/componentes/` para los de `componentes/` y `src/estilos/paginas/` para los de `paginas/` (por ejemplo `componentes/BotonTema.tsx` importa `../estilos/componentes/BotonTema.css`). `App.css` vive en `src/estilos/`.
 
 `index.css` se reserva exclusivamente para: reinicio de estilos globales, variables de tema (tokens de color en `:root`) y estilos de elementos raíz (`body`, `#root`). No se agregan ahí estilos específicos de un componente o pantalla concreta.
 
@@ -827,3 +829,13 @@ No se comparte una hoja de estilos monolítica entre múltiples componentes no r
 ## 42.4 Solo lo necesario
 
 No se agregan librerías de UI, gestión de estado, CSS-in-JS ni utilidades adicionales sin una necesidad concreta ya existente en la pantalla que se está implementando (coherente con `plan.md` §57.2 y `AGENTS.md` §34). Si el estado local de React (`useState`, `useContext`) alcanza, no se introduce una librería externa para resolverlo.
+
+---
+
+# 43. Tamaño de los archivos
+
+**Decisión vigente (2026-10-01):** ningún archivo de código (clase de backend, componente o página de frontend, hoja de estilos, archivo de pruebas) debe superar las **250 líneas**.
+
+Cuando un archivo se acerca a ese límite se divide por responsabilidad, no de forma arbitraria: en backend, extrayendo colaboradores a `Rules`, `Validators`, `Utils` o servicios más pequeños; en frontend, extrayendo lógica a hooks (`use*`) y bloques de pantalla a subcomponentes (ver §42.2). Dividir un archivo no debe cambiar su comportamiento ni sus contratos públicos.
+
+Quedan fuera del límite las migraciones de Entity Framework Core y el código generado.

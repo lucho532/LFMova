@@ -5,7 +5,7 @@ import { CampoFormulario } from '../componentes/CampoFormulario'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { crearEmpresa } from '../servicios/servicioEmpresas'
-import './PaginaNuevaEmpresa.css'
+import '../estilos/paginas/PaginaNuevaEmpresa.css'
 
 /**
  * Formulario de alta de una empresa junto con su primer coordinador (usuario

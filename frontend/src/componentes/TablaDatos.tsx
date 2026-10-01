@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import './TablaDatos.css'
+import '../estilos/componentes/TablaDatos.css'
 
 interface PropiedadesTablaDatos {
   columnas: string[]

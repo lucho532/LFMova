@@ -10,7 +10,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { ResumenEmpresa } from '../modelos/estadisticas'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerResumenEmpresa } from '../servicios/servicioEstadisticas'
-import './PaginaInicioCoordinador.css'
+import '../estilos/paginas/PaginaInicioCoordinador.css'
 
 /** Formatea una fecha ISO (AAAA-MM-DD) como día/mes sin depender de la zona horaria del navegador. */
 function diaMes(fecha: string): string {

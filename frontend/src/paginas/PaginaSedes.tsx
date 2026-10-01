@@ -6,7 +6,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Sede } from '../modelos/sede'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { activarSede, desactivarSede, obtenerSedes } from '../servicios/servicioSedes'
-import './PaginaSedes.css'
+import '../estilos/paginas/PaginaSedes.css'
 
 /**
  * Lista las sedes de la empresa y permite activar o desactivar cada una.
