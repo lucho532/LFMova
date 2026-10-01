@@ -42,7 +42,7 @@ export function BarraSuperior() {
     <header className="barra-superior">
       <div className="barra-superior__identidad">
         <span className="barra-superior__marca">
-          <img src="/favicon.svg" alt="" className="barra-superior__logo" />
+          <img src="/icono-lfmova.svg" alt="" className="barra-superior__logo" />
           LFMova
         </span>
         {empresas.length > 0 && <span className="barra-superior__empresa">{empresas.join(' · ')}</span>}
