@@ -17,6 +17,7 @@ public static class ZonaMapper
         Nombre = zona.Nombre,
         Barrios = new List<string>(zona.Barrios),
         Activa = zona.Activa,
+        Orden = zona.Orden,
         MacroZonaId = zona.MacroZonaId,
         MacroZonaNombre = zona.MacroZona?.Nombre,
         CorredorVialId = zona.CorredorVialId,

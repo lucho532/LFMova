@@ -67,6 +67,26 @@ public class ZonaReorganizacionServicio : IZonaReorganizacionServicio
         await _zonaRepositorio.GuardarCambiosAsync();
     }
 
+    /// <inheritdoc />
+    public async Task ReordenarAsync(int empresaId, List<int> zonaIds)
+    {
+        var zonas = await _zonaRepositorio.ObtenerPorEmpresaAsync(empresaId);
+        var posicion = zonaIds.Distinct().Select((zonaId, indice) => (zonaId, indice)).ToDictionary(p => p.zonaId, p => p.indice);
+
+        var ordenadas = zonas
+            .OrderBy(z => posicion.TryGetValue(z.ZonaId, out var indice) ? indice : int.MaxValue)
+            .ThenBy(z => z.Orden)
+            .ThenBy(z => z.ZonaId)
+            .ToList();
+
+        for (var indice = 0; indice < ordenadas.Count; indice++)
+        {
+            ordenadas[indice].Orden = indice;
+        }
+
+        await _zonaRepositorio.GuardarCambiosAsync();
+    }
+
     /// <summary>
     /// Suma barrios a la zona de destino (sin repetir los que ya tiene) tras comprobar que no chocan con
     /// ninguna barrera geográfica. <paramref name="zonaQueSeElimina"/> es la zona de origen cuando va a

@@ -9,6 +9,7 @@ export interface Zona {
   corredorVialId: number | null
   corredorVialNombre: string | null
   activa: boolean
+  orden: number
 }
 
 /** Refleja CrearZonaDto / ActualizarZonaDto (TransportApp.Application). */

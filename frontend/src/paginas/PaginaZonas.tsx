@@ -17,7 +17,7 @@ import type { CorredorVial } from '../modelos/corredorVial'
 import type { MacroZona } from '../modelos/macroZona'
 import type { Zona } from '../modelos/zona'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { activarZona, actualizarZona, crearZona, desactivarZona, eliminarZona, moverBarrioDeZona, obtenerZonas, unirZonas } from '../servicios/servicioZonas'
+import { activarZona, actualizarZona, crearZona, desactivarZona, eliminarZona, moverBarrioDeZona, obtenerZonas, reordenarZonas, unirZonas } from '../servicios/servicioZonas'
 
 /** Convierte el texto del campo de barrios ("La Enea, Palermo") en la lista que espera el backend. */
 function barriosDesdeTexto(texto: string): string[] {
@@ -140,6 +140,18 @@ export function PaginaZonas() {
   const alUnir = (origen: Zona, destino: Zona) =>
     ejecutarSobreZona(origen.zonaId, (t) => unirZonas(idEmpresa, origen.zonaId, destino.zonaId, t), 'No se pudieron unir las zonas.')
 
+  /** Muestra el nuevo orden de inmediato y luego lo guarda; si falla, vuelve a cargar el orden real. */
+  async function alReordenar(zonaIds: number[]) {
+    if (!token) return
+    setZonas((actuales) => zonaIds.flatMap((id) => actuales.filter((z) => z.zonaId === id)))
+    try {
+      await reordenarZonas(idEmpresa, zonaIds, token)
+    } catch (error) {
+      setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo guardar el orden de las zonas.')
+      await cargar()
+    }
+  }
+
   const alEliminar = (zona: Zona) => ejecutarSobreZona(zona.zonaId, (t) => eliminarZona(idEmpresa, zona.zonaId, t), 'No se pudo eliminar la zona.')
 
   return (
@@ -190,6 +202,7 @@ export function PaginaZonas() {
           alCambiarEstado={alCambiarEstado}
           alMoverBarrio={alMoverBarrio}
           alUnir={alUnir}
+          alReordenar={alReordenar}
           alEliminar={alEliminar}
         />
       )}

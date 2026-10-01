@@ -45,7 +45,9 @@ public class ZonaServicio : IZonaServicio
             Barrios = barrios,
             MacroZonaId = datos.MacroZonaId,
             CorredorVialId = datos.CorredorVialId,
-            Activa = true
+            Activa = true,
+            // La zona nueva queda al final de la lista.
+            Orden = (await _zonaRepositorio.ObtenerPorEmpresaAsync(empresaId)).Select(z => z.Orden).DefaultIfEmpty(-1).Max() + 1
         };
 
         await _zonaRepositorio.AgregarAsync(zona);
@@ -73,7 +75,7 @@ public class ZonaServicio : IZonaServicio
     public async Task<List<ZonaDto>> ObtenerPorEmpresaAsync(int empresaId)
     {
         var zonas = await _zonaRepositorio.ObtenerPorEmpresaAsync(empresaId);
-        return zonas.Select(ZonaMapper.AZonaDto).ToList();
+        return zonas.OrderBy(z => z.Orden).ThenBy(z => z.ZonaId).Select(ZonaMapper.AZonaDto).ToList();
     }
 
     /// <inheritdoc />

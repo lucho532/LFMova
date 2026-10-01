@@ -8,6 +8,7 @@
   border-radius: 14px;
   background: var(--bg);
   box-shadow: var(--shadow);
+  cursor: grab;
 }
 
 .tarjeta-zona--inactiva {
@@ -19,6 +20,18 @@
   border-color: var(--accent);
   background: var(--accent-bg);
   box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Lugar que va a ocupar la tarjeta que se está cambiando de sitio. */
+.tarjeta-zona--hueco {
+  border-style: dashed;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-border);
+}
+
+/* Tarjeta que se está arrastrando. */
+.tarjeta-zona--arrastrada {
+  opacity: 0.45;
 }
 
 /* Zona entera elegida para unirla con otra. */

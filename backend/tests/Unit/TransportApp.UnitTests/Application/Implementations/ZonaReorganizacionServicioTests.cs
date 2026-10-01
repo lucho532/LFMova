@@ -154,6 +154,24 @@ public class ZonaReorganizacionServicioTests
     }
 
     [Fact]
+    public async Task ReordenarAsync_GuardaLaPosicionYDejaAlFinalLasZonasQueNoVienen()
+    {
+        var norte = CrearZona(1, "Norte", "La Enea");
+        var sur = CrearZona(2, "Sur", "Chipre");
+        var centro = CrearZona(3, "Centro", "Centro");
+        var ajena = CrearZona(4, "Ajena", "Otro");
+        ajena.EmpresaId = 99;
+        var repositorio = new ZonaRepositorioFalso(norte, sur, centro, ajena);
+
+        await CrearServicio(repositorio).ReordenarAsync(1, new List<int> { 3, 1, 4 });
+
+        Assert.Equal(0, centro.Orden);
+        Assert.Equal(1, norte.Orden);
+        Assert.Equal(2, sur.Orden);
+        Assert.Equal(0, ajena.Orden);
+    }
+
+    [Fact]
     public async Task EliminarAsync_QuitaLaZona()
     {
         var repositorio = new ZonaRepositorioFalso(CrearZona(1, "Norte", "La Enea"), CrearZona(2, "Sur", "Chipre"));

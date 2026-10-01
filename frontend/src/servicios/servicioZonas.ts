@@ -48,3 +48,8 @@ export function unirZonas(empresaId: number, zonaId: number, zonaDestinoId: numb
 export function eliminarZona(empresaId: number, zonaId: number, token: string): Promise<void> {
   return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/${zonaId}`, { metodo: 'DELETE', token })
 }
+
+/** Consume PUT /api/empresas/{empresaId}/zonas/orden: guarda el orden en que se muestran las zonas. */
+export function reordenarZonas(empresaId: number, zonaIds: number[], token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/orden`, { metodo: 'PUT', cuerpo: { zonaIds }, token })
+}

@@ -16,7 +16,7 @@ namespace TransportApp.Api.Controllers;
 /// el contexto de empresa antes de invocarlo.
 /// </summary>
 [ApiController]
-[Route("api/empresas/{empresaId:int}/zonas/{zonaId:int}")]
+[Route("api/empresas/{empresaId:int}/zonas")]
 [Authorize]
 public class ZonasReorganizacionController : ControllerBase
 {
@@ -29,17 +29,22 @@ public class ZonasReorganizacionController : ControllerBase
     }
 
     /// <summary>Pasa un barrio de esta zona a otra. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPost("mover-barrio")]
+    [HttpPost("{zonaId:int}/mover-barrio")]
     public Task<IActionResult> MoverBarrioAsync(int empresaId, int zonaId, MoverBarrioZonaDto datos)
         => EjecutarAsync(empresaId, () => _reorganizacionServicio.MoverBarrioAsync(empresaId, zonaId, datos.Barrio, datos.ZonaDestinoId));
 
     /// <summary>Une esta zona con otra, que recibe todos sus barrios. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPost("unir")]
+    [HttpPost("{zonaId:int}/unir")]
     public Task<IActionResult> UnirAsync(int empresaId, int zonaId, UnirZonaDto datos)
         => EjecutarAsync(empresaId, () => _reorganizacionServicio.UnirAsync(empresaId, zonaId, datos.ZonaDestinoId));
 
+    /// <summary>Guarda el orden en que se muestran las zonas de la empresa. Solo un coordinador de esa empresa puede hacerlo.</summary>
+    [HttpPut("orden")]
+    public Task<IActionResult> ReordenarAsync(int empresaId, ReordenarZonasDto datos)
+        => EjecutarAsync(empresaId, () => _reorganizacionServicio.ReordenarAsync(empresaId, datos.ZonaIds));
+
     /// <summary>Elimina esta zona. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpDelete]
+    [HttpDelete("{zonaId:int}")]
     public Task<IActionResult> EliminarAsync(int empresaId, int zonaId)
         => EjecutarAsync(empresaId, () => _reorganizacionServicio.EliminarAsync(empresaId, zonaId));
 

@@ -32,3 +32,28 @@
   color: var(--text-h);
   font-size: 14px;
 }
+
+/* Mientras se arrastra, nada dentro de la lista debe poder seleccionarse como texto. */
+.lista-zonas--arrastrando {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Etiqueta que sigue al cursor con lo que se está arrastrando; no intercepta el ratón. */
+.lista-zonas__etiqueta {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  max-width: 280px;
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  will-change: transform;
+}

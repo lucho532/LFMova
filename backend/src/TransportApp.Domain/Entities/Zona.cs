@@ -37,6 +37,9 @@ public class Zona
     /// </summary>
     public bool Activa { get; set; }
 
+    /// <summary>Posición de la zona en la lista de la empresa, tal como la ordenó el coordinador. Solo afecta a cómo se muestran; no cambia el reparto de rutas.</summary>
+    public int Orden { get; set; }
+
     /// <summary>
     /// Macrozona (comuna o sector amplio) bajo la que se organiza esta zona
     /// en pantalla, si el coordinador la clasificó. Es opcional y no afecta

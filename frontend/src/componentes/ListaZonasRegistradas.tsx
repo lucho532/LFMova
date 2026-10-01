@@ -1,5 +1,5 @@
-import { useState, type DragEvent } from 'react'
-import { useDesplazamientoAlArrastrar } from '../hooks/useDesplazamientoAlArrastrar'
+import { useState } from 'react'
+import { useArrastrePuntero } from '../hooks/useArrastrePuntero'
 import type { Zona } from '../modelos/zona'
 import { BotonSecundario } from './BotonSecundario'
 import { ModalConfirmacion } from './ModalConfirmacion'
@@ -14,6 +14,8 @@ interface PropiedadesListaZonasRegistradas {
   alCambiarEstado: (zona: Zona) => void
   alMoverBarrio: (origen: Zona, barrio: string, destino: Zona) => void
   alUnir: (origen: Zona, destino: Zona) => void
+  /** Recibe los identificadores de todas las zonas en su nuevo orden. */
+  alReordenar: (zonaIds: number[]) => void
   alEliminar: (zona: Zona) => void
 }
 
@@ -22,56 +24,37 @@ type Pendiente = { tipo: 'unir'; origen: Zona; destino: Zona } | { tipo: 'elimin
 
 /**
  * Zonas registradas, como tarjetas que se pueden reorganizar: un barrio se
- * mueve a otra zona y una zona entera se une con otra, ya sea arrastrando con
- * el ratón o, en pantallas táctiles, tocando el barrio (o "Unir con…") y luego
- * la zona de destino. No llama a la API: avisa a la página con sus `al*` y
- * solo pide confirmación para lo que elimina una zona.
+ * mueve a otra zona, una zona se une con otra y las tarjetas se cambian de
+ * lugar. Con el ratón todo se hace arrastrando; en pantallas táctiles, mover
+ * y unir se hacen tocando el barrio (o "Unir con…") y luego la zona de
+ * destino. No llama a la API: avisa a la página con sus `al*` y solo pide
+ * confirmación para lo que elimina una zona.
  */
-export function ListaZonasRegistradas({ zonas, zonaIdEnCurso, alEditar, alCambiarEstado, alMoverBarrio, alUnir, alEliminar }: PropiedadesListaZonasRegistradas) {
+export function ListaZonasRegistradas({ zonas, zonaIdEnCurso, alEditar, alCambiarEstado, alMoverBarrio, alUnir, alReordenar, alEliminar }: PropiedadesListaZonasRegistradas) {
   const [seleccion, setSeleccion] = useState<SeleccionZona | null>(null)
-  const [arrastrando, setArrastrando] = useState(false)
-  const [zonaDestinoId, setZonaDestinoId] = useState<number | null>(null)
   const [pendiente, setPendiente] = useState<Pendiente | null>(null)
-  useDesplazamientoAlArrastrar(arrastrando)
+  const { arrastrado, destinoId, etiquetaRef, alPresionar } = useArrastrePuntero<SeleccionZona>('data-zona-id', (dato, zonaId) => aplicar(dato, zonaId))
 
-  function limpiar() {
+  /** Ejecuta lo que corresponde a lo movido (`dato`) al caer sobre la zona de destino. */
+  function aplicar(dato: SeleccionZona, zonaDestinoId: number) {
+    const origen = zonas.find((z) => z.zonaId === dato.zonaId)
+    const destino = zonas.find((z) => z.zonaId === zonaDestinoId)
     setSeleccion(null)
-    setArrastrando(false)
-    setZonaDestinoId(null)
+    if (!origen || !destino || origen.zonaId === destino.zonaId) return
+
+    if (dato.barrio) alMoverBarrio(origen, dato.barrio, destino)
+    else if (dato.ordenar) {
+      // La tarjeta arrastrada pasa a ocupar el lugar de la tarjeta sobre la que se soltó.
+      const ids = zonas.map((z) => z.zonaId).filter((id) => id !== origen.zonaId)
+      ids.splice(zonas.indexOf(destino), 0, origen.zonaId)
+      alReordenar(ids)
+    } else setPendiente({ tipo: 'unir', origen, destino })
   }
 
   /** Tocar lo mismo otra vez lo deselecciona. */
   function alSeleccionar(nueva: SeleccionZona) {
     const esLaMisma = seleccion?.zonaId === nueva.zonaId && seleccion.barrio === nueva.barrio
     setSeleccion(esLaMisma ? null : nueva)
-  }
-
-  function alEmpezarArrastre(evento: DragEvent, nueva: SeleccionZona) {
-    evento.dataTransfer.effectAllowed = 'move'
-    // Firefox no inicia el arrastre si no se guarda algún dato.
-    evento.dataTransfer.setData('text/plain', nueva.barrio ?? String(nueva.zonaId))
-    setSeleccion(nueva)
-    setArrastrando(true)
-  }
-
-  function alPasarSobre(evento: DragEvent, zona: Zona) {
-    if (!arrastrando || seleccion?.zonaId === zona.zonaId) return
-    evento.preventDefault()
-    setZonaDestinoId(zona.zonaId)
-  }
-
-  function alSalir(evento: DragEvent<HTMLElement>) {
-    // Pasar a un elemento interior de la misma tarjeta también dispara "dragleave": solo cuenta salir de ella.
-    if (!evento.currentTarget.contains(evento.relatedTarget as Node | null)) setZonaDestinoId(null)
-  }
-
-  function alSoltar(destino: Zona) {
-    const origen = zonas.find((z) => z.zonaId === seleccion?.zonaId)
-    if (seleccion && origen && origen.zonaId !== destino.zonaId) {
-      if (seleccion.barrio) alMoverBarrio(origen, seleccion.barrio, destino)
-      else setPendiente({ tipo: 'unir', origen, destino })
-    }
-    limpiar()
   }
 
   function alConfirmar() {
@@ -81,43 +64,48 @@ export function ListaZonasRegistradas({ zonas, zonaIdEnCurso, alEditar, alCambia
   }
 
   const zonaElegida = zonas.find((z) => z.zonaId === seleccion?.zonaId)
+  const zonaArrastrada = zonas.find((z) => z.zonaId === arrastrado?.zonaId)
 
   return (
     <>
       <p className="lista-zonas__ayuda">
-        Arrastra un barrio a otra zona para moverlo, o arrastra una zona por su nombre sobre otra para unirlas. También puedes tocar un barrio y luego elegir la zona de destino. Una zona
-        que se queda sin barrios se elimina sola.
+        Arrastra un barrio a otra zona para moverlo, el nombre de una zona sobre otra para unirlas, o la tarjeta desde cualquier parte vacía para cambiarla de lugar. También puedes
+        tocar un barrio y luego elegir la zona de destino. Una zona que se queda sin barrios se elimina sola.
       </p>
 
-      {seleccion && !arrastrando && zonaElegida && (
+      {seleccion && !arrastrado && zonaElegida && (
         <div className="lista-zonas__aviso" role="status">
           <span>
             {seleccion.barrio ? <>Moviendo el barrio <strong>{seleccion.barrio}</strong>: elige la zona de destino.</> : <>Uniendo la zona <strong>{zonaElegida.nombre}</strong>: elige con cuál.</>}
           </span>
-          <BotonSecundario onClick={limpiar}>Cancelar</BotonSecundario>
+          <BotonSecundario onClick={() => setSeleccion(null)}>Cancelar</BotonSecundario>
         </div>
       )}
 
-      <ul className="lista-zonas">
+      <ul className={`lista-zonas${arrastrado ? ' lista-zonas--arrastrando' : ''}`}>
         {zonas.map((zona) => (
           <TarjetaZona
             key={zona.zonaId}
             zona={zona}
-            seleccion={arrastrando ? null : seleccion}
-            esDestinoDelArrastre={zonaDestinoId === zona.zonaId}
+            seleccion={arrastrado ? null : seleccion}
+            arrastrado={arrastrado}
+            esDestinoDelArrastre={arrastrado !== null && destinoId === zona.zonaId && arrastrado.zonaId !== zona.zonaId}
             ocupada={zonaIdEnCurso === zona.zonaId}
             alSeleccionar={alSeleccionar}
-            alEmpezarArrastre={alEmpezarArrastre}
-            alTerminarArrastre={limpiar}
-            alPasarSobre={alPasarSobre}
-            alSalir={alSalir}
-            alSoltar={alSoltar}
+            alPresionar={alPresionar}
+            alElegirDestino={(destino) => seleccion && aplicar(seleccion, destino.zonaId)}
             alEditar={alEditar}
             alCambiarEstado={alCambiarEstado}
             alEliminar={(z) => setPendiente({ tipo: 'eliminar', zona: z })}
           />
         ))}
       </ul>
+
+      {arrastrado && zonaArrastrada && (
+        <div ref={etiquetaRef} className="lista-zonas__etiqueta">
+          {arrastrado.barrio ?? (arrastrado.ordenar ? `Mover: ${zonaArrastrada.nombre}` : `Unir: ${zonaArrastrada.nombre}`)}
+        </div>
+      )}
 
       <ModalConfirmacion
         abierto={pendiente !== null}

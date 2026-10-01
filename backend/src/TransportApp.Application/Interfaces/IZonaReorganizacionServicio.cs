@@ -19,6 +19,12 @@ public interface IZonaReorganizacionServicio
     /// </summary>
     Task UnirAsync(int empresaId, int zonaOrigenId, int zonaDestinoId);
 
+    /// <summary>
+    /// Guarda el orden en que el coordinador quiere ver las zonas: la primera de la lista queda de primera.
+    /// Las zonas de la empresa que no vengan en la lista quedan al final, en el orden que ya tenían.
+    /// </summary>
+    Task ReordenarAsync(int empresaId, List<int> zonaIds);
+
     /// <summary>Elimina por completo una zona de la empresa; sus barrios quedan sin zona.</summary>
     Task EliminarAsync(int empresaId, int zonaId);
 }

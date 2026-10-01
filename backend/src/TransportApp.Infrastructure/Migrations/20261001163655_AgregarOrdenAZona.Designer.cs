@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TransportApp.Infrastructure.Data;
@@ -12,9 +13,11 @@ using TransportApp.Infrastructure.Data;
 namespace TransportApp.Infrastructure.Migrations
 {
     [DbContext(typeof(TransportAppDbContext))]
-    partial class TransportAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261001163655_AgregarOrdenAZona")]
+    partial class AgregarOrdenAZona
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

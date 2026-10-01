@@ -18,6 +18,9 @@ public class ZonaDto
     /// <summary>Indica si la zona está activa.</summary>
     public bool Activa { get; set; }
 
+    /// <summary>Posición de la zona en la lista de la empresa.</summary>
+    public int Orden { get; set; }
+
     /// <summary>Macrozona bajo la que se organiza esta zona, si tiene una asignada.</summary>
     public int? MacroZonaId { get; set; }
 
