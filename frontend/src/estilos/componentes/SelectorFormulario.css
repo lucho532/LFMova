@@ -12,6 +12,9 @@
 }
 
 .selector-formulario select {
+  /* Una opción con texto largo no debe ensanchar el formulario más que su contenedor. */
+  width: 100%;
+  min-width: 0;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;

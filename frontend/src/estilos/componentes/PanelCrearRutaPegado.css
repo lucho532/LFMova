@@ -1,6 +1,7 @@
 .panel-crear-ruta-pegado {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .panel-crear-ruta-pegado h2 {
@@ -12,6 +13,7 @@
   flex: 1;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
   padding: 24px;
   border: 2px dashed var(--accent-border);
   border-radius: 18px;
@@ -136,6 +138,9 @@
 }
 
 .panel-crear-ruta-pegado__pegado textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   height: 130px;
   padding: 10px 12px;
   border: 1px solid var(--border);
@@ -179,4 +184,10 @@
   padding-left: 8px;
   color: var(--text);
   font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .panel-crear-ruta-pegado__caja {
+    padding: 14px;
+  }
 }

@@ -1,5 +1,7 @@
 .barrios-sin-zona {
   display: grid;
+  /* minmax(0, …) para que el contenido ancho (tablas, selectores) no ensanche la página en el celular. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   padding: 14px 16px;
   border: 1px solid var(--error-border);
@@ -21,6 +23,7 @@
 
 .barrios-sin-zona__lista {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 

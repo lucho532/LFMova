@@ -1,7 +1,9 @@
 /* Dos fuentes para armar rutas, una al lado de la otra: subir un Excel o pegar filas copiadas de uno. El recuadro punteado de cada una empieza justo debajo del título, sin nada en medio, para que las dos cajas coincidan visualmente a la misma altura; la fecha de "Cargar Excel" va embebida en su propio título (no en un campo aparte que desalinee las cajas). */
 .pagina-importar-excel__fuentes {
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0, …): sin el 0, una columna nunca se encoge por debajo de su contenido y en el celular
+     ensanchaba toda la página. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: stretch;
   margin-bottom: 8px;
@@ -9,7 +11,7 @@
 
 @media (min-width: 860px) {
   .pagina-importar-excel__fuentes {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 

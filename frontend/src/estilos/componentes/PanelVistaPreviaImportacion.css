@@ -1,5 +1,7 @@
 .vista-previa-importacion {
   display: grid;
+  /* minmax(0, …) para que el contenido ancho (tablas, selectores) no ensanche la página en el celular. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
 }
 

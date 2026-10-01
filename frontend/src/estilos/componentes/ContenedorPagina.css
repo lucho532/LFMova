@@ -42,3 +42,10 @@
   color: var(--text);
   font-size: 14px;
 }
+
+/* En el celular los márgenes laterales grandes le quitaban demasiado ancho al contenido. */
+@media (max-width: 640px) {
+  .contenedor-pagina {
+    padding: 24px 16px 48px;
+  }
+}

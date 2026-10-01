@@ -1,5 +1,6 @@
 .tarjeta-formulario {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   padding: 24px 28px;
   border: 1px solid var(--border);
@@ -23,6 +24,10 @@
 
 @media (max-width: 640px) {
   .tarjeta-formulario--2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tarjeta-formulario {
+    padding: 18px 16px;
   }
 }
