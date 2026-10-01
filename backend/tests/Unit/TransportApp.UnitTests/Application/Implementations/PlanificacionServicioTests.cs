@@ -57,8 +57,6 @@ public class PlanificacionServicioTests
         public Task<List<ServicioPasajero>> ObtenerPorServicioAsync(int servicioId)
             => Task.FromResult(Pasajeros.Where(p => p.ServicioId == servicioId).ToList());
 
-        public Task<List<int>> ObtenerConductorIdsPorEmpleadoAsync(int empleadoId) => Task.FromResult(new List<int>());
-
         public Task<List<ServicioPasajero>> ObtenerPorEmpleadoAsync(int empleadoId)
             => Task.FromResult(Pasajeros.Where(p => p.EmpleadoId == empleadoId).ToList());
 

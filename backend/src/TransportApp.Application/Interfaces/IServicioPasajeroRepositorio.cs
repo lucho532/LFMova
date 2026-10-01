@@ -30,15 +30,6 @@ public interface IServicioPasajeroRepositorio
     /// </summary>
     Task<List<ServicioPasajero>> ObtenerPorEmpleadoAsync(int empleadoId);
 
-    /// <summary>
-    /// Obtiene los identificadores de los conductores que tienen al empleado
-    /// indicado asignado en alguno de sus servicios (mediante
-    /// <c>ServicioPasajero</c> → <c>Servicio.UnidadOperativaId</c> →
-    /// <c>UnidadOperativa.ConductorId</c>). Se usa para autorizar la
-    /// generación de códigos de activación (ver T042A).
-    /// </summary>
-    Task<List<int>> ObtenerConductorIdsPorEmpleadoAsync(int empleadoId);
-
     /// <summary>Agrega un nuevo pasajero de servicio.</summary>
     Task AgregarAsync(ServicioPasajero servicioPasajero);
 

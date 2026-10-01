@@ -23,8 +23,6 @@ public class IncidenciaServicioTests
         public Task<List<ServicioPasajero>> ObtenerPorServicioAsync(int servicioId)
             => Task.FromResult(_pasajeros.Values.Where(p => p.ServicioId == servicioId).ToList());
 
-        public Task<List<int>> ObtenerConductorIdsPorEmpleadoAsync(int empleadoId) => Task.FromResult(new List<int>());
-
         public Task<List<ServicioPasajero>> ObtenerPorEmpleadoAsync(int empleadoId)
             => Task.FromResult(_pasajeros.Values.Where(p => p.EmpleadoId == empleadoId).ToList());
 

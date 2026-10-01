@@ -57,18 +57,6 @@ public class ServicioPasajeroRepositorio : IServicioPasajeroRepositorio
     }
 
     /// <inheritdoc />
-    public async Task<List<int>> ObtenerConductorIdsPorEmpleadoAsync(int empleadoId)
-    {
-        return await _contexto.ServiciosPasajero
-            .Where(sp => sp.EmpleadoId == empleadoId)
-            .Join(_contexto.Servicios, sp => sp.ServicioId, s => s.ServicioId, (sp, s) => s.UnidadOperativaId)
-            .Where(unidadOperativaId => unidadOperativaId != null)
-            .Join(_contexto.UnidadesOperativas, unidadOperativaId => unidadOperativaId!.Value, u => u.UnidadOperativaId, (_, u) => u.ConductorId)
-            .Distinct()
-            .ToListAsync();
-    }
-
-    /// <inheritdoc />
     public async Task AgregarAsync(ServicioPasajero servicioPasajero)
     {
         await _contexto.ServiciosPasajero.AddAsync(servicioPasajero);
