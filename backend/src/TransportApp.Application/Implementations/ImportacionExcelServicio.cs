@@ -123,58 +123,6 @@ public class ImportacionExcelServicio : IImportacionExcelServicio
     }
 
     /// <inheritdoc />
-    public async Task<ResultadoImportacionDto> AgregarEmpleadoARutaAsync(int empresaId, AgregarEmpleadoManualDto datos)
-    {
-        ValidarDatosDePasajero(datos.Cedula, datos.NombreCompleto, datos.Direccion, datos.Barrio);
-
-        var servicio = await _servicioServicio.ObtenerPorIdAsync(empresaId, datos.ServicioId)
-            ?? throw new InvalidOperationException("La ruta indicada no existe en esta empresa.");
-
-        // Una vez enviada (Publicado) la ruta, agregar un pasajero de última hora ya no es un simple alta
-        // manual: el conductor la está usando en el celular. Si hace falta, el flujo es mover al pasajero
-        // desde otra ruta (arrastrar o asignar directo), no escribir sus datos a mano acá.
-        if (servicio.Estado is EstadoServicio.CANCELADO or EstadoServicio.FINALIZADO or EstadoServicio.EN_CURSO or EstadoServicio.PUBLICADO)
-        {
-            throw new InvalidOperationException("No se pueden agregar pasajeros a mano a una ruta ya enviada, cancelada, en curso o finalizada.");
-        }
-
-        var resultado = new ResultadoImportacionDto { JornadaId = servicio.JornadaId, ServicioId = servicio.ServicioId };
-        var fila = new FilaHoja
-        {
-            Cedula = datos.Cedula.Trim(),
-            NombreCompleto = datos.NombreCompleto.Trim(),
-            Celular = datos.Celular.Trim(),
-            Direccion = datos.Direccion.Trim(),
-            Barrio = datos.Barrio.Trim()
-        };
-
-        await AgregarPasajeroAlServicioAsync(empresaId, servicio, fila, resultado);
-        return resultado;
-    }
-
-    /// <inheritdoc />
-    public async Task<ResultadoImportacionDto> CrearRutaManualAsync(int empresaId, CrearRutaManualDto datos)
-    {
-        ValidarDatosDePasajero(datos.Cedula, datos.NombreCompleto, datos.Direccion, datos.Barrio);
-
-        var (resultado, servicio) = await ObtenerOCrearRutaAsignadaAsync(
-            empresaId, datos.Fecha, datos.Hora, datos.Tipo, datos.SedeId, datos.UnidadOperativaId,
-            "No se pueden agregar pasajeros a una ruta cancelada, en curso o finalizada.");
-
-        var fila = new FilaHoja
-        {
-            Cedula = datos.Cedula.Trim(),
-            NombreCompleto = datos.NombreCompleto.Trim(),
-            Celular = datos.Celular.Trim(),
-            Direccion = datos.Direccion.Trim(),
-            Barrio = datos.Barrio.Trim()
-        };
-
-        await AgregarPasajeroAlServicioAsync(empresaId, servicio, fila, resultado);
-        return resultado;
-    }
-
-    /// <inheritdoc />
     public async Task<ResultadoImportacionDto> CrearRutaVaciaAsync(int empresaId, CrearRutaVaciaDto datos)
     {
         // Sirve para dividir una ruta sobrecargada: primero se abre esta ruta vacía para un conductor

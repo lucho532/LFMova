@@ -55,13 +55,6 @@ public interface IServicioServicio
     Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos);
 
     /// <summary>
-    /// Retira la unidad operativa del servicio (<c>UnidadOperativaId = NULL</c>),
-    /// dejándolo disponible para reorganización. No modifica su estado ni su
-    /// jornada.
-    /// </summary>
-    Task RetirarUnidadAsync(int empresaId, int servicioId);
-
-    /// <summary>
     /// "Despublica" una ruta ya enviada (<c>PUBLICADO → ASIGNADO</c>) para
     /// que el coordinador pueda seguir editándola (por ejemplo, agregarle un
     /// pasajero de última hora arrastrándolo o asignándolo directo).

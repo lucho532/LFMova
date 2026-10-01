@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransportApp.Api.Configuration;
-using TransportApp.Application.DTOs.Planificacion;
 using TransportApp.Application.DTOs.Servicios;
 using TransportApp.Application.Interfaces;
 using TransportApp.Domain.Enums;
@@ -20,13 +19,11 @@ namespace TransportApp.Api.Controllers;
 public class ServiciosController : ControllerBase
 {
     private readonly IServicioServicio _servicioServicio;
-    private readonly IPlanificacionServicio _planificacionServicio;
 
-    /// <summary>Crea el controlador con sus servicios.</summary>
-    public ServiciosController(IServicioServicio servicioServicio, IPlanificacionServicio planificacionServicio)
+    /// <summary>Crea el controlador con su servicio.</summary>
+    public ServiciosController(IServicioServicio servicioServicio)
     {
         _servicioServicio = servicioServicio;
-        _planificacionServicio = planificacionServicio;
     }
 
     /// <summary>Crea un servicio en la jornada. Solo un coordinador de esa empresa puede hacerlo.</summary>
@@ -82,29 +79,6 @@ public class ServiciosController : ControllerBase
     }
 
     /// <summary>
-    /// Cambia el estado del servicio. Solo un coordinador de esa empresa
-    /// puede hacerlo.
-    /// </summary>
-    [HttpPost("{servicioId:int}/cambiar-estado")]
-    public async Task<IActionResult> CambiarEstadoAsync(int empresaId, int jornadaId, int servicioId, CambiarEstadoServicioDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _servicioServicio.CambiarEstadoAsync(empresaId, servicioId, datos);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
     /// Asigna o reasigna la unidad operativa del servicio. La reasignación
     /// no modifica la jornada del servicio. Solo un coordinador de esa
     /// empresa puede hacerlo.
@@ -120,29 +94,6 @@ public class ServiciosController : ControllerBase
         try
         {
             await _servicioServicio.AsignarUnidadAsync(empresaId, servicioId, datos);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
-    /// Retira la unidad operativa del servicio, dejándolo disponible para
-    /// reorganización. Solo un coordinador de esa empresa puede hacerlo.
-    /// </summary>
-    [HttpPost("{servicioId:int}/retirar-unidad")]
-    public async Task<IActionResult> RetirarUnidadAsync(int empresaId, int jornadaId, int servicioId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _servicioServicio.RetirarUnidadAsync(empresaId, servicioId);
             return NoContent();
         }
         catch (InvalidOperationException excepcion)
@@ -245,32 +196,6 @@ public class ServiciosController : ControllerBase
         catch (InvalidOperationException excepcion)
         {
             return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
-    /// Genera la propuesta de planificación asistida del servicio (ver
-    /// <c>tasks.md</c> Fase 14): orden sugerido de pasajeros, horarios y
-    /// continuidad geográfica. Es solo una recomendación de lectura; el
-    /// coordinador puede aceptarla, modificarla o ignorarla mediante las
-    /// operaciones manuales existentes (asignar unidad, reordenar
-    /// pasajeros). Solo un coordinador de esa empresa puede consultarla.
-    /// </summary>
-    [HttpGet("{servicioId:int}/propuesta-planificacion")]
-    public async Task<ActionResult<PropuestaPlanificacionDto>> ObtenerPropuestaPlanificacionAsync(int empresaId, int jornadaId, int servicioId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            return Ok(await _planificacionServicio.GenerarPropuestaAsync(empresaId, servicioId));
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
         }
     }
 }

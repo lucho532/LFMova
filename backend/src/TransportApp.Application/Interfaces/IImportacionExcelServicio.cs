@@ -29,23 +29,6 @@ public interface IImportacionExcelServicio
         int empresaId, int usuarioCoordinadorId, string nombreArchivo, Stream archivo, DateOnly fechaOperativa, int? unidadOperativaId, bool repartirEntreUnidades, int? sedeGeneralId);
 
     /// <summary>
-    /// Agrega a mano a un empleado que no venía en el Excel (lo crea o lo
-    /// vincula si hace falta) y lo asigna a una ruta ya creada. Falla si la
-    /// ruta no existe, está cancelada o finalizada, o si la persona ya está
-    /// en una ruta de ese mismo horario y sede.
-    /// </summary>
-    Task<ResultadoImportacionDto> AgregarEmpleadoARutaAsync(int empresaId, AgregarEmpleadoManualDto datos);
-
-    /// <summary>
-    /// Crea una ruta a mano (sin Excel) para una unidad operativa, o agrega el
-    /// pasajero a la que ya exista con esa misma fecha, hora, tipo, sede y
-    /// unidad. Crea la jornada de la fecha si hace falta. La unidad debe
-    /// pertenecer a un conductor con vinculación activa a la empresa y no
-    /// tener ya otra ruta en ese mismo horario.
-    /// </summary>
-    Task<ResultadoImportacionDto> CrearRutaManualAsync(int empresaId, CrearRutaManualDto datos);
-
-    /// <summary>
     /// Crea una ruta vacía a mano para una unidad operativa (o reutiliza la
     /// que ya exista con esa misma fecha, hora, tipo, sede y unidad), sin
     /// darle de alta ningún pasajero: sirve para abrir un destino nuevo antes

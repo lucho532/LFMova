@@ -74,47 +74,6 @@ public class ImportacionesController : ControllerBase
         }
     }
 
-    /// <summary>Agrega a mano a un empleado que no venía en el Excel y lo asigna a una ruta ya creada.</summary>
-    [HttpPost("empleado-manual")]
-    public async Task<ActionResult<ResultadoImportacionDto>> AgregarEmpleadoManualAsync(int empresaId, [FromBody] AgregarEmpleadoManualDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            return Ok(await _importacionServicio.AgregarEmpleadoARutaAsync(empresaId, datos));
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
-    /// Crea una ruta a mano para una unidad operativa (o agrega el pasajero a
-    /// la que ya exista con esa fecha, hora, tipo, sede y unidad).
-    /// </summary>
-    [HttpPost("ruta-manual")]
-    public async Task<ActionResult<ResultadoImportacionDto>> CrearRutaManualAsync(int empresaId, [FromBody] CrearRutaManualDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            return Ok(await _importacionServicio.CrearRutaManualAsync(empresaId, datos));
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
     /// <summary>
     /// Crea una ruta vacía a mano para una unidad operativa (o reutiliza la
     /// que ya exista con esa misma fecha, hora, tipo, sede y unidad), sin

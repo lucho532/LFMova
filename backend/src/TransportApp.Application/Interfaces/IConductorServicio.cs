@@ -31,12 +31,6 @@ public interface IConductorServicio
     /// <summary>Obtiene los conductores vinculados a la empresa indicada.</summary>
     Task<List<ConductorDto>> ObtenerPorEmpresaAsync(int empresaId);
 
-    /// <summary>Activa un conductor globalmente.</summary>
-    Task ActivarAsync(int conductorId);
-
-    /// <summary>Desactiva un conductor globalmente.</summary>
-    Task DesactivarAsync(int conductorId);
-
     /// <summary>Activa la vinculación de un conductor con una empresa.</summary>
     Task ActivarVinculacionAsync(int empresaId, int conductorId);
 

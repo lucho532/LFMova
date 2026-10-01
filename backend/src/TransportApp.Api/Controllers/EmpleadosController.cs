@@ -78,44 +78,4 @@ public class EmpleadosController : ControllerBase
             return NotFound(new { mensaje = excepcion.Message });
         }
     }
-
-    /// <summary>Activa un empleado. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPost("{empleadoId:int}/activar")]
-    public async Task<IActionResult> ActivarAsync(int empresaId, int empleadoId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _empleadoServicio.ActivarAsync(empresaId, empleadoId);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>Desactiva un empleado. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPost("{empleadoId:int}/desactivar")]
-    public async Task<IActionResult> DesactivarAsync(int empresaId, int empleadoId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _empleadoServicio.DesactivarAsync(empresaId, empleadoId);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
 }

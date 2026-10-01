@@ -35,120 +35,6 @@ public class RutaManualTests
     }
 
     [Fact]
-    public async Task CrearRutaManual_ReutilizaSiYaExisteYSeparaPorUnidad_YLasAccionesSobreElPasajeroFuncionan()
-    {
-        using var alcance = _fixture.CrearAlcance();
-        var contexto = alcance.ServiceProvider.GetRequiredService<TransportAppDbContext>();
-        var hasheador = alcance.ServiceProvider.GetRequiredService<IHasheadorContrasenas>();
-
-        var empresa = await SemillaDatosHelper.CrearEmpresaAsync(contexto, "Empresa Ruta Manual");
-        await SemillaDatosHelper.CrearUsuarioConRolAsync(contexto, hasheador, "RM-COORD", "ClaveCoord123", Rol.COORDINADOR, empresa.EmpresaId);
-
-        var unidadId = new Dictionary<string, int>();
-        foreach (var (cedula, placa) in new[] { ("RM-C1", "RUT001"), ("RM-C2", "RUT002"), ("RM-C3", "RUT003") })
-        {
-            var usuario = await SemillaDatosHelper.CrearUsuarioConRolAsync(contexto, hasheador, cedula, "ClaveCond123", Rol.CONDUCTOR, empresa.EmpresaId);
-            var conductor = new Conductor { UsuarioId = usuario.UsuarioId, NombreCompleto = cedula, Telefono = "3000000000", Activo = true };
-            contexto.Conductores.Add(conductor);
-            await contexto.SaveChangesAsync();
-            contexto.VinculacionesConductorEmpresa.Add(new VinculacionConductorEmpresa { ConductorId = conductor.ConductorId, EmpresaId = empresa.EmpresaId, Activa = true });
-            var vehiculo = new Vehiculo { ConductorId = conductor.ConductorId, Placa = placa, Marca = "X", Modelo = "2023", Capacidad = 4, Activo = true };
-            contexto.Vehiculos.Add(vehiculo);
-            await contexto.SaveChangesAsync();
-            var unidad = new UnidadOperativa { ConductorId = conductor.ConductorId, VehiculoId = vehiculo.VehiculoId, Activa = true };
-            contexto.UnidadesOperativas.Add(unidad);
-            await contexto.SaveChangesAsync();
-            unidadId[cedula] = unidad.UnidadOperativaId;
-        }
-
-        using var cliente = _fixture.Fabrica.CreateClient();
-        await AutenticarAsync(cliente, "RM-COORD", "ClaveCoord123");
-
-        var respuestaSede = await cliente.PostAsJsonAsync($"/api/empresas/{empresa.EmpresaId}/sedes", new CrearSedeDto
-        {
-            Nombre = "Sede Manual", Direccion = "Calle 1", Ciudad = "Bogotá", Barrio = "Centro"
-        });
-        respuestaSede.EnsureSuccessStatusCode();
-        var sede = (await respuestaSede.Content.ReadFromJsonAsync<SedeDto>())!;
-
-        var ruta = $"/api/empresas/{empresa.EmpresaId}/importaciones/ruta-manual";
-
-        // Primera persona: crea la jornada y la ruta de la unidad 1.
-        var primero = await EnviarAsync(cliente, ruta, sede.SedeId, unidadId["RM-C1"], "RM-1001", "Ana Primero");
-        Assert.Equal(1, primero.ServiciosCreados);
-        Assert.Equal(1, primero.PasajerosAsignados);
-        Assert.NotNull(primero.ServicioId);
-
-        // Segunda persona, mismos fecha/hora/tipo/sede/unidad: se agrega a la misma ruta, no crea otra.
-        var segundo = await EnviarAsync(cliente, ruta, sede.SedeId, unidadId["RM-C1"], "RM-1002", "Luis Segundo");
-        Assert.Equal(0, segundo.ServiciosCreados);
-        Assert.Equal(primero.ServicioId, segundo.ServicioId);
-
-        // Tercera persona, misma fecha/hora/tipo/sede pero otra unidad: crea una segunda ruta distinta.
-        var tercero = await EnviarAsync(cliente, ruta, sede.SedeId, unidadId["RM-C2"], "RM-1003", "María Tercero");
-        Assert.Equal(1, tercero.ServiciosCreados);
-        Assert.NotEqual(primero.ServicioId, tercero.ServicioId);
-        Assert.Equal(primero.JornadaId, tercero.JornadaId);
-
-        var servicios = await contexto.Servicios.AsNoTracking().Where(s => s.JornadaId == primero.JornadaId).ToListAsync();
-        Assert.Equal(2, servicios.Count);
-        Assert.All(servicios, s => Assert.Equal(EstadoServicio.ASIGNADO, s.Estado));
-
-        // Antes de publicar, "programadas" no las cuenta: son trabajo interno de armado, no rutas reales todavía.
-        var resumenAntes = await cliente.GetFromJsonAsync<TransportApp.Application.DTOs.Estadisticas.ResumenEmpresaDto>($"/api/empresas/{empresa.EmpresaId}/estadisticas/resumen");
-        Assert.Equal(0, resumenAntes!.RutasProgramadas);
-        var rutasAntes = await cliente.GetFromJsonAsync<List<TransportApp.Application.DTOs.Estadisticas.RutaEmpresaDto>>($"/api/empresas/{empresa.EmpresaId}/estadisticas/rutas?filtro=programadas");
-        Assert.Empty(rutasAntes!);
-
-        var publicar = await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{primero.JornadaId}/publicar", content: null);
-        publicar.EnsureSuccessStatusCode();
-
-        var resumenDespues = await cliente.GetFromJsonAsync<TransportApp.Application.DTOs.Estadisticas.ResumenEmpresaDto>($"/api/empresas/{empresa.EmpresaId}/estadisticas/resumen");
-        Assert.Equal(2, resumenDespues!.RutasProgramadas);
-
-        // Reasignar: el segundo pasajero se mueve a la ruta de la unidad 2 (ya existe: no crea una tercera ruta).
-        var rutaPasajeroSegundo = $"/api/empresas/{empresa.EmpresaId}/jornadas/{primero.JornadaId}/servicios/{primero.ServicioId}/pasajeros";
-        var pasajeros1 = await cliente.GetFromJsonAsync<List<ServicioPasajeroDto>>(rutaPasajeroSegundo);
-        var idPasajeroSegundo = pasajeros1!.Single(p => p.NombreCompletoEmpleado == "Luis Segundo").ServicioPasajeroId;
-
-        var reasignar = await cliente.PutAsJsonAsync($"{rutaPasajeroSegundo}/{idPasajeroSegundo}/reasignar", new ReasignarServicioPasajeroDto { UnidadOperativaId = unidadId["RM-C2"] });
-        Assert.Equal(HttpStatusCode.NoContent, reasignar.StatusCode);
-        Assert.Equal(2, await contexto.Servicios.CountAsync(s => s.JornadaId == primero.JornadaId)); // la ruta destino ya existía: sigue habiendo solo 2 rutas
-        var pasajeroSegundoAhora = await contexto.ServiciosPasajero.AsNoTracking().FirstAsync(p => p.ServicioPasajeroId == idPasajeroSegundo);
-        Assert.Equal(tercero.ServicioId, pasajeroSegundoAhora.ServicioId);
-
-        // Reasignar a una unidad sin ruta todavía: crea una ruta nueva (la tercera).
-        var reasignarNueva = await cliente.PutAsJsonAsync($"{rutaPasajeroSegundo}/{idPasajeroSegundo}/reasignar", new ReasignarServicioPasajeroDto { UnidadOperativaId = unidadId["RM-C3"] });
-        Assert.Equal(HttpStatusCode.NoContent, reasignarNueva.StatusCode);
-        Assert.Equal(3, await contexto.Servicios.CountAsync(s => s.JornadaId == primero.JornadaId));
-
-        // Cancelar al tercer pasajero (queda con estado Cancelado, no se borra).
-        var rutaPasajeroTercero = $"/api/empresas/{empresa.EmpresaId}/jornadas/{primero.JornadaId}/servicios/{tercero.ServicioId}/pasajeros";
-        var pasajeros3 = await cliente.GetFromJsonAsync<List<ServicioPasajeroDto>>(rutaPasajeroTercero);
-        var idPasajeroTercero = pasajeros3!.Single(p => p.NombreCompletoEmpleado == "María Tercero").ServicioPasajeroId;
-
-        var cancelar = await cliente.PostAsync($"{rutaPasajeroTercero}/{idPasajeroTercero}/cancelar", content: null);
-        Assert.Equal(HttpStatusCode.NoContent, cancelar.StatusCode);
-        Assert.Equal(EstadoServicioPasajero.CANCELADO, (await contexto.ServiciosPasajero.AsNoTracking().FirstAsync(p => p.ServicioPasajeroId == idPasajeroTercero)).Estado);
-
-        var cancelarDeNuevo = await cliente.PostAsync($"{rutaPasajeroTercero}/{idPasajeroTercero}/cancelar", content: null);
-        Assert.Equal(HttpStatusCode.Conflict, cancelarDeNuevo.StatusCode);
-
-        // Eliminar al primer pasajero: no queda ningún rastro de esa fila.
-        var pasajeros1Ahora = await cliente.GetFromJsonAsync<List<ServicioPasajeroDto>>(rutaPasajeroSegundo);
-        var idPasajeroPrimero = pasajeros1Ahora!.Single(p => p.NombreCompletoEmpleado == "Ana Primero").ServicioPasajeroId;
-
-        var eliminar = await cliente.DeleteAsync($"{rutaPasajeroSegundo}/{idPasajeroPrimero}");
-        Assert.Equal(HttpStatusCode.NoContent, eliminar.StatusCode);
-        Assert.Null(await contexto.ServiciosPasajero.AsNoTracking().FirstOrDefaultAsync(p => p.ServicioPasajeroId == idPasajeroPrimero));
-
-        // Un conductor (no coordinador) no puede usar estas acciones administrativas.
-        await AutenticarAsync(cliente, "RM-C1", "ClaveCond123");
-        var prohibido = await cliente.PostAsync($"{rutaPasajeroTercero}/{idPasajeroTercero}/cancelar", content: null);
-        Assert.Equal(HttpStatusCode.Forbidden, prohibido.StatusCode);
-    }
-
-    [Fact]
     public async Task CrearRutaVacia_ReutilizaSiYaExiste_YSirveComoDestinoParaMoverUnPasajero()
     {
         using var alcance = _fixture.CrearAlcance();
@@ -187,9 +73,17 @@ public class RutaManualTests
 
         // La ruta original: dos pasajeros con la unidad 1, todos los barrios de la ciudad mezclados
         // (el caso real que motivó esto: una ruta "sobrante" que absorbió todo lo que quedó sin conductor).
-        var rutaManual = $"/api/empresas/{empresa.EmpresaId}/importaciones/ruta-manual";
-        var original = await EnviarAsync(cliente, rutaManual, sede.SedeId, unidadId["RV-C1"], "RV-1001", "Ana Original");
-        await EnviarAsync(cliente, rutaManual, sede.SedeId, unidadId["RV-C1"], "RV-1002", "Luis Original");
+        var respuestaOriginal = await cliente.PostAsJsonAsync($"/api/empresas/{empresa.EmpresaId}/importaciones/ruta-pegada", new CrearRutaPegadaDto
+        {
+            Fecha = new DateOnly(2026, 10, 1), Hora = new TimeOnly(6, 0), Tipo = TipoServicio.ENTRADA, SedeId = sede.SedeId, UnidadOperativaId = unidadId["RV-C1"],
+            Pasajeros = new List<FilaPasajeroPegadoDto>
+            {
+                new() { Cedula = "RV-1001", NombreCompleto = "Ana Original", Celular = "3000000001", Direccion = "Calle 1 # 2-3", Barrio = "Centro" },
+                new() { Cedula = "RV-1002", NombreCompleto = "Luis Original", Celular = "3000000001", Direccion = "Calle 1 # 2-3", Barrio = "Centro" },
+            }
+        });
+        Assert.Equal(HttpStatusCode.OK, respuestaOriginal.StatusCode);
+        var original = (await respuestaOriginal.Content.ReadFromJsonAsync<ResultadoImportacionDto>())!;
 
         var rutaVacia = $"/api/empresas/{empresa.EmpresaId}/importaciones/ruta-vacia";
         var datosRutaVacia = new CrearRutaVaciaDto
@@ -502,22 +396,4 @@ public class RutaManualTests
         cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", cuerpo!.Token);
     }
 
-    private static async Task<ResultadoImportacionDto> EnviarAsync(HttpClient cliente, string ruta, int sedeId, int unidadOperativaId, string cedula, string nombre)
-    {
-        var respuesta = await cliente.PostAsJsonAsync(ruta, new CrearRutaManualDto
-        {
-            Fecha = new DateOnly(2026, 10, 1),
-            Hora = new TimeOnly(6, 0),
-            Tipo = TipoServicio.ENTRADA,
-            SedeId = sedeId,
-            UnidadOperativaId = unidadOperativaId,
-            Cedula = cedula,
-            NombreCompleto = nombre,
-            Celular = "3000000001",
-            Direccion = "Calle 1 # 2-3",
-            Barrio = "Centro"
-        });
-        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
-        return (await respuesta.Content.ReadFromJsonAsync<ResultadoImportacionDto>())!;
-    }
 }

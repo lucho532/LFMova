@@ -30,36 +30,6 @@ public class ConductorController : ControllerBase
     }
 
     /// <summary>
-    /// Consulta un conductor por su identificador. Si quien consulta es un
-    /// coordinador (no el propio conductor), no se exponen las empresas con
-    /// las que el conductor está vinculado fuera de las del coordinador que
-    /// consulta (ver <c>tasks.md</c> T097).
-    /// </summary>
-    [HttpGet("{conductorId:int}")]
-    public async Task<ActionResult<ConductorDto>> ObtenerPorIdAsync(int conductorId)
-    {
-        var conductor = await _conductorServicio.ObtenerPorIdAsync(conductorId);
-        if (conductor is null)
-        {
-            return NotFound();
-        }
-
-        if (!PuedeGestionar(conductor))
-        {
-            return Forbid();
-        }
-
-        if (!User.EsUsuario(conductor.UsuarioId))
-        {
-            conductor.EmpresaIdsVinculadosActivos = conductor.EmpresaIdsVinculadosActivos
-                .Where(id => User.TieneRolEnEmpresa(Rol.COORDINADOR, id))
-                .ToList();
-        }
-
-        return Ok(conductor);
-    }
-
-    /// <summary>
     /// Consulta los servicios asignados al conductor autenticado (en
     /// cualquier empresa con la que tenga vinculación), más recientes
     /// primero. Se resuelve el conductor a partir del usuario del token, sin
@@ -94,51 +64,4 @@ public class ConductorController : ControllerBase
             return NotFound(new { mensaje = excepcion.Message });
         }
     }
-
-    /// <summary>Activa un conductor globalmente.</summary>
-    [HttpPost("{conductorId:int}/activar")]
-    public async Task<IActionResult> ActivarAsync(int conductorId)
-    {
-        return await EjecutarSiPuedeGestionarAsync(conductorId, () => _conductorServicio.ActivarAsync(conductorId));
-    }
-
-    /// <summary>Desactiva un conductor globalmente.</summary>
-    [HttpPost("{conductorId:int}/desactivar")]
-    public async Task<IActionResult> DesactivarAsync(int conductorId)
-    {
-        return await EjecutarSiPuedeGestionarAsync(conductorId, () => _conductorServicio.DesactivarAsync(conductorId));
-    }
-
-    private async Task<IActionResult> EjecutarSiPuedeGestionarAsync(int conductorId, Func<Task> operacion)
-    {
-        var conductor = await _conductorServicio.ObtenerPorIdAsync(conductorId);
-        if (conductor is null)
-        {
-            return NotFound();
-        }
-
-        if (!PuedeGestionar(conductor))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await operacion();
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
-    /// Indica si el usuario autenticado puede gestionar el conductor
-    /// indicado: es el propio conductor, o es coordinador de alguna empresa
-    /// con la que el conductor tenga una vinculación activa.
-    /// </summary>
-    private bool PuedeGestionar(ConductorDto conductor)
-        => User.EsUsuario(conductor.UsuarioId)
-           || conductor.EmpresaIdsVinculadosActivos.Any(empresaId => User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId));
 }

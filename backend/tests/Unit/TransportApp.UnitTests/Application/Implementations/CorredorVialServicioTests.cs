@@ -50,17 +50,6 @@ public class CorredorVialServicioTests
     }
 
     [Fact]
-    public async Task ActualizarAsync_LanzaExcepcion_CuandoElCorredorEsDeOtraEmpresa()
-    {
-        var repositorio = new CorredorVialRepositorioFalso();
-        var servicio = new CorredorVialServicio(repositorio);
-        var corredor = await servicio.CrearAsync(1, new CrearCorredorVialDto { Nombre = "Atardeceres Occidente" });
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            servicio.ActualizarAsync(2, corredor.CorredorVialId, new ActualizarCorredorVialDto { Nombre = "Otro" }));
-    }
-
-    [Fact]
     public async Task DesactivarAsync_DesactivaElCorredor_CuandoPerteneceALaEmpresa()
     {
         var repositorio = new CorredorVialRepositorioFalso();

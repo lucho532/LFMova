@@ -129,16 +129,4 @@ public class EmpleadoServicioTests
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             servicio.ActualizarAsync(1, 1, new ActualizarEmpleadoDto { NombreCompleto = "X", Telefono = "", Direccion = "X", Barrio = "X" }));
     }
-
-    [Fact]
-    public async Task DesactivarAsync_DesactivaElEmpleado_CuandoPerteneceALaEmpresa()
-    {
-        var repositorio = new EmpleadoRepositorioFalso(CrearEmpleado(1, 1));
-        var servicio = new EmpleadoServicio(repositorio);
-
-        await servicio.DesactivarAsync(1, 1);
-        var actualizado = await servicio.ObtenerPorIdAsync(1, 1);
-
-        Assert.False(actualizado!.Activo);
-    }
 }

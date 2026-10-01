@@ -109,14 +109,6 @@ public interface IServicioPasajeroServicio
     Task EliminarUbicacionGuardadaAsync(int empresaId, int servicioPasajeroId);
 
     /// <summary>
-    /// El coordinador cancela la participación del pasajero en la ruta
-    /// (queda con estado <c>CANCELADO</c>, visible en el historial de esa
-    /// ruta). Falla si el pasajero ya tiene un resultado final (recogido, no
-    /// recogido, no asistirá o ya estaba cancelado).
-    /// </summary>
-    Task CancelarAsync(int empresaId, int servicioPasajeroId);
-
-    /// <summary>
     /// El coordinador elimina por completo al pasajero de la ruta (borrado
     /// físico, para cuando se agregó por error): no queda registro de que
     /// estuvo ahí. Falla si el servicio ya está en curso o finalizado.
@@ -130,14 +122,6 @@ public interface IServicioPasajeroServicio
     /// está en curso o finalizado.
     /// </summary>
     Task EditarDireccionAsync(int empresaId, int servicioPasajeroId, EditarDireccionServicioPasajeroDto datos);
-
-    /// <summary>
-    /// Mueve al pasajero a la ruta (servicio) de otra unidad operativa con la
-    /// misma sede, fecha, hora y tipo; si esa ruta no existe todavía, la crea.
-    /// El servicio de origen y el de destino deben pertenecer a la misma
-    /// empresa y no estar cancelados, en curso ni finalizados.
-    /// </summary>
-    Task ReasignarAsync(int empresaId, int servicioPasajeroId, ReasignarServicioPasajeroDto datos);
 
     /// <summary>
     /// Mueve al pasajero directamente al servicio (ruta) indicado, para

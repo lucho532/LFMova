@@ -212,19 +212,6 @@ public class ServicioServicio : IServicioServicio
     }
 
     /// <inheritdoc />
-    public async Task RetirarUnidadAsync(int empresaId, int servicioId)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
-
-        servicio.UnidadOperativaId = null;
-        await _servicioRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
     public async Task DespublicarAsync(int empresaId, int servicioId)
     {
         var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);

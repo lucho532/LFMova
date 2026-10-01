@@ -43,7 +43,6 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IInvitacionEmpresaServicio, InvitacionEmpresaServicio>();
         servicios.AddScoped<IRecuperacionContrasenaServicio, RecuperacionContrasenaServicio>();
         servicios.AddScoped<INotificacionServicio, NotificacionServicio>();
-        servicios.AddScoped<IPlanificacionServicio, PlanificacionServicio>();
         servicios.AddScoped<IChatServicio, ChatServicio>();
         servicios.AddScoped<IIncidenciaServicio, IncidenciaServicio>();
         servicios.AddScoped<IAlertaEjecucionServicio, AlertaEjecucionServicio>();

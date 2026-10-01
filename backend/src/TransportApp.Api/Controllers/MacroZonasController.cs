@@ -52,26 +52,6 @@ public class MacroZonasController : ControllerBase
         return Ok(await _macroZonaServicio.ObtenerPorEmpresaAsync(empresaId));
     }
 
-    /// <summary>Actualiza el nombre de una macrozona. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPut("{macroZonaId:int}")]
-    public async Task<IActionResult> ActualizarAsync(int empresaId, int macroZonaId, ActualizarMacroZonaDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _macroZonaServicio.ActualizarAsync(empresaId, macroZonaId, datos);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
-
     /// <summary>Activa una macrozona. Solo un coordinador de esa empresa puede hacerlo.</summary>
     [HttpPost("{macroZonaId:int}/activar")]
     public async Task<IActionResult> ActivarAsync(int empresaId, int macroZonaId)

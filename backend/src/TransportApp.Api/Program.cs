@@ -7,7 +7,6 @@ using TransportApp.Api.BackgroundServices;
 using TransportApp.Api.Configuration;
 using TransportApp.Application;
 using TransportApp.Application.DTOs.Autenticacion;
-using TransportApp.Application.DTOs.Planificacion;
 using TransportApp.Domain.Enums;
 using TransportApp.Infrastructure;
 using TransportApp.Infrastructure.Autenticacion;
@@ -49,9 +48,6 @@ builder.Services.AddSwaggerGen(opciones =>
 
 builder.Services.AgregarInfraestructura(builder.Configuration);
 builder.Services.AgregarAplicacion();
-
-var opcionesPlanificacion = builder.Configuration.GetSection(OpcionesPlanificacion.Seccion).Get<OpcionesPlanificacion>() ?? new OpcionesPlanificacion();
-builder.Services.AddSingleton(opcionesPlanificacion);
 
 var opcionesFrontend = builder.Configuration.GetSection(OpcionesFrontend.Seccion).Get<OpcionesFrontend>() ?? new OpcionesFrontend();
 builder.Services.AddSingleton(opcionesFrontend);

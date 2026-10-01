@@ -91,31 +91,6 @@ public class IncidenciasController : ControllerBase
     }
 
     /// <summary>
-    /// Asocia una nueva evidencia a la incidencia indicada. No almacena el
-    /// archivo binario: <c>ReferenciaArchivo</c> apunta al almacenamiento
-    /// externo que se defina técnicamente.
-    /// </summary>
-    [HttpPost("{incidenciaId:int}/evidencias")]
-    public async Task<ActionResult<EvidenciaDto>> AgregarEvidenciaAsync(
-        int empresaId, int jornadaId, int servicioId, int servicioPasajeroId, int incidenciaId, AgregarEvidenciaDto datos)
-    {
-        if (!await EsConductorAsignadoAsync(empresaId, servicioPasajeroId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            var evidencia = await _incidenciaServicio.AgregarEvidenciaAsync(empresaId, servicioPasajeroId, incidenciaId, datos);
-            return Ok(evidencia);
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>
     /// Sube una fotografía (JPEG, PNG, WebP o HEIC, hasta 10 MB) y la asocia
     /// como evidencia de la incidencia. El archivo se guarda fuera de la base
     /// de datos; esta solo conserva su referencia.

@@ -197,22 +197,6 @@ public class ConductorServicio : IConductorServicio
     }
 
     /// <inheritdoc />
-    public async Task ActivarAsync(int conductorId)
-    {
-        var conductor = await ObtenerConductorOFallarAsync(conductorId);
-        conductor.Activo = true;
-        await _conductorRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task DesactivarAsync(int conductorId)
-    {
-        var conductor = await ObtenerConductorOFallarAsync(conductorId);
-        conductor.Activo = false;
-        await _conductorRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
     public async Task ActivarVinculacionAsync(int empresaId, int conductorId)
     {
         var vinculacion = await ObtenerVinculacionOFallarAsync(empresaId, conductorId);

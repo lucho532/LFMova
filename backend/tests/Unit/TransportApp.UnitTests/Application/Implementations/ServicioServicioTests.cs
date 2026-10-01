@@ -461,20 +461,6 @@ public class ServicioServicioTests
         Assert.Equal(UnidadActivaId, actualizado!.UnidadOperativaId);
     }
 
-    [Fact]
-    public async Task RetirarUnidadAsync_DejaElServicioSinUnidad()
-    {
-        var (jornadas, sedes, servicios, unidades, conductores) = CrearRepositorios();
-        var servicio = CrearServicio(servicios, jornadas, sedes, unidades, conductores);
-        var creado = await servicio.CrearAsync(1, 1, DtoValido(UnidadActivaId));
-
-        await servicio.RetirarUnidadAsync(1, creado.ServicioId);
-        var actualizado = await servicio.ObtenerPorIdAsync(1, creado.ServicioId);
-
-        Assert.Null(actualizado!.UnidadOperativaId);
-        Assert.Equal(1, actualizado.JornadaId);
-    }
-
     private static async Task<int> CrearServicioPublicadoAsync(ServicioServicio servicio, int unidadOperativaId)
     {
         var creado = await servicio.CrearAsync(1, 1, DtoValido(unidadOperativaId));

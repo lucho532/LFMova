@@ -60,22 +60,6 @@ public class EmpleadoServicio : IEmpleadoServicio
         await _empleadoRepositorio.GuardarCambiosAsync();
     }
 
-    /// <inheritdoc />
-    public async Task ActivarAsync(int empresaId, int empleadoId)
-    {
-        var empleado = await ObtenerEmpleadoDeLaEmpresaOFallarAsync(empresaId, empleadoId);
-        empleado.Activo = true;
-        await _empleadoRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task DesactivarAsync(int empresaId, int empleadoId)
-    {
-        var empleado = await ObtenerEmpleadoDeLaEmpresaOFallarAsync(empresaId, empleadoId);
-        empleado.Activo = false;
-        await _empleadoRepositorio.GuardarCambiosAsync();
-    }
-
     private async Task<Empleado> ObtenerEmpleadoDeLaEmpresaOFallarAsync(int empresaId, int empleadoId)
     {
         var empleado = await _empleadoRepositorio.ObtenerPorIdAsync(empleadoId);

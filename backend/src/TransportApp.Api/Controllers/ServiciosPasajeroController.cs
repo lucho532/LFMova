@@ -80,26 +80,6 @@ public class ServiciosPasajeroController : ControllerBase
         }
     }
 
-    /// <summary>El coordinador cancela la participación del pasajero en la ruta (queda con estado Cancelado, visible en el historial de la ruta).</summary>
-    [HttpPost("{servicioPasajeroId:int}/cancelar")]
-    public async Task<IActionResult> CancelarAsync(int empresaId, int jornadaId, int servicioId, int servicioPasajeroId)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _servicioPasajeroServicio.CancelarAsync(empresaId, servicioPasajeroId);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
     /// <summary>El coordinador elimina por completo al pasajero de la ruta (para cuando se agregó por error); no queda registro de que estuvo ahí.</summary>
     [HttpDelete("{servicioPasajeroId:int}")]
     public async Task<IActionResult> EliminarAsync(int empresaId, int jornadaId, int servicioId, int servicioPasajeroId)
@@ -132,26 +112,6 @@ public class ServiciosPasajeroController : ControllerBase
         try
         {
             await _servicioPasajeroServicio.EditarDireccionAsync(empresaId, servicioPasajeroId, datos);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return Conflict(new { mensaje = excepcion.Message });
-        }
-    }
-
-    /// <summary>El coordinador mueve al pasajero a la ruta de otra unidad operativa (misma sede, fecha, hora y tipo); si esa ruta no existe, se crea.</summary>
-    [HttpPut("{servicioPasajeroId:int}/reasignar")]
-    public async Task<IActionResult> ReasignarAsync(int empresaId, int jornadaId, int servicioId, int servicioPasajeroId, ReasignarServicioPasajeroDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _servicioPasajeroServicio.ReasignarAsync(empresaId, servicioPasajeroId, datos);
             return NoContent();
         }
         catch (InvalidOperationException excepcion)

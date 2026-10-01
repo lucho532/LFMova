@@ -51,19 +51,6 @@ public class CorredorVialServicio : ICorredorVialServicio
     }
 
     /// <inheritdoc />
-    public async Task ActualizarAsync(int empresaId, int corredorVialId, ActualizarCorredorVialDto datos)
-    {
-        if (string.IsNullOrWhiteSpace(datos.Nombre))
-        {
-            throw new InvalidOperationException("El nombre del corredor vial es obligatorio.");
-        }
-
-        var corredor = await ObtenerCorredorDeLaEmpresaOFallarAsync(empresaId, corredorVialId);
-        corredor.Nombre = datos.Nombre.Trim();
-        await _corredorVialRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
     public async Task ActivarAsync(int empresaId, int corredorVialId)
     {
         var corredor = await ObtenerCorredorDeLaEmpresaOFallarAsync(empresaId, corredorVialId);

@@ -15,9 +15,6 @@ public interface IMacroZonaServicio
     /// <summary>Obtiene todas las macrozonas de la empresa indicada.</summary>
     Task<List<MacroZonaDto>> ObtenerPorEmpresaAsync(int empresaId);
 
-    /// <summary>Actualiza el nombre de una macrozona de la empresa indicada.</summary>
-    Task ActualizarAsync(int empresaId, int macroZonaId, ActualizarMacroZonaDto datos);
-
     /// <summary>Activa una macrozona de la empresa indicada.</summary>
     Task ActivarAsync(int empresaId, int macroZonaId);
 

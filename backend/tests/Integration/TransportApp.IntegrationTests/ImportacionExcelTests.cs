@@ -301,24 +301,11 @@ public class ImportacionExcelTests
         Assert.Equal(0, repetido.ServiciosCreados);
         Assert.Equal(6, repetido.FilasOmitidas);
 
-        // Un empleado que no venía en el Excel se agrega a mano y queda asignado a una ruta.
-        var manual = await cliente.PostAsJsonAsync($"{ruta}/empleado-manual", new AgregarEmpleadoManualDto
-        {
-            ServicioId = servicios[0].ServicioId, Cedula = "2999", NombreCompleto = "Nuevo Manual", Celular = "3009999999", Direccion = "Calle 1 # 2-3", Barrio = "Centro"
-        });
-        Assert.Equal(HttpStatusCode.OK, manual.StatusCode);
-        Assert.Equal(1, await contexto.ServiciosPasajero.CountAsync(p => p.ServicioId == servicios[0].ServicioId && p.Empleado!.Usuario!.Cedula == "2999"));
-
         // La ruta tiene conductor pero todavía no está publicada: el conductor no la ve, así que no se le
-        // avisa del pasajero agregado; se entera de toda la ruta (con ese pasajero) al publicarla.
+        // avisa de nada; se entera de toda la ruta al publicarla.
         var unidadDelServicio = await contexto.UnidadesOperativas.AsNoTracking().SingleAsync(u => u.UnidadOperativaId == servicios[0].UnidadOperativaId);
         var conductorDelServicio = await contexto.Conductores.AsNoTracking().SingleAsync(c => c.ConductorId == unidadDelServicio.ConductorId);
         Assert.Equal(0, await contexto.Notificaciones.CountAsync(n => n.UsuarioId == conductorDelServicio.UsuarioId));
-        var repetidoManual = await cliente.PostAsJsonAsync($"{ruta}/empleado-manual", new AgregarEmpleadoManualDto
-        {
-            ServicioId = servicios[0].ServicioId, Cedula = "2999", NombreCompleto = "Nuevo Manual", Celular = "3009999999", Direccion = "Calle 1 # 2-3", Barrio = "Centro"
-        });
-        Assert.Equal(HttpStatusCode.Conflict, repetidoManual.StatusCode);
 
         // "Programadas" solo cuenta desde que se publica la jornada.
         (await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{resultado.JornadaId}/publicar", content: null)).EnsureSuccessStatusCode();
@@ -329,12 +316,12 @@ public class ImportacionExcelTests
         Assert.Equal(servicios.Count, rutasEmpresa!.Count);
         Assert.All(rutasEmpresa, r => Assert.False(string.IsNullOrEmpty(r.Conductor)));
         var pasajerosEmpresa = await cliente.GetFromJsonAsync<List<TransportApp.Application.DTOs.Estadisticas.PasajeroEmpresaDto>>($"/api/empresas/{empresa.EmpresaId}/estadisticas/pasajeros");
-        Assert.Equal(7, pasajerosEmpresa!.Count);
+        Assert.Equal(6, pasajerosEmpresa!.Count);
 
         // El resumen del inicio y la actividad por conductor reflejan las rutas.
         var resumen = await cliente.GetFromJsonAsync<TransportApp.Application.DTOs.Estadisticas.ResumenEmpresaDto>($"/api/empresas/{empresa.EmpresaId}/estadisticas/resumen");
         Assert.Equal(servicios.Count, resumen!.RutasProgramadas);
-        Assert.Equal(7, resumen.PasajerosProgramados);
+        Assert.Equal(6, resumen.PasajerosProgramados);
         var porConductor = await cliente.GetFromJsonAsync<List<TransportApp.Application.DTOs.Estadisticas.EstadisticaConductorDto>>(
             $"/api/empresas/{empresa.EmpresaId}/estadisticas/conductores?desde=2026-09-14&hasta=2026-09-14");
         Assert.Equal(2, porConductor!.Count);

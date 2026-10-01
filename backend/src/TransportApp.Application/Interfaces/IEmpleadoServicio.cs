@@ -24,10 +24,4 @@ public interface IEmpleadoServicio
 
     /// <summary>Actualiza los datos actuales de un empleado de la empresa indicada.</summary>
     Task ActualizarAsync(int empresaId, int empleadoId, ActualizarEmpleadoDto datos);
-
-    /// <summary>Activa un empleado de la empresa indicada.</summary>
-    Task ActivarAsync(int empresaId, int empleadoId);
-
-    /// <summary>Desactiva un empleado de la empresa indicada.</summary>
-    Task DesactivarAsync(int empresaId, int empleadoId);
 }

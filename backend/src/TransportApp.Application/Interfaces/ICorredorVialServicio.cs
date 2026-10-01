@@ -15,9 +15,6 @@ public interface ICorredorVialServicio
     /// <summary>Obtiene todos los corredores viales de la empresa indicada.</summary>
     Task<List<CorredorVialDto>> ObtenerPorEmpresaAsync(int empresaId);
 
-    /// <summary>Actualiza el nombre de un corredor vial de la empresa indicada.</summary>
-    Task ActualizarAsync(int empresaId, int corredorVialId, ActualizarCorredorVialDto datos);
-
     /// <summary>Activa un corredor vial de la empresa indicada.</summary>
     Task ActivarAsync(int empresaId, int corredorVialId);
 

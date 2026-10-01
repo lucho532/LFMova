@@ -51,19 +51,6 @@ public class MacroZonaServicio : IMacroZonaServicio
     }
 
     /// <inheritdoc />
-    public async Task ActualizarAsync(int empresaId, int macroZonaId, ActualizarMacroZonaDto datos)
-    {
-        if (string.IsNullOrWhiteSpace(datos.Nombre))
-        {
-            throw new InvalidOperationException("El nombre de la macrozona es obligatorio.");
-        }
-
-        var macroZona = await ObtenerMacroZonaDeLaEmpresaOFallarAsync(empresaId, macroZonaId);
-        macroZona.Nombre = datos.Nombre.Trim();
-        await _macroZonaRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
     public async Task ActivarAsync(int empresaId, int macroZonaId)
     {
         var macroZona = await ObtenerMacroZonaDeLaEmpresaOFallarAsync(empresaId, macroZonaId);

@@ -53,26 +53,6 @@ public class CorredoresVialesController : ControllerBase
         return Ok(await _corredorVialServicio.ObtenerPorEmpresaAsync(empresaId));
     }
 
-    /// <summary>Actualiza el nombre de un corredor vial. Solo un coordinador de esa empresa puede hacerlo.</summary>
-    [HttpPut("{corredorVialId:int}")]
-    public async Task<IActionResult> ActualizarAsync(int empresaId, int corredorVialId, ActualizarCorredorVialDto datos)
-    {
-        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
-        {
-            return Forbid();
-        }
-
-        try
-        {
-            await _corredorVialServicio.ActualizarAsync(empresaId, corredorVialId, datos);
-            return NoContent();
-        }
-        catch (InvalidOperationException excepcion)
-        {
-            return NotFound(new { mensaje = excepcion.Message });
-        }
-    }
-
     /// <summary>Activa un corredor vial. Solo un coordinador de esa empresa puede hacerlo.</summary>
     [HttpPost("{corredorVialId:int}/activar")]
     public async Task<IActionResult> ActivarAsync(int empresaId, int corredorVialId)

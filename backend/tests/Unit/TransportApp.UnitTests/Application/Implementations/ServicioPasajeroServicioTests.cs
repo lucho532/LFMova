@@ -1175,38 +1175,6 @@ public class ServicioPasajeroServicioTests
     }
 
     [Fact]
-    public async Task CancelarAsync_MarcaCancelado_CuandoElPasajeroNoHaSidoProcesado()
-    {
-        var servicioEntidad = CrearServicio(CrearJornada());
-        var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero
-        {
-            ServicioId = servicioEntidad.ServicioId, EmpleadoId = 1, ProgramacionTransporteId = 1, Estado = EstadoServicioPasajero.CONFIRMADO, DireccionRecogida = "Calle 1"
-        });
-        var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
-        var servicio = CrearServicioPasajeroServicio(pasajeroRepo, servicioEntidad);
-
-        await servicio.CancelarAsync(EmpresaId, pasajero.ServicioPasajeroId);
-
-        Assert.Equal(EstadoServicioPasajero.CANCELADO, (await pasajeroRepo.ObtenerPorIdAsync(pasajero.ServicioPasajeroId))!.Estado);
-    }
-
-    [Fact]
-    public async Task CancelarAsync_LanzaExcepcion_CuandoElPasajeroYaFueProcesado()
-    {
-        var servicioEntidad = CrearServicio(CrearJornada());
-        var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero
-        {
-            ServicioId = servicioEntidad.ServicioId, EmpleadoId = 1, ProgramacionTransporteId = 1, Estado = EstadoServicioPasajero.RECOGIDO, DireccionRecogida = "Calle 1"
-        });
-        var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
-        var servicio = CrearServicioPasajeroServicio(pasajeroRepo, servicioEntidad);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.CancelarAsync(EmpresaId, pasajero.ServicioPasajeroId));
-    }
-
-    [Fact]
     public async Task EliminarAsync_BorraElPasajeroPorCompleto()
     {
         var servicioEntidad = CrearServicio(CrearJornada());
@@ -1311,75 +1279,5 @@ public class ServicioPasajeroServicioTests
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => servicio.EditarDireccionAsync(EmpresaId, pasajero.ServicioPasajeroId, new EditarDireccionServicioPasajeroDto { Direccion = "Calle 2" }));
-    }
-
-    [Fact]
-    public async Task ReasignarAsync_CreaLaRutaDestino_CuandoNoExisteYMueveAlPasajero()
-    {
-        var jornada = CrearJornada();
-        var servicioEntidad = CrearServicio(jornada); // UnidadOperativaId = 1
-        var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero
-        {
-            ServicioId = servicioEntidad.ServicioId, EmpleadoId = 1, ProgramacionTransporteId = 1, Estado = EstadoServicioPasajero.PROGRAMADO, DireccionRecogida = "Calle 1"
-        });
-        var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
-        // Arranca el contador de IDs de este repositorio falso lejos del de servicioEntidad (ServicioId 1): en la base real es una
-        // sola secuencia y nunca chocarían, pero acá son dos diccionarios en memoria independientes.
-        var servicioServicioFalso = new ServicioServicioFalso(new ServicioDto { ServicioId = 500, JornadaId = -1, Estado = EstadoServicio.CANCELADO });
-        var servicio = CrearServicioPasajeroServicio(pasajeroRepo, servicioEntidad, servicioServicioFalso);
-
-        await servicio.ReasignarAsync(EmpresaId, pasajero.ServicioPasajeroId, new ReasignarServicioPasajeroDto { UnidadOperativaId = 2 });
-
-        var actualizado = await pasajeroRepo.ObtenerPorIdAsync(pasajero.ServicioPasajeroId);
-        Assert.NotEqual(servicioEntidad.ServicioId, actualizado!.ServicioId);
-        Assert.Equal(1, actualizado.Orden);
-
-        var creado = (await servicioServicioFalso.ObtenerPorJornadaAsync(EmpresaId, jornada.JornadaId)).Single(s => s.ServicioId == actualizado.ServicioId);
-        Assert.Equal(2, creado.UnidadOperativaId);
-        Assert.Equal(EstadoServicio.ASIGNADO, creado.Estado);
-        Assert.Equal(servicioEntidad.SedeId, creado.SedeId);
-        Assert.Equal(servicioEntidad.HoraProgramada, creado.HoraProgramada);
-    }
-
-    [Fact]
-    public async Task ReasignarAsync_ReutilizaLaRutaDestino_CuandoYaExisteYRespetaElOrden()
-    {
-        var jornada = CrearJornada();
-        var servicioEntidad = CrearServicio(jornada); // UnidadOperativaId = 1, ServicioId = 1
-        var destinoExistente = new ServicioDto
-        {
-            ServicioId = 99, EmpresaId = EmpresaId, JornadaId = jornada.JornadaId, UnidadOperativaId = 2,
-            SedeId = servicioEntidad.SedeId, Fecha = servicioEntidad.Fecha, HoraProgramada = servicioEntidad.HoraProgramada, Tipo = servicioEntidad.Tipo, Estado = EstadoServicio.ASIGNADO
-        };
-        var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
-        // Ya hay alguien en la ruta destino: el reasignado debe quedar después.
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero { ServicioId = 99, EmpleadoId = 2, ProgramacionTransporteId = 2, Estado = EstadoServicioPasajero.PROGRAMADO, DireccionRecogida = "Calle 2", Orden = 1 });
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero { ServicioId = servicioEntidad.ServicioId, EmpleadoId = 1, ProgramacionTransporteId = 1, Estado = EstadoServicioPasajero.PROGRAMADO, DireccionRecogida = "Calle 1" });
-        var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
-        var servicioServicioFalso = new ServicioServicioFalso(destinoExistente);
-        var servicio = CrearServicioPasajeroServicio(pasajeroRepo, servicioEntidad, servicioServicioFalso);
-
-        await servicio.ReasignarAsync(EmpresaId, pasajero.ServicioPasajeroId, new ReasignarServicioPasajeroDto { UnidadOperativaId = 2 });
-
-        var actualizado = await pasajeroRepo.ObtenerPorIdAsync(pasajero.ServicioPasajeroId);
-        Assert.Equal(99, actualizado!.ServicioId);
-        Assert.Equal(2, actualizado.Orden);
-        Assert.Single(await servicioServicioFalso.ObtenerPorJornadaAsync(EmpresaId, jornada.JornadaId));
-    }
-
-    [Fact]
-    public async Task ReasignarAsync_LanzaExcepcion_CuandoYaEstaEnUnaRutaDeEsaUnidad()
-    {
-        var servicioEntidad = CrearServicio(CrearJornada()); // UnidadOperativaId = 1
-        var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
-        await pasajeroRepo.AgregarAsync(new ServicioPasajero
-        {
-            ServicioId = servicioEntidad.ServicioId, EmpleadoId = 1, ProgramacionTransporteId = 1, Estado = EstadoServicioPasajero.PROGRAMADO, DireccionRecogida = "Calle 1"
-        });
-        var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
-        var servicio = CrearServicioPasajeroServicio(pasajeroRepo, servicioEntidad);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.ReasignarAsync(EmpresaId, pasajero.ServicioPasajeroId, new ReasignarServicioPasajeroDto { UnidadOperativaId = 1 }));
     }
 }

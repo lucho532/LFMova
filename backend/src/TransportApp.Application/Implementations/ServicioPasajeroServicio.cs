@@ -437,19 +437,6 @@ public class ServicioPasajeroServicio : IServicioPasajeroServicio
     }
 
     /// <inheritdoc />
-    public async Task CancelarAsync(int empresaId, int servicioPasajeroId)
-    {
-        var pasajero = await ObtenerPasajeroDeLaEmpresaOFallarAsync(empresaId, servicioPasajeroId);
-        if (ReglasEstadoServicioPasajero.EstaProcesado(pasajero.Estado))
-        {
-            throw new InvalidOperationException($"No se puede cancelar un pasajero en estado {pasajero.Estado}.");
-        }
-
-        pasajero.Estado = EstadoServicioPasajero.CANCELADO;
-        await _servicioPasajeroRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
     public async Task EliminarAsync(int empresaId, int servicioPasajeroId)
     {
         var pasajero = await ObtenerPasajeroDeLaEmpresaOFallarAsync(empresaId, servicioPasajeroId);
@@ -487,54 +474,6 @@ public class ServicioPasajeroServicio : IServicioPasajeroServicio
         }
 
         pasajero.DireccionRecogida = datos.Direccion.Trim();
-        await _servicioPasajeroRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <inheritdoc />
-    public async Task ReasignarAsync(int empresaId, int servicioPasajeroId, ReasignarServicioPasajeroDto datos)
-    {
-        var pasajero = await ObtenerPasajeroDeLaEmpresaOFallarAsync(empresaId, servicioPasajeroId);
-        var servicioActual = await ObtenerServicioDeLaEmpresaOFallarAsync(empresaId, pasajero.ServicioId);
-
-        if (servicioActual.Estado is EstadoServicio.CANCELADO or EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO)
-        {
-            throw new InvalidOperationException("No se puede reasignar un pasajero de una ruta cancelada, en curso o finalizada.");
-        }
-
-        if (servicioActual.UnidadOperativaId == datos.UnidadOperativaId)
-        {
-            throw new InvalidOperationException("El pasajero ya está en una ruta de esa unidad.");
-        }
-
-        // Se busca (o se crea) la ruta de la unidad destino con la misma sede, fecha, hora y tipo; el pasajero se mueve ahí.
-        var serviciosDeLaJornada = await _servicioServicio.ObtenerPorJornadaAsync(empresaId, servicioActual.JornadaId);
-        var destino = serviciosDeLaJornada.FirstOrDefault(s =>
-            s.SedeId == servicioActual.SedeId && s.Tipo == servicioActual.Tipo && s.Fecha == servicioActual.Fecha
-            && s.HoraProgramada == servicioActual.HoraProgramada && s.UnidadOperativaId == datos.UnidadOperativaId);
-
-        if (destino is null)
-        {
-            var creado = await _servicioServicio.CrearAsync(empresaId, servicioActual.JornadaId, new CrearServicioDto
-            {
-                SedeId = servicioActual.SedeId,
-                Fecha = servicioActual.Fecha,
-                HoraProgramada = servicioActual.HoraProgramada,
-                Tipo = servicioActual.Tipo,
-                UnidadOperativaId = datos.UnidadOperativaId
-            });
-            // La unidad ya viene elegida: la ruta pasa directo a Asignada.
-            await _servicioServicio.CambiarEstadoAsync(empresaId, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
-            await _servicioServicio.CambiarEstadoAsync(empresaId, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
-            destino = await _servicioServicio.ObtenerPorIdAsync(empresaId, creado.ServicioId);
-        }
-        else if (destino.Estado is EstadoServicio.CANCELADO or EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO)
-        {
-            throw new InvalidOperationException("La ruta de esa unidad está cancelada, en curso o finalizada.");
-        }
-
-        var pasajerosDestino = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(destino!.ServicioId);
-        pasajero.ServicioId = destino.ServicioId;
-        pasajero.Orden = pasajerosDestino.Count == 0 ? 1 : pasajerosDestino.Max(p => p.Orden) + 1;
         await _servicioPasajeroRepositorio.GuardarCambiosAsync();
     }
 

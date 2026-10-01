@@ -50,17 +50,6 @@ public class MacroZonaServicioTests
     }
 
     [Fact]
-    public async Task ActualizarAsync_LanzaExcepcion_CuandoLaMacroZonaEsDeOtraEmpresa()
-    {
-        var repositorio = new MacroZonaRepositorioFalso();
-        var servicio = new MacroZonaServicio(repositorio);
-        var macroZona = await servicio.CrearAsync(1, new CrearMacroZonaDto { Nombre = "Atardeceres" });
-
-        await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            servicio.ActualizarAsync(2, macroZona.MacroZonaId, new ActualizarMacroZonaDto { Nombre = "Otra" }));
-    }
-
-    [Fact]
     public async Task DesactivarAsync_DesactivaLaMacroZona_CuandoPerteneceALaEmpresa()
     {
         var repositorio = new MacroZonaRepositorioFalso();

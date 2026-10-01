@@ -166,8 +166,9 @@ public class FlujoCompletoTests
             new CrearServicioPasajeroDto { ProgramacionTransporteId = programacion.ProgramacionTransporteId });
 
         // --- Resolver estado del servicio hasta PUBLICADO y publicar la jornada (coordinador) ---
-        await CambiarEstadoServicioAsync(cliente, empresa.EmpresaId, jornada.JornadaId, servicio.ServicioId, EstadoServicio.PENDIENTE_ASIGNACION);
-        await CambiarEstadoServicioAsync(cliente, empresa.EmpresaId, jornada.JornadaId, servicio.ServicioId, EstadoServicio.ASIGNADO);
+        var servicioServicio = alcance.ServiceProvider.GetRequiredService<IServicioServicio>();
+        await servicioServicio.CambiarEstadoAsync(empresa.EmpresaId, servicio.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
+        await servicioServicio.CambiarEstadoAsync(empresa.EmpresaId, servicio.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
 
         var respuestaPublicar = await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/publicar", content: null);
         respuestaPublicar.EnsureSuccessStatusCode();
@@ -237,14 +238,6 @@ public class FlujoCompletoTests
         var respuesta = await cliente.PostAsJsonAsync(ruta, cuerpo);
         respuesta.EnsureSuccessStatusCode();
         return (await respuesta.Content.ReadFromJsonAsync<TRespuesta>())!;
-    }
-
-    private static async Task CambiarEstadoServicioAsync(HttpClient cliente, int empresaId, int jornadaId, int servicioId, EstadoServicio nuevoEstado)
-    {
-        var respuesta = await cliente.PostAsJsonAsync(
-            $"/api/empresas/{empresaId}/jornadas/{jornadaId}/servicios/{servicioId}/cambiar-estado",
-            new CambiarEstadoServicioDto { NuevoEstado = nuevoEstado });
-        respuesta.EnsureSuccessStatusCode();
     }
 
     private static async Task CambiarEstadoPasajeroAsync(HttpClient cliente, string rutaPasajero, EstadoServicioPasajero nuevoEstado)
