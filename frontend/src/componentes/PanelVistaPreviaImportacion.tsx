@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
+import { armarPulsacionLarga } from '../hooks/pulsacionLarga'
 import { formatearBarrioConCiudad, useBarriosVillamaria } from '../hooks/useBarriosVillamaria'
 import { EstadoServicio } from '../modelos/enumeraciones'
 import type { PasajeroPrevia, VistaPreviaImportacion } from '../modelos/importacion'
@@ -235,7 +236,8 @@ export function PanelVistaPreviaImportacion({
       const origen = arrastradoRef.current
       arrastradoRef.current = null
       setArrastrado(null)
-      if (!origen) return
+      // "pointercancel": el sistema interrumpió el toque; el arrastre se abandona sin mover a nadie.
+      if (!origen || evento.type === 'pointercancel') return
 
       const elemento = document.elementFromPoint(evento.clientX, evento.clientY)
       const tarjeta = elemento?.closest<HTMLElement>('[data-servicio-id]')
@@ -264,11 +266,13 @@ export function PanelVistaPreviaImportacion({
 
     document.addEventListener('pointermove', alMoverElPuntero)
     document.addEventListener('pointerup', alSoltarElPuntero)
+    document.addEventListener('pointercancel', alSoltarElPuntero)
     idCuadro = requestAnimationFrame(ciclo)
 
     return () => {
       document.removeEventListener('pointermove', alMoverElPuntero)
       document.removeEventListener('pointerup', alSoltarElPuntero)
+      document.removeEventListener('pointercancel', alSoltarElPuntero)
       cancelAnimationFrame(idCuadro)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -507,17 +511,17 @@ export function PanelVistaPreviaImportacion({
                     key={pasajero.cedula}
                     className={sePuedeArrastrar ? 'vista-previa-importacion__fila-arrastrable' : undefined}
                     onPointerDown={(evento) => {
-                      // Solo con ratón: en pantallas táctiles el dedo sobre la fila es para desplazar la página, y el pasajero se mueve con la flechita.
-                      if (evento.pointerType !== 'mouse') return
                       if (!sePuedeArrastrar || !real || !pasajero.servicioPasajeroId || evento.button !== 0) return
                       // Si la presión empezó sobre la flechita de mover (otra acción en la misma fila), no se inicia un arrastre.
                       if (evento.target instanceof Element && evento.target.closest('.vista-previa-importacion__celda-mover')) return
+                      const arrastrable = { servicioPasajeroId: pasajero.servicioPasajeroId, servicioOrigen: real, pasajero }
+                      if (evento.pointerType !== 'mouse') {
+                        // En pantallas táctiles deslizar el dedo desplaza la página: el arrastre solo empieza al dejar el dedo presionado.
+                        armarPulsacionLarga(evento, (x, y) => iniciarArrastre(arrastrable, x, y), () => arrastradoRef.current !== null)
+                        return
+                      }
                       evento.preventDefault() // evita que el navegador intente seleccionar el texto de la fila mientras se arrastra
-                      iniciarArrastre(
-                        { servicioPasajeroId: pasajero.servicioPasajeroId, servicioOrigen: real, pasajero },
-                        evento.clientX,
-                        evento.clientY,
-                      )
+                      iniciarArrastre(arrastrable, evento.clientX, evento.clientY)
                     }}
                   >
                     <td>{indice + 1}</td>

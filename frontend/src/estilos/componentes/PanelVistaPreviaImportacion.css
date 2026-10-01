@@ -270,3 +270,25 @@
   margin: 4px 2px;
   background: var(--border);
 }
+
+.vista-previa-importacion__fila-arrastrable {
+  -webkit-touch-callout: none;
+}
+
+/* En el celular el menú de mover no cabe pegado a la flechita: se muestra como una hoja fija abajo,
+   a todo el ancho, con la lista completa de conductores y desplazamiento propio si es muy larga. */
+@media (max-width: 640px) {
+  .vista-previa-importacion__menu-mover {
+    top: auto !important;
+    right: 8px !important;
+    bottom: 8px !important;
+    left: 8px;
+    max-height: 70vh;
+    padding: 8px;
+  }
+
+  .vista-previa-importacion__menu-mover button {
+    padding: 12px 10px;
+    font-size: 15px;
+  }
+}
