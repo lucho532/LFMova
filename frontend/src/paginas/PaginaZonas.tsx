@@ -5,19 +5,19 @@ import { BotonSecundario } from '../componentes/BotonSecundario'
 import { CampoFormulario } from '../componentes/CampoFormulario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
+import { ListaZonasRegistradas } from '../componentes/ListaZonasRegistradas'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { SeccionBarrerasGeograficas } from '../componentes/SeccionBarrerasGeograficas'
 import { SeccionCorredoresViales } from '../componentes/SeccionCorredoresViales'
 import { SeccionMacroZonas } from '../componentes/SeccionMacroZonas'
 import { SelectorFormulario } from '../componentes/SelectorFormulario'
-import { TablaDatos } from '../componentes/TablaDatos'
 import { TarjetaFormulario } from '../componentes/TarjetaFormulario'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { CorredorVial } from '../modelos/corredorVial'
 import type { MacroZona } from '../modelos/macroZona'
 import type { Zona } from '../modelos/zona'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { activarZona, actualizarZona, crearZona, desactivarZona, obtenerZonas } from '../servicios/servicioZonas'
+import { activarZona, actualizarZona, crearZona, desactivarZona, eliminarZona, moverBarrioDeZona, obtenerZonas, unirZonas } from '../servicios/servicioZonas'
 
 /** Convierte el texto del campo de barrios ("La Enea, Palermo") en la lista que espera el backend. */
 function barriosDesdeTexto(texto: string): string[] {
@@ -115,23 +115,32 @@ export function PaginaZonas() {
     }
   }
 
-  async function alCambiarEstado(zona: Zona) {
+  /** Ejecuta una operación sobre una zona ya registrada y recarga la lista, mostrando el error si falla. */
+  async function ejecutarSobreZona(zonaId: number, operacion: (token: string) => Promise<void>, mensajeSiFalla: string) {
     if (!token) return
-    setZonaIdEnCurso(zona.zonaId)
+    setZonaIdEnCurso(zonaId)
     setMensajeError(null)
     try {
-      if (zona.activa) {
-        await desactivarZona(idEmpresa, zona.zonaId, token)
-      } else {
-        await activarZona(idEmpresa, zona.zonaId, token)
-      }
-      await cargar()
+      await operacion(token)
+      // Se refresca sin pasar por "Cargando…" para que la tabla no parpadee al reorganizar varias zonas seguidas.
+      setZonas(await obtenerZonas(idEmpresa, token))
     } catch (error) {
-      setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo cambiar el estado de la zona.')
+      setMensajeError(error instanceof ErrorApi ? error.message : mensajeSiFalla)
     } finally {
       setZonaIdEnCurso(null)
     }
   }
+
+  const alCambiarEstado = (zona: Zona) =>
+    ejecutarSobreZona(zona.zonaId, (t) => (zona.activa ? desactivarZona(idEmpresa, zona.zonaId, t) : activarZona(idEmpresa, zona.zonaId, t)), 'No se pudo cambiar el estado de la zona.')
+
+  const alMoverBarrio = (origen: Zona, barrio: string, destino: Zona) =>
+    ejecutarSobreZona(origen.zonaId, (t) => moverBarrioDeZona(idEmpresa, origen.zonaId, barrio, destino.zonaId, t), 'No se pudo mover el barrio.')
+
+  const alUnir = (origen: Zona, destino: Zona) =>
+    ejecutarSobreZona(origen.zonaId, (t) => unirZonas(idEmpresa, origen.zonaId, destino.zonaId, t), 'No se pudieron unir las zonas.')
+
+  const alEliminar = (zona: Zona) => ejecutarSobreZona(zona.zonaId, (t) => eliminarZona(idEmpresa, zona.zonaId, t), 'No se pudo eliminar la zona.')
 
   return (
     <ContenedorPagina>
@@ -142,9 +151,6 @@ export function PaginaZonas() {
       />
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
-
-      {token && <SeccionMacroZonas empresaId={idEmpresa} token={token} alCambiarMacroZonas={setMacroZonas} />}
-      {token && <SeccionCorredoresViales empresaId={idEmpresa} token={token} alCambiarCorredores={setCorredores} />}
 
       {formularioAbierto && (
         <TarjetaFormulario alEnviar={alEnviar} columnas={2}>
@@ -177,25 +183,19 @@ export function PaginaZonas() {
       ) : zonas.length === 0 ? (
         <p className="contenedor-pagina__estado">Todavía no hay zonas registradas.</p>
       ) : (
-        <TablaDatos columnas={['Nombre', 'Macrozona', 'Corredor vial', 'Barrios', 'Estado', '']}>
-          {zonas.map((zona) => (
-            <tr key={zona.zonaId}>
-              <td>{zona.nombre}</td>
-              <td>{zona.macroZonaNombre ?? '—'}</td>
-              <td>{zona.corredorVialNombre ?? '—'}</td>
-              <td>{zona.barrios.length > 0 ? zona.barrios.join(', ') : '—'}</td>
-              <td>{zona.activa ? 'Activa' : 'Inactiva'}</td>
-              <td style={{ whiteSpace: 'nowrap' }}>
-                <BotonSecundario onClick={() => alEditar(zona)}>Editar</BotonSecundario>{' '}
-                <BotonSecundario onClick={() => alCambiarEstado(zona)} disabled={zonaIdEnCurso === zona.zonaId}>
-                  {zona.activa ? 'Desactivar' : 'Activar'}
-                </BotonSecundario>
-              </td>
-            </tr>
-          ))}
-        </TablaDatos>
+        <ListaZonasRegistradas
+          zonas={zonas}
+          zonaIdEnCurso={zonaIdEnCurso}
+          alEditar={alEditar}
+          alCambiarEstado={alCambiarEstado}
+          alMoverBarrio={alMoverBarrio}
+          alUnir={alUnir}
+          alEliminar={alEliminar}
+        />
       )}
 
+      {token && <SeccionMacroZonas empresaId={idEmpresa} token={token} alCambiarMacroZonas={setMacroZonas} />}
+      {token && <SeccionCorredoresViales empresaId={idEmpresa} token={token} alCambiarCorredores={setCorredores} />}
       {token && <SeccionBarrerasGeograficas empresaId={idEmpresa} token={token} />}
     </ContenedorPagina>
   )

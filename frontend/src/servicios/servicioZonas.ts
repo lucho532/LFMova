@@ -30,3 +30,21 @@ export function activarZona(empresaId: number, zonaId: number, token: string): P
 export function desactivarZona(empresaId: number, zonaId: number, token: string): Promise<void> {
   return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/${zonaId}/desactivar`, { metodo: 'POST', token })
 }
+
+/**
+ * Consume POST /api/empresas/{empresaId}/zonas/{zonaId}/mover-barrio: pasa un barrio de esa zona a otra.
+ * Si la zona de origen se queda sin barrios, el backend la elimina.
+ */
+export function moverBarrioDeZona(empresaId: number, zonaId: number, barrio: string, zonaDestinoId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/${zonaId}/mover-barrio`, { metodo: 'POST', cuerpo: { barrio, zonaDestinoId }, token })
+}
+
+/** Consume POST /api/empresas/{empresaId}/zonas/{zonaId}/unir: la zona de destino recibe todos los barrios y esa zona se elimina. */
+export function unirZonas(empresaId: number, zonaId: number, zonaDestinoId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/${zonaId}/unir`, { metodo: 'POST', cuerpo: { zonaDestinoId }, token })
+}
+
+/** Consume DELETE /api/empresas/{empresaId}/zonas/{zonaId}: elimina la zona; sus barrios quedan sin zona. */
+export function eliminarZona(empresaId: number, zonaId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/zonas/${zonaId}`, { metodo: 'DELETE', token })
+}

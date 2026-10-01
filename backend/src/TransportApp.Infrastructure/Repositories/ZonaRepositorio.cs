@@ -39,6 +39,12 @@ public class ZonaRepositorio : IZonaRepositorio
     }
 
     /// <inheritdoc />
+    public void Eliminar(Zona zona)
+    {
+        _contexto.Zonas.Remove(zona);
+    }
+
+    /// <inheritdoc />
     public async Task GuardarCambiosAsync()
     {
         await _contexto.SaveChangesAsync();

@@ -17,6 +17,9 @@ public interface IZonaRepositorio
     /// <summary>Agrega una nueva zona.</summary>
     Task AgregarAsync(Zona zona);
 
+    /// <summary>Marca una zona para eliminarla por completo al guardar los cambios.</summary>
+    void Eliminar(Zona zona);
+
     /// <summary>Persiste los cambios pendientes en el contexto de datos.</summary>
     Task GuardarCambiosAsync();
 }

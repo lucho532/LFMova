@@ -23,6 +23,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IAsignacionCoordinadorServicio, AsignacionCoordinadorServicio>();
         servicios.AddScoped<ISedeServicio, SedeServicio>();
         servicios.AddScoped<IZonaServicio, ZonaServicio>();
+        servicios.AddScoped<IZonaReorganizacionServicio, ZonaReorganizacionServicio>();
         servicios.AddScoped<IPlantillaColumnasPegadoServicio, PlantillaColumnasPegadoServicio>();
         servicios.AddScoped<IMacroZonaServicio, MacroZonaServicio>();
         servicios.AddScoped<IBarreraGeograficaServicio, BarreraGeograficaServicio>();

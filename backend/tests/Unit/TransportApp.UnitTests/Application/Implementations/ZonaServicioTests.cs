@@ -26,6 +26,8 @@ public class ZonaServicioTests
             return Task.CompletedTask;
         }
 
+        public void Eliminar(Zona zona) => _zonas.Remove(zona.ZonaId);
+
         public Task GuardarCambiosAsync() => Task.CompletedTask;
     }
 

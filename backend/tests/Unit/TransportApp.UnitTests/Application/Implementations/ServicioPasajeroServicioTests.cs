@@ -296,6 +296,8 @@ public class ServicioPasajeroServicioTests
             return Task.CompletedTask;
         }
 
+        public void Eliminar(Zona zona) => _zonas.Remove(zona);
+
         public Task GuardarCambiosAsync() => Task.CompletedTask;
     }
 
