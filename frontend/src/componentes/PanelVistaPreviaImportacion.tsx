@@ -507,6 +507,8 @@ export function PanelVistaPreviaImportacion({
                     key={pasajero.cedula}
                     className={sePuedeArrastrar ? 'vista-previa-importacion__fila-arrastrable' : undefined}
                     onPointerDown={(evento) => {
+                      // Solo con ratón: en pantallas táctiles el dedo sobre la fila es para desplazar la página, y el pasajero se mueve con la flechita.
+                      if (evento.pointerType !== 'mouse') return
                       if (!sePuedeArrastrar || !real || !pasajero.servicioPasajeroId || evento.button !== 0) return
                       // Si la presión empezó sobre la flechita de mover (otra acción en la misma fila), no se inicia un arrastre.
                       if (evento.target instanceof Element && evento.target.closest('.vista-previa-importacion__celda-mover')) return
