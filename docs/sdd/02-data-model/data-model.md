@@ -1463,7 +1463,7 @@ Los siguientes puntos permanecen deliberadamente abiertos:
 
 La validación de identidad para activación ya no es una decisión pendiente: se resuelve mediante el código de activación generado por el conductor (ver §28).
 
-La configuración de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC (ver `AGENTS.md` §41 y `plan.md` §48).
+La configuración de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30, sustituye a la del 2026-09-18 que ponía todo en UTC): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia (ver `AGENTS.md` §41 y `plan.md` §48).
 19. Estrategia de autorización para múltiples roles.
 20. Estrategia para selección de rol activo cuando un usuario posee múltiples roles.
 21. Auditoría de asignación y eliminación de roles.

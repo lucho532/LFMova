@@ -1404,7 +1404,7 @@ Los índices definitivos deben basarse en las consultas reales y no agregarse in
 
 # 48. Zona horaria
 
-**Decisión cerrada (2026-09-18):** toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, se almacenan y se comparan en UTC (`DateTime.UtcNow` en el backend), sin conversión a hora local en ninguna capa del servidor. La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
+**Decisión anterior (2026-09-18), sustituida por la actualización del 2026-09-30 que aparece más abajo:** toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, se almacenan y se comparan en UTC (`DateTime.UtcNow` en el backend), sin conversión a hora local en ninguna capa del servidor. La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
 
 Se diferencia:
 
@@ -1694,7 +1694,7 @@ Las siguientes decisiones permanecen abiertas y no deben ser inventadas:
 
 La validación de identidad durante la activación se resuelve mediante un enlace enviado por correo (revisado el 2026-09-19; antes: código de activación generado por el conductor, ya eliminado). Ver AGENTS.md §16 (ver §28 de `data-model.md` y §10 de `spec.md`).
 
-La estrategia de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC (ver `AGENTS.md` §41 y `spec.md` §47).
+La estrategia de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia (ver `AGENTS.md` §41 y `spec.md` §47).
 
 La estrategia exacta de roles activos en JWT ya no es una decisión pendiente (decisión cerrada, 2026-09-18): ver `spec.md` §47 y `GeneradorTokenJwt`.
 

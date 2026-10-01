@@ -1073,7 +1073,7 @@ Las siguientes decisiones todavía no están cerradas y no deben ser inventadas 
 
 El método de activación inicial (código generado por el conductor) ya no es una decisión pendiente: quedó cerrado en `data-model.md` §28 y en esta sección §10.
 
-La estrategia de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, almacenan y comparan en UTC, sin conversión a hora local en el backend; la presentación en hora local es responsabilidad exclusiva del frontend. Ver `AGENTS.md` §41.
+La estrategia de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30, sustituye a la del 2026-09-18 que ponía todo en UTC): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia. Ver `AGENTS.md` §41.
 
 La estrategia definitiva de claims JWT ya no es una decisión pendiente (decisión cerrada, 2026-09-18): cada rol activo del usuario se codifica como un claim `rol` independiente, con formato `"ROL:EmpresaId"` para roles con empresa (`COORDINADOR`, `EMPLEADO`) o `"ROL"` para roles globales (`CONDUCTOR`, `ADMINISTRADOR_PLATAFORMA`). Ver `GeneradorTokenJwt` (`TransportApp.Infrastructure.Autenticacion`) y `docs/sdd/03-architecture/overview.md` §4.
 

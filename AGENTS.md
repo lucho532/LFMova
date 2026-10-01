@@ -784,22 +784,16 @@ y fiel a las decisiones tomadas en la especificación.
 
 # 41. Zona horaria
 
-**Decisión cerrada (2026-09-18):** toda la plataforma opera en UTC.
+**Decisión vigente (2026-09-30): la aplicación es para Colombia y todo se expresa en hora de Colombia (UTC−5 fijo, sin horario de verano).** Esta decisión sustituye a la del 2026-09-18 ("toda la plataforma opera en UTC"), que ya no aplica a las fechas y horas programadas.
 
-`Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora (incluidos `FechaHora` de `Notificacion`, `Mensaje`, `Incidencia` y `Evidencia`) se interpretan, se almacenan y se comparan en UTC en el backend (`DateTime.UtcNow`), sin conversión a hora local en ninguna capa del servidor.
-
-La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
-
-No introducir `TimeZoneInfo` ni lógica de conversión de zona horaria en el backend salvo que una decisión posterior lo requiera explícitamente.
-
-Ver `spec.md` §47, `plan.md` §48 y `data-model.md` §34.
-
-**Decisión vigente (2026-09-30, precisa la anterior): la aplicación es para Colombia y todo se expresa en hora de Colombia (UTC−5 fijo, sin horario de verano).** Hay que distinguir dos clases de datos:
+Hay que distinguir dos clases de datos:
 
 * **Fechas y horas programadas** (`Servicio.Fecha`, `Servicio.HoraProgramada`, `Jornada.FechaOperativa`, `ProgramacionTransporte.Fecha`/`Hora`): se guardan tal como las escribe el coordinador o como vienen en el Excel, **en hora de Colombia**, sin convertir. Toda comparación de estas con "ahora" (por ejemplo, la alerta de ruta no iniciada) usa la hora actual de Colombia: `ReglasHoraColombia.AhoraColombia(DateTime.UtcNow)`, nunca `DateTime.UtcNow` directamente. En el frontend, "hoy" es `hoyColombia()`, no la fecha UTC.
-* **Instantes reales** (`HoraInicioReal`, `HoraFinReal`, `HoraProcesado`, `FechaHora` de `Notificacion`/`Mensaje`/`Incidencia`/`Evidencia`, vencimientos de tokens e invitaciones): se siguen guardando en UTC (`DateTime.UtcNow`) y el frontend los muestra en hora local de Colombia.
+* **Instantes reales** (`HoraInicioReal`, `HoraFinReal`, `HoraProcesado`, `FechaHora` de `Notificacion`/`Mensaje`/`Incidencia`/`Evidencia`, vencimientos de tokens e invitaciones): se guardan en UTC (`DateTime.UtcNow`) y el frontend los muestra en hora local de Colombia.
 
-El desfase de Colombia es fijo (−5 h), por lo que no se usa `TimeZoneInfo`.
+El desfase de Colombia es fijo (−5 h), por lo que no se usa `TimeZoneInfo` ni ninguna otra lógica de zonas horarias en el backend: la única conversión permitida es `ReglasHoraColombia`.
+
+Si `spec.md` §47, `plan.md` §48 o `data-model.md` §34 todavía dicen que las fechas y horas programadas están en UTC, prevalece esta sección.
 
 ---
 
