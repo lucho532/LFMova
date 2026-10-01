@@ -1,4 +1,4 @@
-/** Refleja PasajeroPreviaDto (TransportApp.Application). */
+/** Refleja PasajeroPreviaDto (LFMova.Application). */
 export interface PasajeroPrevia {
   cedula: string
   nombreCompleto: string
@@ -13,7 +13,7 @@ export interface PasajeroPrevia {
   empleadoId?: number
 }
 
-/** Refleja ServicioPreviaDto (TransportApp.Application). */
+/** Refleja ServicioPreviaDto (LFMova.Application). */
 export interface ServicioPrevia {
   tipo: number
   sedeEnHoja: string
@@ -30,7 +30,7 @@ export interface ServicioPrevia {
   servicioId?: number
 }
 
-/** Refleja VistaPreviaImportacionDto (TransportApp.Application). */
+/** Refleja VistaPreviaImportacionDto (LFMova.Application). */
 export interface VistaPreviaImportacion {
   transportador: string
   fechaTexto: string
@@ -46,7 +46,7 @@ export interface VistaPreviaImportacion {
   barriosSinZona: string[]
 }
 
-/** Refleja ResultadoImportacionDto (TransportApp.Application). */
+/** Refleja ResultadoImportacionDto (LFMova.Application). */
 export interface ResultadoImportacion {
   jornadaId: number
   /** Ruta (servicio) donde quedó el pasajero, cuando la operación afecta a uno solo (alta manual). */
@@ -61,7 +61,7 @@ export interface ResultadoImportacion {
   barriosSinZona: string[]
 }
 
-/** Datos para crear una ruta vacía a mano; refleja CrearRutaVaciaDto (TransportApp.Application). */
+/** Datos para crear una ruta vacía a mano; refleja CrearRutaVaciaDto (LFMova.Application). */
 export interface DatosRutaVacia {
   fecha: string
   hora: string
@@ -70,7 +70,7 @@ export interface DatosRutaVacia {
   unidadOperativaId: number
 }
 
-/** Un pasajero de una fila pegada, ya separado en sus campos; refleja FilaPasajeroPegadoDto (TransportApp.Application). */
+/** Un pasajero de una fila pegada, ya separado en sus campos; refleja FilaPasajeroPegadoDto (LFMova.Application). */
 export interface FilaPasajeroPegado {
   cedula: string
   nombreCompleto: string
@@ -79,7 +79,7 @@ export interface FilaPasajeroPegado {
   barrio: string
 }
 
-/** Datos para crear una ruta a partir de pasajeros pegados; refleja CrearRutaPegadaDto (TransportApp.Application). */
+/** Datos para crear una ruta a partir de pasajeros pegados; refleja CrearRutaPegadaDto (LFMova.Application). */
 export interface DatosRutaPegada {
   fecha: string
   hora: string
@@ -99,7 +99,7 @@ export interface DatosRutaPegada {
  */
 export type CampoPasajeroPegado = 'CEDULA' | 'NOMBRE' | 'APELLIDOS' | 'CELULAR' | 'DIRECCION' | 'BARRIO' | 'IGNORAR'
 
-/** Refleja PlantillaColumnasPegadoDto (TransportApp.Application). */
+/** Refleja PlantillaColumnasPegadoDto (LFMova.Application). */
 export interface PlantillaColumnasPegado {
   plantillaColumnasPegadoId: number
   columnasEnOrden: CampoPasajeroPegado[]

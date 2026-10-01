@@ -36,10 +36,10 @@ No marcar `[X]` solamente porque el código exista.
 ## Estructura
 
 * [ ] Existe solución .NET funcional.
-* [ ] Existe `TransportApp.Api`.
-* [ ] Existe `TransportApp.Application`.
-* [ ] Existe `TransportApp.Domain`.
-* [ ] Existe `TransportApp.Infrastructure`.
+* [ ] Existe `LFMova.Api`.
+* [ ] Existe `LFMova.Application`.
+* [ ] Existe `LFMova.Domain`.
+* [ ] Existe `LFMova.Infrastructure`.
 * [ ] Existe proyecto de pruebas unitarias.
 * [ ] Existe proyecto de pruebas de integración.
 

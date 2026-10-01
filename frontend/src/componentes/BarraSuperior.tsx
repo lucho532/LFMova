@@ -48,9 +48,9 @@ export function BarraSuperior() {
         {empresas.length > 0 && <span className="barra-superior__empresa">{empresas.join(' · ')}</span>}
       </div>
       <div className="barra-superior__acciones">
-        <CampanaNotificaciones />
-        <BotonCerrarSesion />
         <BotonTema />
+        <CampanaNotificaciones />
+        <BotonCerrarSesion /> 
       </div>
       {token && (
         <Link to="/mi-cuenta" className="barra-superior__usuario" title="Mi cuenta">

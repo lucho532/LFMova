@@ -1,4 +1,4 @@
-/** Refleja MacroZonaDto (TransportApp.Application). */
+/** Refleja MacroZonaDto (LFMova.Application). */
 export interface MacroZona {
   macroZonaId: number
   empresaId: number
@@ -6,7 +6,7 @@ export interface MacroZona {
   activa: boolean
 }
 
-/** Refleja CrearMacroZonaDto / ActualizarMacroZonaDto (TransportApp.Application). */
+/** Refleja CrearMacroZonaDto / ActualizarMacroZonaDto (LFMova.Application). */
 export interface DatosMacroZona {
   nombre: string
 }

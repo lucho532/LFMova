@@ -1,4 +1,4 @@
-/** Refleja ConductorDto (TransportApp.Application). */
+/** Refleja ConductorDto (LFMova.Application). */
 export interface Conductor {
   conductorId: number
   usuarioId: number
@@ -10,7 +10,7 @@ export interface Conductor {
 }
 
 /**
- * Refleja CrearConductorDto (TransportApp.Application): asigna el rol de
+ * Refleja CrearConductorDto (LFMova.Application): asigna el rol de
  * conductor a una persona que ya se registró; su nombre y teléfono se toman
  * de su propia cuenta.
  */
@@ -19,12 +19,12 @@ export interface CrearConductorDatos {
   vehiculo: CrearVehiculoDatos
 }
 
-/** Refleja VincularConductorDto (TransportApp.Application). */
+/** Refleja VincularConductorDto (LFMova.Application). */
 export interface VincularConductorDatos {
   cedula: string
 }
 
-/** Refleja VehiculoDto (TransportApp.Application). */
+/** Refleja VehiculoDto (LFMova.Application). */
 export interface Vehiculo {
   vehiculoId: number
   conductorId: number
@@ -37,7 +37,7 @@ export interface Vehiculo {
   activo: boolean
 }
 
-/** Refleja CrearVehiculoDto (TransportApp.Application). */
+/** Refleja CrearVehiculoDto (LFMova.Application). */
 export interface CrearVehiculoDatos {
   placa: string
   marca: string
@@ -47,7 +47,7 @@ export interface CrearVehiculoDatos {
   vigenciaTecnomecanica: string
 }
 
-/** Refleja UnidadOperativaDto (TransportApp.Application). */
+/** Refleja UnidadOperativaDto (LFMova.Application). */
 export interface UnidadOperativa {
   unidadOperativaId: number
   conductorId: number
@@ -55,7 +55,7 @@ export interface UnidadOperativa {
   activa: boolean
 }
 
-/** Refleja UnidadDeTrabajoDto (TransportApp.Application): unidad operativa con los datos de su vehículo. */
+/** Refleja UnidadDeTrabajoDto (LFMova.Application): unidad operativa con los datos de su vehículo. */
 export interface UnidadDeTrabajo {
   unidadOperativaId: number
   activa: boolean

@@ -4,7 +4,7 @@ const path = require('path')
 const ORIGEN = path.join(__dirname, '..', 'public', 'ChatGPT Image 18 sept 2026, 23_08_13.png')
 const RES_DIR = path.join(__dirname, '..', 'android', 'app', 'src', 'main', 'res')
 
-// Recorte ajustado del logo completo (emblema + "TransportApp" + eslogan), sin el margen blanco sobrante.
+// Recorte ajustado del logo completo (emblema + "LFMova" + eslogan), sin el margen blanco sobrante.
 const RECORTE_LOGO = { left: 257, top: 134, width: 1023, height: 746 }
 const FONDO = { r: 255, g: 255, b: 255, alpha: 1 }
 

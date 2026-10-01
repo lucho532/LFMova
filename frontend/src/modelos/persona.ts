@@ -1,4 +1,4 @@
-/** Refleja PersonaDto (TransportApp.Application). */
+/** Refleja PersonaDto (LFMova.Application). */
 export interface Persona {
   cedula: string
   nombreCompleto: string
@@ -12,7 +12,7 @@ export interface Persona {
   empresaEmpleado: EmpresaResumen | null
 }
 
-/** Refleja EmpresaResumenDto (TransportApp.Application). */
+/** Refleja EmpresaResumenDto (LFMova.Application). */
 export interface EmpresaResumen {
   empresaId: number
   nombre: string

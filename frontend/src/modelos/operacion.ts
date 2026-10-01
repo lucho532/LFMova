@@ -1,4 +1,4 @@
-/** Refleja ProgramacionDto (TransportApp.Application). */
+/** Refleja ProgramacionDto (LFMova.Application). */
 export interface Programacion {
   programacionTransporteId: number
   empresaId: number
@@ -21,13 +21,13 @@ export interface DatosProgramacion {
   barrioRecogida: string
 }
 
-/** Refleja DeshacerRepartoDto (TransportApp.Application). */
+/** Refleja DeshacerRepartoDto (LFMova.Application). */
 export interface DeshacerReparto {
   serviciosEliminados: number
   pasajerosLiberados: number
 }
 
-/** Refleja EliminarRastroDto (TransportApp.Application). */
+/** Refleja EliminarRastroDto (LFMova.Application). */
 export interface EliminarRastro {
   serviciosEliminados: number
   pasajerosEliminados: number
@@ -35,7 +35,7 @@ export interface EliminarRastro {
   jornadaEliminada: boolean
 }
 
-/** Refleja ServicioDto (TransportApp.Application). */
+/** Refleja ServicioDto (LFMova.Application). */
 export interface Servicio {
   servicioId: number
   empresaId: number
@@ -56,7 +56,7 @@ export interface Servicio {
   cantidadPasajeros: number
 }
 
-/** Refleja ServicioPasajeroDto (TransportApp.Application). */
+/** Refleja ServicioPasajeroDto (LFMova.Application). */
 export interface ServicioPasajero {
   servicioPasajeroId: number
   servicioId: number

@@ -13,8 +13,8 @@ export interface ValorContextoAutenticacion {
 
 export const ContextoAutenticacion = createContext<ValorContextoAutenticacion | undefined>(undefined)
 
-const CLAVE_TOKEN = 'transportapp.token'
-const CLAVE_NOMBRE = 'transportapp.nombre'
+const CLAVE_TOKEN = 'lfmova.token'
+const CLAVE_NOMBRE = 'lfmova.nombre'
 
 /**
  * En la app instalada en el teléfono la sesión se guarda en `localStorage`,

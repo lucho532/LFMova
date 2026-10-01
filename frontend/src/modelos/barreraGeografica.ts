@@ -1,4 +1,4 @@
-/** Refleja BarreraGeograficaDto (TransportApp.Application). */
+/** Refleja BarreraGeograficaDto (LFMova.Application). */
 export interface BarreraGeografica {
   barreraGeograficaId: number
   empresaId: number
@@ -7,7 +7,7 @@ export interface BarreraGeografica {
   motivo: string | null
 }
 
-/** Refleja CrearBarreraGeograficaDto (TransportApp.Application). */
+/** Refleja CrearBarreraGeograficaDto (LFMova.Application). */
 export interface DatosBarreraGeografica {
   barrioA: string
   barrioB: string

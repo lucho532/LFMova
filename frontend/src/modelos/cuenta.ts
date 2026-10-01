@@ -1,4 +1,4 @@
-/** Refleja CuentaDto (TransportApp.Application). */
+/** Refleja CuentaDto (LFMova.Application). */
 export interface Cuenta {
   cedula: string
   nombreCompleto: string
@@ -8,7 +8,7 @@ export interface Cuenta {
   empresas: string[]
 }
 
-/** Refleja CambiarContrasenaDto (TransportApp.Application). */
+/** Refleja CambiarContrasenaDto (LFMova.Application). */
 export interface CambiarContrasenaDatos {
   contrasenaActual: string
   nuevaContrasena: string

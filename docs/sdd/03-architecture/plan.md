@@ -77,17 +77,17 @@ El frontend no se considera un mecanismo de seguridad.
 La solución utilizará una estructura similar a:
 
 ```text
-TransportApp/
+LFMova/
 │
 ├── src/
 │   │
-│   ├── TransportApp.Api/
+│   ├── LFMova.Api/
 │   │   ├── Controllers/
 │   │   ├── Middleware/
 │   │   ├── Configuration/
 │   │   └── Program.cs
 │   │
-│   ├── TransportApp.Application/
+│   ├── LFMova.Application/
 │   │   ├── DTOs/
 │   │   ├── Interfaces/
 │   │   ├── Services/
@@ -96,12 +96,12 @@ TransportApp/
 │   │   ├── Validators/
 │   │   └── Utils/
 │   │
-│   ├── TransportApp.Domain/
+│   ├── LFMova.Domain/
 │   │   ├── Entities/
 │   │   ├── Enums/
 │   │   └── Rules/
 │   │
-│   └── TransportApp.Infrastructure/
+│   └── LFMova.Infrastructure/
 │       ├── Data/
 │       ├── Repositories/
 │       ├── Configurations/
@@ -118,7 +118,7 @@ TransportApp/
 ├── .gitignore
 ├── docker-compose.yml
 ├── README.md
-└── TransportApp.sln
+└── LFMova.sln
 ```
 
 La estructura puede ajustarse si una necesidad técnica real lo justifica, pero no se deben crear proyectos o capas adicionales sin necesidad.
@@ -1757,17 +1757,17 @@ La prioridad será construir primero una base sólida y sencilla antes de incorp
 * React.
 * Vite (herramienta de compilación y servidor de desarrollo).
 * TypeScript.
-* Cliente HTTP para consumir la API REST de `TransportApp.Api`.
+* Cliente HTTP para consumir la API REST de `LFMova.Api`.
 
 No se introducen frameworks de gestión de estado, UI kits ni librerías adicionales sin una necesidad concreta (coherente con `AGENTS.md` §34, no sobreingeniería).
 
 ## 57.3 Ubicación e independencia de la solución .NET
 
-El frontend vive en una carpeta independiente `frontend/` en la raíz del repositorio, **fuera** de `TransportApp.sln`. No es un proyecto .NET y no se agrega a la solución. Tiene su propio `package.json`, control de dependencias y ciclo de vida de build, separado del backend.
+El frontend vive en una carpeta independiente `frontend/` en la raíz del repositorio, **fuera** de `LFMova.sln`. No es un proyecto .NET y no se agrega a la solución. Tiene su propio `package.json`, control de dependencias y ciclo de vida de build, separado del backend.
 
 ```text
-TransportApp/
-├── src/            (backend .NET, dentro de TransportApp.sln)
+LFMova/
+├── src/            (backend .NET, dentro de LFMova.sln)
 ├── tests/          (backend .NET)
 ├── docs/
 └── frontend/       (React + Vite + TypeScript, independiente del .sln)

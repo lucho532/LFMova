@@ -33,4 +33,4 @@ publish/
 Thumbs.db
 
 # Archivos subidos (fotos de evidencias) en desarrollo
-almacenamiento/
+backend/src/LFMova.Api/almacenamiento/

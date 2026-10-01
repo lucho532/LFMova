@@ -1,4 +1,4 @@
-# TransportApp
+# LFMova
 
 Plataforma de gestión y operación de transporte empresarial multiempresa.
 
@@ -23,17 +23,17 @@ endpoints funcionales, autenticación ni ninguna regla de negocio.
 Monolito modular por capas:
 
 ```text
-TransportApp.Api
+LFMova.Api
         ↓
-TransportApp.Application
+LFMova.Application
         ↓
-TransportApp.Domain
+LFMova.Domain
 
-TransportApp.Infrastructure
+LFMova.Infrastructure
         ↓
-TransportApp.Application
+LFMova.Application
         ↓
-TransportApp.Domain
+LFMova.Domain
 ```
 
 ## Estructura de la solución
@@ -42,15 +42,15 @@ El backend (.NET) vive en `backend/`, igual que el frontend vive en `frontend/`:
 
 ```text
 backend/
-├── TransportApp.sln
+├── LFMova.sln
 ├── src/
-│   ├── TransportApp.Api/            Controllers, Middleware, Configuration
-│   ├── TransportApp.Application/    DTOs, Interfaces, Services, Implementations, Mappers, Validators, Utils
-│   ├── TransportApp.Domain/         Entities, Enums, Rules
-│   └── TransportApp.Infrastructure/ Data, Repositories, Configurations, Migrations
+│   ├── LFMova.Api/            Controllers, Middleware, Configuration
+│   ├── LFMova.Application/    DTOs, Interfaces, Services, Implementations, Mappers, Validators, Utils
+│   ├── LFMova.Domain/         Entities, Enums, Rules
+│   └── LFMova.Infrastructure/ Data, Repositories, Configurations, Migrations
 └── tests/
-    ├── Unit/TransportApp.UnitTests/
-    └── Integration/TransportApp.IntegrationTests/
+    ├── Unit/LFMova.UnitTests/
+    └── Integration/LFMova.IntegrationTests/
 ```
 
 ## Tecnologías
@@ -72,7 +72,7 @@ backend/
 cd backend
 dotnet restore
 dotnet build
-dotnet run --project src/TransportApp.Api
+dotnet run --project src/LFMova.Api
 ```
 
 ## Ejecutar pruebas
@@ -84,16 +84,16 @@ dotnet test
 
 ## Configuración local
 
-La cadena de conexión a PostgreSQL se lee desde `ConnectionStrings:TransportAppDb`.
+La cadena de conexión a PostgreSQL se lee desde `ConnectionStrings:LFMovaDb`.
 Para desarrollo local, no coloques credenciales reales en `appsettings.Development.json`;
 usa en su lugar los secretos de usuario de .NET:
 
 ```bash
-dotnet user-secrets set "ConnectionStrings:TransportAppDb" "Host=localhost;Port=5432;Database=transportapp_dev;Username=...;Password=..." --project backend/src/TransportApp.Api
+dotnet user-secrets set "ConnectionStrings:LFMovaDb" "Host=localhost;Port=5432;Database=lfmova_dev;Username=...;Password=..." --project backend/src/LFMova.Api
 ```
 
-Alternativa: copiar `backend/src/TransportApp.Api/appsettings.Development.json.example` a
-`backend/src/TransportApp.Api/appsettings.Development.json` (ignorado por git) y completar los valores reales.
+Alternativa: copiar `backend/src/LFMova.Api/appsettings.Development.json.example` a
+`backend/src/LFMova.Api/appsettings.Development.json` (ignorado por git) y completar los valores reales.
 
 ## Docker
 
@@ -109,9 +109,9 @@ La API queda disponible en `http://localhost:8080`. PostgreSQL queda expuesto en
 
 ```bash
 dotnet ef database update \
-  --project backend/src/TransportApp.Infrastructure \
-  --startup-project backend/src/TransportApp.Api \
-  --connection "Host=localhost;Port=5433;Database=transportapp;Username=postgres;Password=<la de tu .env>"
+  --project backend/src/LFMova.Infrastructure \
+  --startup-project backend/src/LFMova.Api \
+  --connection "Host=localhost;Port=5433;Database=lfmova;Username=postgres;Password=<la de tu .env>"
 ```
 
 `docker-compose.yml` y `.env.example` están versionados; `.env` (con los valores reales) nunca debe versionarse — ya está en `.gitignore`.

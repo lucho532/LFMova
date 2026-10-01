@@ -9,14 +9,14 @@ using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TransportApp.Application;
-using TransportApp.Application.DTOs.Conductores;
-using TransportApp.Application.DTOs.Vehiculos;
-using TransportApp.Application.Interfaces;
-using TransportApp.Domain.Entities;
-using TransportApp.Domain.Enums;
-using TransportApp.Infrastructure;
-using TransportApp.Infrastructure.Data;
+using LFMova.Application;
+using LFMova.Application.DTOs.Conductores;
+using LFMova.Application.DTOs.Vehiculos;
+using LFMova.Application.Interfaces;
+using LFMova.Domain.Entities;
+using LFMova.Domain.Enums;
+using LFMova.Infrastructure;
+using LFMova.Infrastructure.Data;
 
 const string ClaveDemo = "Demo12345";
 
@@ -50,7 +50,7 @@ for (var e = 0; e < empresasDemo.Length; e++)
     var demo = empresasDemo[e];
     using var alcance = proveedor.CreateScope();
     var sp = alcance.ServiceProvider;
-    var contexto = sp.GetRequiredService<TransportAppDbContext>();
+    var contexto = sp.GetRequiredService<LFMovaDbContext>();
     var hasheador = sp.GetRequiredService<IHasheadorContrasenas>();
 
     if (await contexto.Empresas.AnyAsync(x => x.Nombre == demo.Nombre))
@@ -74,7 +74,7 @@ for (var e = 0; e < empresasDemo.Length; e++)
         };
 
     // Coordinador.
-    var coordinador = NuevoUsuario(cedulaCoordinador++, $"Coordinador {e + 1} {demo.Prefijo}", $"coordinador{e + 1}@demo.transportapp.test", $"300000000{e + 1}");
+    var coordinador = NuevoUsuario(cedulaCoordinador++, $"Coordinador {e + 1} {demo.Prefijo}", $"coordinador{e + 1}@demo.lfmova.test", $"300000000{e + 1}");
     contexto.Usuarios.Add(coordinador);
     await contexto.SaveChangesAsync();
     contexto.UsuarioRoles.Add(new UsuarioRol { UsuarioId = coordinador.UsuarioId, Rol = Rol.COORDINADOR, EmpresaId = empresa.EmpresaId, Activo = true });
@@ -84,7 +84,7 @@ for (var e = 0; e < empresasDemo.Length; e++)
     var conductorServicio = sp.GetRequiredService<IConductorServicio>();
     for (var c = 0; c < 10; c++)
     {
-        var persona = NuevoUsuario(cedulaConductor++, $"{nombres[(c + e * 3) % nombres.Length]} {apellidos[(c * 2 + e) % apellidos.Length]}", $"conductor{e + 1}.{c + 1}@demo.transportapp.test", $"31{e}00000{c:00}");
+        var persona = NuevoUsuario(cedulaConductor++, $"{nombres[(c + e * 3) % nombres.Length]} {apellidos[(c * 2 + e) % apellidos.Length]}", $"conductor{e + 1}.{c + 1}@demo.lfmova.test", $"31{e}00000{c:00}");
         contexto.Usuarios.Add(persona);
         await contexto.SaveChangesAsync();
         contexto.UsuarioRoles.Add(new UsuarioRol { UsuarioId = persona.UsuarioId, Rol = Rol.EMPLEADO, EmpresaId = null, Activo = true });

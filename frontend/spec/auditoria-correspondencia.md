@@ -10,7 +10,7 @@ Ambos están cubiertos por pruebas unitarias (278 unit + 10 integration, todas e
 Fuentes utilizadas:
 - `frontend/spec/especificación_Frontend` (documento a auditar)
 - `GET /swagger/v1/swagger.json` de la API real en ejecución (`http://localhost:5109`), leído endpoint por endpoint y esquema por esquema
-- Código fuente real de los 15 controladores en `src/TransportApp.Api/Controllers/`
+- Código fuente real de los 15 controladores en `src/LFMova.Api/Controllers/`
 - `AGENTS.md` (Constitución) y `docs/sdd/03-architecture/plan.md` §57 (arquitectura del frontend ya decidida)
 
 Regla aplicada (spec §59 y `plan.md` §57.6): si el backend no expone un endpoint/DTO/propiedad, esa parte del frontend **no se construye todavía**; se documenta aquí y se deja pendiente de decisión.

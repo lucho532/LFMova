@@ -1,4 +1,4 @@
-/** Refleja MensajeDto (TransportApp.Application). */
+/** Refleja MensajeDto (LFMova.Application). */
 export interface Mensaje {
   mensajeId: number
   usuarioId: number

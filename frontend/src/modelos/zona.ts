@@ -1,4 +1,4 @@
-/** Refleja ZonaDto (TransportApp.Application). */
+/** Refleja ZonaDto (LFMova.Application). */
 export interface Zona {
   zonaId: number
   empresaId: number
@@ -12,7 +12,7 @@ export interface Zona {
   orden: number
 }
 
-/** Refleja CrearZonaDto / ActualizarZonaDto (TransportApp.Application). */
+/** Refleja CrearZonaDto / ActualizarZonaDto (LFMova.Application). */
 export interface DatosZona {
   nombre: string
   barrios: string[]

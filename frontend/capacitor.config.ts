@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-  appId: 'com.transportapp.app',
+  appId: 'com.lfmova.app',
   appName: 'LFMova',
   webDir: 'dist',
   server: {

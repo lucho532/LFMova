@@ -1,4 +1,4 @@
-/** Refleja SedeDto (TransportApp.Application). */
+/** Refleja SedeDto (LFMova.Application). */
 export interface Sede {
   sedeId: number
   empresaId: number
@@ -11,7 +11,7 @@ export interface Sede {
   activa: boolean
 }
 
-/** Refleja CrearSedeDto / ActualizarSedeDto (TransportApp.Application). */
+/** Refleja CrearSedeDto / ActualizarSedeDto (LFMova.Application). */
 export interface DatosSede {
   nombre: string
   direccion: string

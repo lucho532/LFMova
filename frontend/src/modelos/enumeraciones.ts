@@ -1,6 +1,6 @@
 /*
  * La API serializa las enumeraciones como enteros (ver el contrato OpenAPI).
- * Estos valores reflejan el orden de TransportApp.Domain.Enums; los nombres
+ * Estos valores reflejan el orden de LFMova.Domain.Enums; los nombres
  * que se muestran al usuario salen de estas tablas, nunca se inventan estados.
  */
 
