@@ -16,9 +16,19 @@ export const ContextoAutenticacion = createContext<ValorContextoAutenticacion | 
 const CLAVE_TOKEN = 'transportapp.token'
 const CLAVE_NOMBRE = 'transportapp.nombre'
 
+/**
+ * En la app instalada en el teléfono la sesión se guarda en `localStorage`,
+ * para que siga abierta al cerrar y volver a abrir la app; en el navegador se
+ * guarda en `sessionStorage` y se pierde al cerrar la pestaña.
+ */
+function almacenamiento(): Storage {
+  const esAppInstalada = (window as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.() === true
+  return esAppInstalada ? localStorage : sessionStorage
+}
+
 function leerAlmacenamiento(clave: string): string | null {
   try {
-    return sessionStorage.getItem(clave)
+    return almacenamiento().getItem(clave)
   } catch {
     return null
   }
@@ -26,8 +36,8 @@ function leerAlmacenamiento(clave: string): string | null {
 
 function escribirAlmacenamiento(clave: string, valor: string | null) {
   try {
-    if (valor === null) sessionStorage.removeItem(clave)
-    else sessionStorage.setItem(clave, valor)
+    if (valor === null) almacenamiento().removeItem(clave)
+    else almacenamiento().setItem(clave, valor)
   } catch {
     // Sin almacenamiento disponible (modo privado, etc.): la sesión sigue solo en memoria.
   }
@@ -43,9 +53,10 @@ function tokenGuardadoVigente(): string | null {
 
 /**
  * Provee el token JWT de la sesión actual a toda la aplicación. El token se
- * guarda también en `sessionStorage`: la sesión sobrevive a recargar la página
- * pero se pierde al cerrar la pestaña, y se cierra sola cuando el token
- * expira. Esta protección es únicamente de experiencia de usuario: la
+ * guarda también en el almacenamiento del navegador (ver `almacenamiento`): en
+ * la web la sesión sobrevive a recargar la página pero se pierde al cerrar la
+ * pestaña; en la app instalada sigue abierta al volver a abrirla. En ambos
+ * casos se cierra sola cuando el token expira. Esta protección es únicamente de experiencia de usuario: la
  * autorización real siempre se valida en el backend.
  */
 export function ProveedorAutenticacion({ children }: { children: ReactNode }) {

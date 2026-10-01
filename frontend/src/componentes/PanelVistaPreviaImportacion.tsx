@@ -205,7 +205,11 @@ export function PanelVistaPreviaImportacion({
   /** Posiciona la etiqueta que sigue al cursor directamente en el DOM (sin pasar por React) para que siga al mouse sin tirones. */
   function ubicarEtiqueta(x: number, y: number) {
     const etiqueta = etiquetaArrastreRef.current
-    if (etiqueta) etiqueta.style.transform = `translate(${x + 14}px, ${y + 14}px)`
+    if (!etiqueta) return
+    // Se mantiene dentro de la ventana: en pantallas angostas quedaría cortada a la derecha del dedo.
+    const maximoX = Math.max(8, window.innerWidth - etiqueta.offsetWidth - 8)
+    const maximoY = Math.max(8, window.innerHeight - etiqueta.offsetHeight - 8)
+    etiqueta.style.transform = `translate(${Math.min(x + 14, maximoX)}px, ${Math.min(y + 14, maximoY)}px)`
   }
 
   function iniciarArrastre(pasajero: PasajeroArrastrado, x: number, y: number) {

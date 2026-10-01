@@ -292,3 +292,10 @@
     font-size: 15px;
   }
 }
+
+/* En el celular la etiqueta que sigue al dedo muestra solo la cédula y el nombre, para que quepa. */
+@media (max-width: 640px) {
+  .vista-previa-importacion__tarjeta-arrastre td:nth-child(n + 3) {
+    display: none;
+  }
+}
