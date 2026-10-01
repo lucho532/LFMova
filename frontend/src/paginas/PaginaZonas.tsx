@@ -143,7 +143,7 @@ export function PaginaZonas() {
   const alEliminar = (zona: Zona) => ejecutarSobreZona(zona.zonaId, (t) => eliminarZona(idEmpresa, zona.zonaId, t), 'No se pudo eliminar la zona.')
 
   return (
-    <ContenedorPagina>
+    <ContenedorPagina ancho="amplio">
       <EncabezadoPagina
         titulo="Zonas"
         subtitulo="Agrupa los barrios de la ciudad por zona. Al repartir una ruta, cada zona presente en un mismo horario recibe su propio conductor."
