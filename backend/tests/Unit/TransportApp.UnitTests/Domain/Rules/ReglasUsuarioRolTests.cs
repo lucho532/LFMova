@@ -6,20 +6,6 @@ namespace TransportApp.UnitTests.Domain.Rules;
 
 public class ReglasUsuarioRolTests
 {
-    [Theory]
-    [InlineData(Rol.COORDINADOR, 1, true)]
-    [InlineData(Rol.COORDINADOR, null, false)]
-    [InlineData(Rol.EMPLEADO, 1, true)]
-    [InlineData(Rol.EMPLEADO, null, false)]
-    [InlineData(Rol.ADMINISTRADOR_PLATAFORMA, null, true)]
-    [InlineData(Rol.ADMINISTRADOR_PLATAFORMA, 1, false)]
-    [InlineData(Rol.CONDUCTOR, null, true)]
-    [InlineData(Rol.CONDUCTOR, 1, false)]
-    public void EmpresaIdEsValidaParaRol_RespetaLaReglaPorRol(Rol rol, int? empresaId, bool esperado)
-    {
-        Assert.Equal(esperado, ReglasUsuarioRol.EmpresaIdEsValidaParaRol(rol, empresaId));
-    }
-
     [Fact]
     public void ViolaUnicidadDeCoordinador_DevuelveVerdadero_CuandoYaEsCoordinadorActivoDeOtraEmpresa()
     {

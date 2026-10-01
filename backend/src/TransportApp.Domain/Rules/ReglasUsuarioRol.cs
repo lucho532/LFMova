@@ -13,23 +13,6 @@ namespace TransportApp.Domain.Rules;
 public static class ReglasUsuarioRol
 {
     /// <summary>
-    /// Indica si <c>EmpresaId</c> es válido para el rol indicado:
-    /// obligatorio para <c>COORDINADOR</c> y <c>EMPLEADO</c>, nulo para
-    /// <c>ADMINISTRADOR_PLATAFORMA</c> y <c>CONDUCTOR</c>.
-    /// </summary>
-    public static bool EmpresaIdEsValidaParaRol(Rol rol, int? empresaId)
-    {
-        return rol switch
-        {
-            Rol.COORDINADOR => empresaId is not null,
-            Rol.EMPLEADO => empresaId is not null,
-            Rol.ADMINISTRADOR_PLATAFORMA => empresaId is null,
-            Rol.CONDUCTOR => empresaId is null,
-            _ => false
-        };
-    }
-
-    /// <summary>
     /// Indica si asignar el rol <c>COORDINADOR</c> en la empresa indicada
     /// violaría la unicidad de empresa para ese rol, dado el conjunto de
     /// roles activos que ya tiene el usuario.

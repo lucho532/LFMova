@@ -39,28 +39,4 @@ public class ReglasMultiempresaTests
 
         Assert.False(ReglasMultiempresa.ServicioEsConsistenteConEmpresa(jornada, sede, 1));
     }
-
-    [Fact]
-    public void CoordinadorOperaSobreEmpresa_DevuelveVerdadero_CuandoRolActivoYEmpresaCoincide()
-    {
-        var rol = new UsuarioRol { Rol = Rol.COORDINADOR, Activo = true, EmpresaId = 1 };
-
-        Assert.True(ReglasMultiempresa.CoordinadorOperaSobreEmpresa(rol, 1));
-    }
-
-    [Fact]
-    public void CoordinadorOperaSobreEmpresa_DevuelveFalso_CuandoRolEstaInactivo()
-    {
-        var rol = new UsuarioRol { Rol = Rol.COORDINADOR, Activo = false, EmpresaId = 1 };
-
-        Assert.False(ReglasMultiempresa.CoordinadorOperaSobreEmpresa(rol, 1));
-    }
-
-    [Fact]
-    public void CoordinadorOperaSobreEmpresa_DevuelveFalso_CuandoEsOtraEmpresa()
-    {
-        var rol = new UsuarioRol { Rol = Rol.COORDINADOR, Activo = true, EmpresaId = 1 };
-
-        Assert.False(ReglasMultiempresa.CoordinadorOperaSobreEmpresa(rol, 2));
-    }
 }

@@ -52,13 +52,4 @@ public static class ReglasMultiempresa
     /// </summary>
     public static bool ServicioEsConsistenteConEmpresa(Jornada jornada, Sede sede, int empresaId)
         => JornadaPerteneceAEmpresa(jornada, empresaId) && SedePerteneceAEmpresa(sede, empresaId);
-
-    /// <summary>
-    /// Indica si un coordinador (a través de su rol activo) está autorizado
-    /// para operar sobre la empresa indicada.
-    /// </summary>
-    public static bool CoordinadorOperaSobreEmpresa(UsuarioRol rolCoordinador, int empresaId)
-        => rolCoordinador.Rol == Rol.COORDINADOR
-           && rolCoordinador.Activo
-           && rolCoordinador.EmpresaId == empresaId;
 }
