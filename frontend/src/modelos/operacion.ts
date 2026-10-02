@@ -69,6 +69,11 @@ export interface ServicioPasajero {
   direccionRecogida: string
   latitud: number | null
   longitud: number | null
+  /** Punto que el propio empleado compartió para este servicio (no el que guarda el conductor). */
+  latitudCompartida: number | null
+  longitudCompartida: number | null
+  /** Instante (UTC) en que el empleado compartió su ubicación por última vez. */
+  fechaHoraUbicacionCompartida: string | null
   nombreCompletoEmpleado: string
   telefonoEmpleado: string
   cedulaEmpleado: string

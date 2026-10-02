@@ -6,6 +6,7 @@ import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { EnlaceBoton } from '../componentes/EnlaceBoton'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { PanelMiVehiculo } from '../componentes/PanelMiVehiculo'
+import { PreferenciaNavegacion } from '../componentes/PreferenciaNavegacion'
 import { TarjetaFormulario } from '../componentes/TarjetaFormulario'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Cuenta } from '../modelos/cuenta'
@@ -106,6 +107,7 @@ export function PaginaMiCuenta() {
       {!cuenta && errorDatos && <MensajeAlerta tipo="error">{errorDatos}</MensajeAlerta>}
 
       {esConductor && <PanelMiVehiculo />}
+      {esConductor && <PreferenciaNavegacion />}
 
       <h2>Cambiar contraseña</h2>
       <TarjetaFormulario alEnviar={alCambiarContrasena}>

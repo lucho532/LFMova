@@ -3,8 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
+import { enlaceNavegacion } from '../servicios/navegacion'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
+import { BotonNavegar } from './BotonNavegar'
 import { ModalConfirmacion } from './ModalConfirmacion'
+import { UbicacionesCompartidas } from './UbicacionesCompartidas'
 import '../estilos/componentes/HerramientasPasajero.css'
 
 /** Tipos de incidencia que el conductor puede reportar (mismo orden que el enum TipoIncidencia del backend). */
@@ -36,11 +39,6 @@ interface PropiedadesHerramientasPasajero {
 
 function etiquetaTipoIncidencia(tipo: number): string {
   return TIPOS_INCIDENCIA.find((t) => t.valor === tipo)?.texto ?? 'Incidencia'
-}
-
-/** Enlace de Google Maps para navegar a un punto por sus coordenadas. */
-function enlaceNavegacion(destino: { latitud: number; longitud: number }): string {
-  return `https://www.google.com/maps/dir/?api=1&destination=${destino.latitud},${destino.longitud}&travelmode=driving`
 }
 
 function obtenerPosicion(): Promise<GeolocationPosition> {
@@ -264,9 +262,9 @@ export function HerramientasPasajero({
     <div className="herramientas-pasajero">
       <div className="herramientas-pasajero__fila">
         {destino ? (
-          <a className="herramientas-pasajero__fila-boton" href={enlaceNavegacion(destino)} target="_blank" rel="noreferrer">
+          <BotonNavegar destino={destino} className="herramientas-pasajero__fila-boton">
             <span>🧭 Navegar</span>
-          </a>
+          </BotonNavegar>
         ) : (
           <button
             type="button"
@@ -277,6 +275,8 @@ export function HerramientasPasajero({
           </button>
         )}
       </div>
+
+      <UbicacionesCompartidas pasajero={pasajero} />
 
       {aviso &&
         createPortal(
@@ -315,9 +315,9 @@ export function HerramientasPasajero({
                   {u.barrio ? ` · ${u.barrio}` : ''} <small>({u.fechaRegistro.slice(0, 10)})</small>
                 </span>
                 {u.latitud !== null && u.longitud !== null && (
-                  <a href={enlaceNavegacion({ latitud: u.latitud, longitud: u.longitud })} target="_blank" rel="noreferrer">
+                  <BotonNavegar destino={{ latitud: u.latitud, longitud: u.longitud }} className="herramientas-pasajero__enlace-navegar">
                     Navegar
-                  </a>
+                  </BotonNavegar>
                 )}
               </li>
             ))}
