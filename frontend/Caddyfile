@@ -1,0 +1,9 @@
+# Sirve la aplicación web ya compilada. Cualquier ruta que no sea un archivo
+# devuelve index.html, para que los enlaces de los correos (confirmación,
+# invitación, recuperación de contraseña) abran la pantalla correcta.
+:80 {
+	root * /srv
+	encode gzip
+	try_files {path} /index.html
+	file_server
+}
