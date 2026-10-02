@@ -16,8 +16,26 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // La firma de distribución se lee de android/keystore.properties, que no se sube al repositorio.
+    // Sin ese archivo el proyecto sigue compilando en debug; solo falla la versión de distribución.
+    def archivoFirma = rootProject.file('keystore.properties')
+    def datosFirma = new Properties()
+    if (archivoFirma.exists()) {
+        archivoFirma.withInputStream { datosFirma.load(it) }
+    }
+    signingConfigs {
+        release {
+            if (archivoFirma.exists()) {
+                storeFile file(datosFirma['storeFile'])
+                storePassword datosFirma['storePassword']
+                keyAlias datosFirma['keyAlias']
+                keyPassword datosFirma['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
