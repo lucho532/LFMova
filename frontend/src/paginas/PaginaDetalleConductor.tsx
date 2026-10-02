@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { BotonSecundario } from '../componentes/BotonSecundario'
 import { FormularioVehiculo } from '../componentes/FormularioVehiculo'
@@ -14,6 +14,7 @@ import { ErrorApi } from '../servicios/clienteHttp'
 import {
   activarUnidadOperativa,
   activarVehiculo,
+  actualizarVehiculo,
   crearUnidadOperativa,
   crearVehiculo,
   desactivarUnidadOperativa,
@@ -25,7 +26,9 @@ import {
 
 /**
  * Ficha de un conductor: sus datos, sus vehículos y las unidades operativas
- * (conductor + vehículo) que un coordinador puede asignar a servicios.
+ * (conductor + vehículo) que un coordinador puede asignar a servicios. Cada
+ * vehículo se puede editar, por ejemplo para renovar el SOAT o la
+ * técnico-mecánica.
  */
 export function PaginaDetalleConductor() {
   const { empresaId, conductorId } = useParams<{ empresaId: string; conductorId: string }>()
@@ -37,6 +40,8 @@ export function PaginaDetalleConductor() {
   const [unidades, setUnidades] = useState<UnidadOperativa[]>([])
   const [cargando, setCargando] = useState(true)
   const [mensajeError, setMensajeError] = useState<string | null>(null)
+  const [mensajeExito, setMensajeExito] = useState<string | null>(null)
+  const [editando, setEditando] = useState<number | null>(null)
 
   async function cargar() {
     if (!token) return
@@ -97,6 +102,7 @@ export function PaginaDetalleConductor() {
       <EncabezadoPagina titulo={conductor.nombreCompleto} subtitulo={`Cédula ${conductor.cedula} · Tel. ${conductor.telefono}`} />
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
+      {mensajeExito && <MensajeAlerta tipo="exito">{mensajeExito}</MensajeAlerta>}
 
       <h2>Vehículos</h2>
       {vehiculos.length === 0 ? (
@@ -104,7 +110,8 @@ export function PaginaDetalleConductor() {
       ) : (
         <TablaDatos columnas={['Placa', 'Marca', 'Modelo', 'Capacidad', 'SOAT', 'Técnico-mecánica', 'Estado', '']}>
           {vehiculos.map((vehiculo) => (
-            <tr key={vehiculo.vehiculoId}>
+            <Fragment key={vehiculo.vehiculoId}>
+            <tr>
               <td>{vehiculo.placa}</td>
               <td>{vehiculo.marca}</td>
               <td>{vehiculo.modelo}</td>
@@ -118,7 +125,10 @@ export function PaginaDetalleConductor() {
               <td>
                 <EtiquetaEstado activo={vehiculo.activo} textoActivo="Activo" textoInactivo="Inactivo" />
               </td>
-              <td>
+              <td style={{ whiteSpace: 'nowrap' }}>
+                <BotonSecundario onClick={() => setEditando(editando === vehiculo.vehiculoId ? null : vehiculo.vehiculoId)}>
+                  {editando === vehiculo.vehiculoId ? 'Cerrar' : 'Editar'}
+                </BotonSecundario>{' '}
                 <BotonSecundario
                   onClick={() =>
                     ejecutar(
@@ -134,6 +144,35 @@ export function PaginaDetalleConductor() {
                 </BotonSecundario>
               </td>
             </tr>
+            {editando === vehiculo.vehiculoId && (
+              <tr>
+                <td colSpan={8}>
+                  <FormularioVehiculo
+                    idBase={`editar${vehiculo.vehiculoId}`}
+                    inicial={{
+                      placa: vehiculo.placa,
+                      marca: vehiculo.marca,
+                      modelo: vehiculo.modelo,
+                      capacidad: vehiculo.capacidad,
+                      vigenciaSoat: vehiculo.vigenciaSoat ?? '',
+                      vigenciaTecnomecanica: vehiculo.vigenciaTecnomecanica ?? '',
+                    }}
+                    textoBoton="Guardar cambios"
+                    alGuardar={async (datos) => {
+                      try {
+                        await actualizarVehiculo(idConductor, vehiculo.vehiculoId, datos, token)
+                      } catch (error) {
+                        throw new Error(error instanceof ErrorApi ? error.message : 'No se pudo guardar el vehículo.')
+                      }
+                      setEditando(null)
+                      setMensajeExito(`Los datos del vehículo ${datos.placa} se guardaron.`)
+                      await cargar()
+                    }}
+                  />
+                </td>
+              </tr>
+            )}
+            </Fragment>
           ))}
         </TablaDatos>
       )}
