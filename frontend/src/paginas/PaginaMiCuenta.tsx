@@ -3,6 +3,7 @@ import { BotonPrimario } from '../componentes/BotonPrimario'
 import { CampoFormulario } from '../componentes/CampoFormulario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
+import { EnlaceBoton } from '../componentes/EnlaceBoton'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { PanelMiVehiculo } from '../componentes/PanelMiVehiculo'
 import { TarjetaFormulario } from '../componentes/TarjetaFormulario'
@@ -10,7 +11,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Cuenta } from '../modelos/cuenta'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { actualizarCuenta, cambiarContrasena, obtenerCuenta } from '../servicios/servicioCuenta'
-import { obtenerRolesDelToken } from '../servicios/tokenJwt'
+import { obtenerRolesDelToken, rutaInicialSegunRoles } from '../servicios/tokenJwt'
 
 /**
  * Datos de la propia cuenta: la cédula y el correo se muestran pero no se
@@ -30,7 +31,10 @@ export function PaginaMiCuenta() {
   const [errorContrasena, setErrorContrasena] = useState<string | null>(null)
   const [exitoContrasena, setExitoContrasena] = useState<string | null>(null)
   const [ocupado, setOcupado] = useState(false)
-  const esConductor = token ? obtenerRolesDelToken(token).some((claim) => claim.rol === 'CONDUCTOR') : false
+  const roles = token ? obtenerRolesDelToken(token) : []
+  const esConductor = roles.some((claim) => claim.rol === 'CONDUCTOR')
+  // Esta pantalla no está en el menú de ningún rol: sin este enlace no habría cómo volver.
+  const rutaDeInicio = rutaInicialSegunRoles(roles)
 
   useEffect(() => {
     if (!token) return
@@ -82,7 +86,11 @@ export function PaginaMiCuenta() {
 
   return (
     <ContenedorPagina ancho="estrecho">
-      <EncabezadoPagina titulo="Mi cuenta" subtitulo={esConductor ? "Tus datos personales, los de tu vehículo y tu contraseña." : "Tus datos personales y tu contraseña."} />
+      <EncabezadoPagina
+        titulo="Mi cuenta"
+        subtitulo={esConductor ? "Tus datos personales, los de tu vehículo y tu contraseña." : "Tus datos personales y tu contraseña."}
+        acciones={<EnlaceBoton a={rutaDeInicio}>Ir al inicio</EnlaceBoton>}
+      />
 
       {cuenta && (
         <TarjetaFormulario alEnviar={alGuardarDatos}>
