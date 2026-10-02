@@ -67,6 +67,30 @@ public class JornadasController : ControllerBase
     }
 
     /// <summary>
+    /// Descarga el Excel con toda la programación de la jornada: las rutas de
+    /// todos los conductores con sus pasajeros. Solo un coordinador de esa
+    /// empresa puede hacerlo.
+    /// </summary>
+    [HttpGet("{jornadaId:int}/soporte")]
+    public async Task<IActionResult> DescargarSoporteAsync(int empresaId, int jornadaId)
+    {
+        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            var archivo = await _jornadaServicio.DescargarSoporteAsync(empresaId, jornadaId);
+            return File(archivo.Contenido, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", archivo.NombreArchivo);
+        }
+        catch (InvalidOperationException excepcion)
+        {
+            return NotFound(new { mensaje = excepcion.Message });
+        }
+    }
+
+    /// <summary>
     /// Deshace el reparto automático de la jornada: borra los servicios que
     /// todavía no se publicaron y deja sus pasajeros listos para repartirse
     /// de nuevo. Solo un coordinador de esa empresa puede hacerlo.

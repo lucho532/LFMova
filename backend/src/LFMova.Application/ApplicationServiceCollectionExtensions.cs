@@ -68,6 +68,8 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<RegistroConductor>();
         servicios.AddScoped<DepuradorJornada>();
         servicios.AddScoped<EnviadorSoporteRutas>();
+        servicios.AddScoped<ArmadorSoporteRutas>();
+        servicios.AddScoped<ExportadorSoporteJornada>();
         servicios.AddScoped<EmisorInvitacionEmpresa>();
 
         // ServicioServicio.

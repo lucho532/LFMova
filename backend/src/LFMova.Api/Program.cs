@@ -90,7 +90,9 @@ builder.Services.AddCors(opciones =>
     {
         politica.WithOrigins(origenesPermitidos)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            // Para que el frontend pueda leer el nombre del archivo en las descargas (Excel de programación).
+            .WithExposedHeaders("Content-Disposition");
     });
 });
 

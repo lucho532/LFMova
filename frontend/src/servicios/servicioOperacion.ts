@@ -24,6 +24,20 @@ export function obtenerProgramacion(empresaId: number, id: number, token: string
   return solicitarApi<Programacion>(`${base(empresaId)}/programaciones/${id}`, { token })
 }
 
+/**
+ * Consume GET /api/empresas/{empresaId}/jornadas/{jornadaId}/soporte: el Excel con toda la programación
+ * de la jornada (las rutas de todos los conductores con sus pasajeros). Devuelve el archivo y el nombre
+ * que le puso el servidor; requiere el token en la cabecera, así que no sirve como enlace directo.
+ */
+export async function descargarSoporteJornada(empresaId: number, jornadaId: number, token: string): Promise<{ nombre: string; archivo: Blob }> {
+  const respuesta = await fetch(`${urlBaseApi}${base(empresaId)}/jornadas/${jornadaId}/soporte`, { headers: { Authorization: `Bearer ${token}` } })
+  if (!respuesta.ok) {
+    throw new Error('No se pudo descargar la programación.')
+  }
+  const nombre = /filename="?([^";]+)"?/.exec(respuesta.headers.get('Content-Disposition') ?? '')?.[1]
+  return { nombre: nombre ?? `programacion-${jornadaId}.xlsx`, archivo: await respuesta.blob() }
+}
+
 /** Consume POST /api/empresas/{empresaId}/programaciones. */
 export function crearProgramacion(empresaId: number, datos: DatosProgramacion & { empleadoId: number }, token: string): Promise<Programacion> {
   return solicitarApi<Programacion>(`${base(empresaId)}/programaciones`, { metodo: 'POST', cuerpo: datos, token })

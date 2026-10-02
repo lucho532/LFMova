@@ -185,6 +185,17 @@ public class FlujoCompletoTests
             Assert.Contains("Calle 10 # 20-30", textos);
         }
 
+        // El coordinador puede descargar el Excel de toda la jornada, con el conductor de cada ruta.
+        var respuestaSoporte = await cliente.GetAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/soporte");
+        respuestaSoporte.EnsureSuccessStatusCode();
+        using (var libroJornada = new ClosedXML.Excel.XLWorkbook(new MemoryStream(await respuestaSoporte.Content.ReadAsByteArrayAsync())))
+        {
+            var textos = libroJornada.Worksheet(1).CellsUsed().Select(c => c.GetString()).ToList();
+            Assert.Contains(textos, t => t.StartsWith("ENTRADA SEDE PRINCIPAL") && t.EndsWith("Conductor: Carlos Conductor"));
+            Assert.Contains("Emilia Empleada", textos);
+            Assert.Contains("E2E-EMPL", textos);
+        }
+
         // --- Ejecución del servicio como el propio conductor ---
         await AutenticarAsync(cliente, "E2E-COND", "ClaveCond123");
 

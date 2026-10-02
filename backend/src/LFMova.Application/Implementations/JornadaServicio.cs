@@ -1,4 +1,5 @@
 using LFMova.Application.DTOs.Jornadas;
+using LFMova.Application.DTOs.Soportes;
 using LFMova.Application.Implementations.Jornadas;
 using LFMova.Application.Interfaces;
 using LFMova.Application.Utils;
@@ -26,6 +27,7 @@ public class JornadaServicio : IJornadaServicio
     private readonly INotificacionServicio _notificacionServicio;
     private readonly DepuradorJornada _depurador;
     private readonly EnviadorSoporteRutas _enviadorSoporte;
+    private readonly ExportadorSoporteJornada _exportadorSoporte;
 
     /// <summary>Crea el servicio con sus repositorios y colaboradores.</summary>
     public JornadaServicio(
@@ -37,7 +39,8 @@ public class JornadaServicio : IJornadaServicio
         IEmpleadoRepositorio empleadoRepositorio,
         INotificacionServicio notificacionServicio,
         DepuradorJornada depurador,
-        EnviadorSoporteRutas enviadorSoporte)
+        EnviadorSoporteRutas enviadorSoporte,
+        ExportadorSoporteJornada exportadorSoporte)
     {
         _jornadaRepositorio = jornadaRepositorio;
         _servicioRepositorio = servicioRepositorio;
@@ -48,6 +51,7 @@ public class JornadaServicio : IJornadaServicio
         _notificacionServicio = notificacionServicio;
         _depurador = depurador;
         _enviadorSoporte = enviadorSoporte;
+        _exportadorSoporte = exportadorSoporte;
     }
 
     /// <inheritdoc />
@@ -114,6 +118,10 @@ public class JornadaServicio : IJornadaServicio
         // Además del aviso en la aplicación, cada conductor recibe por correo un Excel con sus rutas.
         await _enviadorSoporte.EnviarAsync(jornada, serviciosAPublicar);
     }
+
+    /// <inheritdoc />
+    public Task<ArchivoSoporte> DescargarSoporteAsync(int empresaId, int jornadaId)
+        => _exportadorSoporte.ExportarAsync(empresaId, jornadaId);
 
     /// <inheritdoc />
     public Task<DeshacerRepartoDto> DeshacerRepartoAsync(int empresaId, int jornadaId)

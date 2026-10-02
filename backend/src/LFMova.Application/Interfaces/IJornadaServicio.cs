@@ -1,4 +1,5 @@
 using LFMova.Application.DTOs.Jornadas;
+using LFMova.Application.DTOs.Soportes;
 
 namespace LFMova.Application.Interfaces;
 
@@ -27,6 +28,14 @@ public interface IJornadaServicio
     /// publicado (ver <c>tasks.md</c> T073).
     /// </summary>
     Task PublicarAsync(int empresaId, int jornadaId);
+
+    /// <summary>
+    /// Genera el Excel con toda la programación de la jornada para el
+    /// coordinador: las rutas no canceladas de todos los conductores (y las
+    /// que aún no tienen conductor), cada una con sus pasajeros. Falla si la
+    /// jornada no es de la empresa.
+    /// </summary>
+    Task<ArchivoSoporte> DescargarSoporteAsync(int empresaId, int jornadaId);
 
     /// <summary>
     /// Deshace el reparto automático de la jornada: elimina por completo los

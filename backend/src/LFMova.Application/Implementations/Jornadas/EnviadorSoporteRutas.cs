@@ -18,9 +18,8 @@ public class EnviadorSoporteRutas
     private readonly IServicioRepositorio _servicioRepositorio;
     private readonly IUnidadOperativaRepositorio _unidadOperativaRepositorio;
     private readonly IConductorRepositorio _conductorRepositorio;
-    private readonly IServicioPasajeroRepositorio _servicioPasajeroRepositorio;
-    private readonly IEmpleadoRepositorio _empleadoRepositorio;
     private readonly IEmpresaRepositorio _empresaRepositorio;
+    private readonly ArmadorSoporteRutas _armador;
     private readonly IGeneradorSoporteRutas _generador;
     private readonly IServicioCorreo _servicioCorreo;
 
@@ -29,18 +28,16 @@ public class EnviadorSoporteRutas
         IServicioRepositorio servicioRepositorio,
         IUnidadOperativaRepositorio unidadOperativaRepositorio,
         IConductorRepositorio conductorRepositorio,
-        IServicioPasajeroRepositorio servicioPasajeroRepositorio,
-        IEmpleadoRepositorio empleadoRepositorio,
         IEmpresaRepositorio empresaRepositorio,
+        ArmadorSoporteRutas armador,
         IGeneradorSoporteRutas generador,
         IServicioCorreo servicioCorreo)
     {
         _servicioRepositorio = servicioRepositorio;
         _unidadOperativaRepositorio = unidadOperativaRepositorio;
         _conductorRepositorio = conductorRepositorio;
-        _servicioPasajeroRepositorio = servicioPasajeroRepositorio;
-        _empleadoRepositorio = empleadoRepositorio;
         _empresaRepositorio = empresaRepositorio;
+        _armador = armador;
         _generador = generador;
         _servicioCorreo = servicioCorreo;
     }
@@ -111,7 +108,7 @@ public class EnviadorSoporteRutas
 
     private async Task EnviarAConductorAsync(Conductor conductor, string correo, string nombreEmpresa, Jornada jornada, List<Servicio> rutas)
     {
-        var soporte = new SoporteRutasConductor
+        var soporte = new SoporteRutas
         {
             NombreConductor = conductor.NombreCompleto,
             NombreEmpresa = nombreEmpresa,
@@ -120,30 +117,7 @@ public class EnviadorSoporteRutas
 
         foreach (var ruta in rutas)
         {
-            var rutaSoporte = new RutaSoporte
-            {
-                Tipo = ruta.Tipo,
-                NombreSede = ruta.Sede?.Nombre ?? string.Empty,
-                Fecha = ruta.Fecha,
-                Hora = ruta.HoraProgramada
-            };
-
-            var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(ruta.ServicioId);
-            foreach (var pasajero in pasajeros.OrderBy(p => p.Orden))
-            {
-                var empleado = await _empleadoRepositorio.ObtenerPorIdAsync(pasajero.EmpleadoId);
-                rutaSoporte.Pasajeros.Add(new PasajeroSoporte
-                {
-                    Orden = pasajero.Orden,
-                    NombreCompleto = empleado?.NombreCompleto ?? string.Empty,
-                    Telefono = empleado?.Telefono ?? string.Empty,
-                    // La dirección es la que quedó guardada para ese servicio, no la actual del empleado.
-                    Direccion = pasajero.DireccionRecogida,
-                    Barrio = empleado?.Barrio ?? string.Empty
-                });
-            }
-
-            soporte.Rutas.Add(rutaSoporte);
+            soporte.Rutas.Add(await _armador.ArmarAsync(ruta));
         }
 
         var fecha = jornada.FechaOperativa;

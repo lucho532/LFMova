@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react'
 import { useParams } from 'react-router-dom'
+import { BotonDescargarProgramacion } from '../componentes/BotonDescargarProgramacion'
 import { BotonPrimario } from '../componentes/BotonPrimario'
 import { BotonSecundario } from '../componentes/BotonSecundario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
@@ -477,6 +478,7 @@ export function PaginaImportarExcel() {
       <EncabezadoPagina
         titulo="Programación"
         subtitulo="Arma las rutas (con Excel o a mano), cada una con su propia fecha, y publícalas todas juntas cuando estén listas, sin importar el día de cada una."
+        acciones={<BotonDescargarProgramacion empresaId={idEmpresa} jornadaIds={[...new Set(serviciosReales.map((s) => s.jornadaId))]} />}
       />
       <div className="pagina-importar-excel__enviar">
         <BotonPrimario className="pagina-importar-excel__boton-enviar" type="button" disabled={publicando} onClick={alPublicar}>

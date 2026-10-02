@@ -482,9 +482,11 @@ Si una modificación afecta directamente a determinados usuarios, solo ellos deb
 **Decisión del usuario (2026-10-02): soporte de rutas por correo.** Al publicar, cada conductor al que se le publicó alguna ruta recibe además, en el correo de su cuenta, un archivo Excel de soporte para consultar sus rutas si la aplicación no está disponible:
 
 * contiene únicamente **sus propias rutas** de esa jornada que ya son visibles para él (nunca las de otros conductores ni sus pasajeros);
-* es una sola hoja con un bloque por ruta (sentido, sede, fecha y hora) y, debajo, sus pasajeros en orden de recogida con nombre, teléfono, dirección y barrio;
+* es una sola hoja con un bloque por ruta (sentido, sede, fecha y hora) y, debajo, sus pasajeros en orden de recogida con cédula, nombre, teléfono, dirección y barrio;
 * cada nueva publicación reenvía el soporte actualizado; el correo más reciente es el vigente;
 * si el conductor no tiene correo o el envío falla, la publicación no se deshace.
+
+**Decisión del usuario (2026-10-02): Excel de la jornada para el coordinador.** Desde la pantalla de Programación, el coordinador puede descargar un Excel con el mismo formato que reúne **todas** las rutas no canceladas de la jornada (publicadas o no, de todos los conductores y las que aún no tienen conductor), indicando en cada bloque el conductor de la ruta. Es solo una descarga: no publica ni envía nada.
 
 ---
 

@@ -10,5 +10,5 @@ namespace LFMova.Application.Interfaces;
 public interface IGeneradorSoporteRutas
 {
     /// <summary>Genera el archivo Excel del soporte: una hoja con un bloque por cada ruta.</summary>
-    byte[] Generar(SoporteRutasConductor soporte);
+    byte[] Generar(SoporteRutas soporte);
 }

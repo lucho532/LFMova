@@ -94,6 +94,39 @@ public partial class JornadaServicioTests
     }
 
     [Fact]
+    public async Task DescargarSoporteAsync_IncluyeLasRutasDeTodosLosConductoresMenosLasCanceladas()
+    {
+        var servicioRepo = new ServicioRepositorioFalso();
+        var unidadRepo = new UnidadOperativaRepositorioFalso(new UnidadOperativa { UnidadOperativaId = 1, ConductorId = 10, VehiculoId = 1, Activa = true });
+        var conductorRepo = new ConductorRepositorioFalso(ConductorConCorreo(10, 100, "uno@pruebas.test"));
+        var pasajeroRepo = new ServicioPasajeroRepositorioFalso(
+            new ServicioPasajero { ServicioPasajeroId = 1, ServicioId = 1, EmpleadoId = 20, Orden = 1 },
+            new ServicioPasajero { ServicioPasajeroId = 2, ServicioId = 2, EmpleadoId = 21, Orden = 1 },
+            new ServicioPasajero { ServicioPasajeroId = 3, ServicioId = 3, EmpleadoId = 22, Orden = 1 });
+        var servicio = CrearServicio(new JornadaRepositorioFalso(), servicioRepo, unidadRepo, conductorRepo, pasajeroRepo);
+        var jornada = await servicio.CrearAsync(1, new CrearJornadaDto { FechaOperativa = new DateOnly(2026, 1, 20) });
+        // Una ruta publicada con conductor, una todavía sin conductor y una cancelada (que no debe salir).
+        servicioRepo.Servicios.Add(new Servicio { ServicioId = 1, JornadaId = jornada.JornadaId, UnidadOperativaId = 1, Estado = EstadoServicio.PUBLICADO });
+        servicioRepo.Servicios.Add(new Servicio { ServicioId = 2, JornadaId = jornada.JornadaId, Estado = EstadoServicio.PENDIENTE_ASIGNACION });
+        servicioRepo.Servicios.Add(new Servicio { ServicioId = 3, JornadaId = jornada.JornadaId, UnidadOperativaId = 1, Estado = EstadoServicio.CANCELADO });
+
+        var archivo = await servicio.DescargarSoporteAsync(1, jornada.JornadaId);
+
+        Assert.Equal("programacion-2026-01-20.xlsx", archivo.NombreArchivo);
+        // El generador falso devuelve un byte por pasajero incluido.
+        Assert.Equal(2, archivo.Contenido.Length);
+    }
+
+    [Fact]
+    public async Task DescargarSoporteAsync_LanzaExcepcion_CuandoLaJornadaEsDeOtraEmpresa()
+    {
+        var servicio = CrearServicio(new JornadaRepositorioFalso(), new ServicioRepositorioFalso());
+        var jornada = await servicio.CrearAsync(1, new CrearJornadaDto { FechaOperativa = new DateOnly(2026, 1, 20) });
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.DescargarSoporteAsync(2, jornada.JornadaId));
+    }
+
+    [Fact]
     public async Task PublicarAsync_PublicaYNotifica_AunqueFalleElCorreoDelSoporte()
     {
         var servicioRepo = new ServicioRepositorioFalso();

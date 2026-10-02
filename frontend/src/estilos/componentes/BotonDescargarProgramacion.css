@@ -1,0 +1,5 @@
+.boton-descargar-programacion {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}

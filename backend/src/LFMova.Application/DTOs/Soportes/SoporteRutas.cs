@@ -3,15 +3,16 @@ using LFMova.Domain.Enums;
 namespace LFMova.Application.DTOs.Soportes;
 
 /// <summary>
-/// Contenido del soporte que se le envía por correo a un conductor: sus
-/// propias rutas publicadas de una jornada, con los pasajeros de cada una.
-/// Es una copia para consultar si la aplicación no está disponible; nunca
-/// incluye rutas ni pasajeros de otros conductores.
+/// Contenido de un soporte de rutas en Excel: las rutas de una jornada con
+/// los pasajeros de cada una. Hay dos usos: el que recibe cada conductor por
+/// correo (solo sus propias rutas, con <see cref="NombreConductor"/>) y el
+/// que descarga el coordinador (todas las rutas de la jornada, sin
+/// <see cref="NombreConductor"/> y con el conductor indicado en cada ruta).
 /// </summary>
-public class SoporteRutasConductor
+public class SoporteRutas
 {
-    /// <summary>Nombre del conductor dueño del soporte.</summary>
-    public string NombreConductor { get; set; } = string.Empty;
+    /// <summary>Nombre del conductor dueño del soporte, o <c>null</c> si el soporte es de toda la jornada.</summary>
+    public string? NombreConductor { get; set; }
 
     /// <summary>Nombre de la empresa para la que hace las rutas.</summary>
     public string NombreEmpresa { get; set; } = string.Empty;
@@ -19,7 +20,7 @@ public class SoporteRutasConductor
     /// <summary>Fecha operativa de la jornada.</summary>
     public DateOnly FechaOperativa { get; set; }
 
-    /// <summary>Rutas del conductor, en el orden en que ocurren.</summary>
+    /// <summary>Rutas del soporte, en el orden en que ocurren.</summary>
     public List<RutaSoporte> Rutas { get; set; } = new();
 }
 
@@ -38,6 +39,9 @@ public class RutaSoporte
     /// <summary>Hora programada de la ruta (hora de Colombia).</summary>
     public TimeOnly Hora { get; set; }
 
+    /// <summary>Conductor de la ruta; solo se indica en el soporte de toda la jornada.</summary>
+    public string? NombreConductor { get; set; }
+
     /// <summary>Pasajeros de la ruta, en su orden de recogida.</summary>
     public List<PasajeroSoporte> Pasajeros { get; set; } = new();
 }
@@ -47,6 +51,9 @@ public class PasajeroSoporte
 {
     /// <summary>Orden de recogida.</summary>
     public int Orden { get; set; }
+
+    /// <summary>Cédula del pasajero.</summary>
+    public string Cedula { get; set; } = string.Empty;
 
     /// <summary>Nombre completo del pasajero.</summary>
     public string NombreCompleto { get; set; } = string.Empty;
@@ -60,3 +67,6 @@ public class PasajeroSoporte
     /// <summary>Barrio de la dirección.</summary>
     public string Barrio { get; set; } = string.Empty;
 }
+
+/// <summary>Archivo de soporte listo para entregar: su nombre (con extensión) y su contenido.</summary>
+public sealed record ArchivoSoporte(string NombreArchivo, byte[] Contenido);

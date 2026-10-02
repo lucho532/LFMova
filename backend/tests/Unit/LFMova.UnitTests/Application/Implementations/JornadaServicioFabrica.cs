@@ -24,13 +24,20 @@ internal static class JornadaServicioFabrica
         IProgramacionTransporteRepositorio programacionRepositorio,
         INotificacionServicio notificacionServicio,
         IServicioCorreo? servicioCorreo = null)
-        => new(
+    {
+        var empresas = new EmpresaRepositorioFijo();
+        var generador = new GeneradorSoporteFalso();
+        var armador = new ArmadorSoporteRutas(servicioPasajeroRepositorio, empleadoRepositorio);
+        return new JornadaServicio(
             jornadaRepositorio, servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, servicioPasajeroRepositorio,
             empleadoRepositorio, notificacionServicio,
             new DepuradorJornada(jornadaRepositorio, servicioRepositorio, servicioPasajeroRepositorio, programacionRepositorio),
             new EnviadorSoporteRutas(
-                servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, servicioPasajeroRepositorio, empleadoRepositorio,
-                new EmpresaRepositorioFijo(), new GeneradorSoporteFalso(), servicioCorreo ?? new CorreoSoporteFalso()));
+                servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, empresas, armador, generador,
+                servicioCorreo ?? new CorreoSoporteFalso()),
+            new ExportadorSoporteJornada(
+                jornadaRepositorio, servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, empresas, armador, generador));
+    }
 
     /// <summary>Devuelve siempre una empresa con el nombre "Empresa de prueba"; no guarda nada.</summary>
     private class EmpresaRepositorioFijo : IEmpresaRepositorio
@@ -50,7 +57,7 @@ internal static class JornadaServicioFabrica
     /// <summary>En vez de un Excel, devuelve un byte por cada pasajero del soporte: basta para comprobar qué se incluyó.</summary>
     private class GeneradorSoporteFalso : IGeneradorSoporteRutas
     {
-        public byte[] Generar(SoporteRutasConductor soporte) => new byte[soporte.Rutas.Sum(r => r.Pasajeros.Count)];
+        public byte[] Generar(SoporteRutas soporte) => new byte[soporte.Rutas.Sum(r => r.Pasajeros.Count)];
     }
 }
 
