@@ -744,7 +744,7 @@ public class ServicioServicioTests
     }
 
     [Fact]
-    public async Task FinalizarAsync_Finaliza_ParaSalida_SinValidarPasajeros()
+    public async Task FinalizarAsync_Finaliza_CuandoLaSalidaNoTienePasajerosPendientes()
     {
         var (servicio, creado) = await CrearServicioEnCursoAsync(TipoServicio.SALIDA);
 
@@ -754,14 +754,18 @@ public class ServicioServicioTests
         Assert.Equal(EstadoServicio.FINALIZADO, actualizado!.Estado);
     }
 
-    [Fact]
-    public async Task FinalizarAsync_LanzaExcepcion_CuandoHayPasajerosPendientesParaEntrada()
+    [Theory]
+    [InlineData(TipoServicio.ENTRADA)]
+    [InlineData(TipoServicio.SALIDA)]
+    public async Task FinalizarAsync_LanzaExcepcion_CuandoHayPasajerosPendientes(TipoServicio tipo)
     {
         var (jornadas, sedes, servicios, unidades, conductores) = CrearRepositorios();
         var pasajeros = new ServicioPasajeroRepositorioFalso(
             new ServicioPasajero { ServicioPasajeroId = 1, ServicioId = 1, EmpleadoId = 1, Estado = EstadoServicioPasajero.PROGRAMADO });
         var servicio = CrearServicio(servicios, jornadas, sedes, unidades, conductores, pasajeros: pasajeros);
-        var creado = await servicio.CrearAsync(1, 1, DtoValido(UnidadActivaId));
+        var dto = DtoValido(UnidadActivaId);
+        dto.Tipo = tipo;
+        var creado = await servicio.CrearAsync(1, 1, dto);
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });

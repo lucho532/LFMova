@@ -98,11 +98,10 @@ public interface IServicioServicio
     /// <c>FINALIZADO</c> y registra <c>HoraFinReal</c> (ver <c>spec.md</c>
     /// §27 y <c>tasks.md</c> T090), junto con la ubicación real del
     /// dispositivo del conductor en ese momento (<paramref name="datos"/>,
-    /// opcional: si el dispositivo no la entrega, se finaliza igual). Para
-    /// <c>ENTRADA</c> no se permite finalizar si existen pasajeros pendientes
-    /// de procesar (ver
+    /// opcional: si el dispositivo no la entrega, se finaliza igual). Ni en
+    /// <c>ENTRADA</c> ni en <c>SALIDA</c> se permite finalizar si existen
+    /// pasajeros pendientes de procesar (ver
     /// <see cref="Domain.Rules.ReglasEstadoServicioPasajero.EstaProcesado"/>).
-    /// Para <c>SALIDA</c> no se exigen pasajeros procesados.
     /// Falla si el servicio no está en estado <c>EN_CURSO</c>.
     /// </summary>
     Task FinalizarAsync(int empresaId, int servicioId, FinalizarServicioDto? datos = null);

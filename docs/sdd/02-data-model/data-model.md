@@ -1383,7 +1383,7 @@ El tiempo máximo operativo definido inicialmente es de aproximadamente 2 minuto
 
 ### Incidencias
 
-El conductor puede registrar incidencias y evidencias.
+El conductor puede registrar incidencias y evidencias. Una incidencia de cualquier tipo deja al pasajero como `NO_RECOGIDO` (decisión del 2026-10-02: ya no hay incidencias solo informativas).
 
 ### Finalización
 
@@ -1395,7 +1395,7 @@ Para servicios de entrada:
 
 Para servicios de salida:
 
-* pueden finalizar cuando se complete el transporte de los pasajeros;
+* pueden finalizar cuando se complete el transporte de los pasajeros: igual que en las entradas, no se permite finalizar mientras existan pasajeros pendientes de procesar (decisión del 2026-10-02);
 * no necesitan terminar en una ubicación concreta.
 
 El registro de ubicación exacta y radio de geocerca queda pendiente de definición técnica.

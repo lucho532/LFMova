@@ -61,14 +61,12 @@ public class EjecucionServicio
             throw new InvalidOperationException($"No se puede finalizar el servicio desde el estado {servicio.Estado}.");
         }
 
-        if (servicio.Tipo == TipoServicio.ENTRADA)
+        // Vale igual para entradas y salidas: cada pasajero debe quedar recogido o con incidencia antes de cerrar la ruta.
+        var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicioId);
+        if (pasajeros.Any(p => !ReglasEstadoServicioPasajero.EstaProcesado(p.Estado)))
         {
-            var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicioId);
-            if (pasajeros.Any(p => !ReglasEstadoServicioPasajero.EstaProcesado(p.Estado)))
-            {
-                throw new InvalidOperationException(
-                    "No se puede finalizar el servicio: existen pasajeros pendientes de procesar.");
-            }
+            throw new InvalidOperationException(
+                "No se puede finalizar el servicio: existen pasajeros pendientes de procesar.");
         }
 
         servicio.Estado = EstadoServicio.FINALIZADO;

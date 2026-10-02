@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { ServicioPasajero } from '../modelos/operacion'
+import { marcarUbicacionCompartidaVista, ubicacionCompartidaVista } from '../servicios/ubicacionesVistas'
 import { BotonNavegar } from './BotonNavegar'
 import '../estilos/componentes/UbicacionesCompartidas.css'
 
@@ -11,23 +12,40 @@ function horaColombia(instante: string): string {
 /**
  * Tarjeta desplegable del conductor con la ubicación que el propio pasajero
  * compartió para esta ruta (no la que guarda el conductor). Al tocar la
- * ubicación aparece la opción de navegar hasta ella. Solo muestra y
+ * ubicación aparece la opción de navegar hasta ella. El aviso con el número
+ * solo se muestra mientras el conductor no la ha abierto. Solo muestra y
  * enlaza: no pide ni guarda ubicaciones.
  */
 export function UbicacionesCompartidas({ pasajero }: { pasajero: ServicioPasajero }) {
   const [abierta, setAbierta] = useState(false)
   const [elegida, setElegida] = useState(false)
+  const [vista, setVista] = useState(() => ubicacionCompartidaVista(pasajero.servicioPasajeroId, pasajero.fechaHoraUbicacionCompartida))
   const compartida =
     pasajero.latitudCompartida !== null && pasajero.longitudCompartida !== null
       ? { latitud: pasajero.latitudCompartida, longitud: pasajero.longitudCompartida }
       : null
 
+  // Si el pasajero comparte una ubicación nueva, vuelve a contar como no vista.
+  const [fechaVista, setFechaVista] = useState(pasajero.fechaHoraUbicacionCompartida)
+  if (fechaVista !== pasajero.fechaHoraUbicacionCompartida) {
+    setFechaVista(pasajero.fechaHoraUbicacionCompartida)
+    setVista(ubicacionCompartidaVista(pasajero.servicioPasajeroId, pasajero.fechaHoraUbicacionCompartida))
+  }
+
+  function alAlternar() {
+    if (!abierta && compartida) {
+      marcarUbicacionCompartidaVista(pasajero.servicioPasajeroId, pasajero.fechaHoraUbicacionCompartida)
+      setVista(true)
+    }
+    setAbierta((v) => !v)
+  }
+
   return (
     <div className="ubicaciones-compartidas">
-      <button type="button" className="ubicaciones-compartidas__titulo" onClick={() => setAbierta((v) => !v)} aria-expanded={abierta}>
+      <button type="button" className="ubicaciones-compartidas__titulo" onClick={alAlternar} aria-expanded={abierta}>
         <span>
           📡 Ubicaciones compartidas
-          {compartida && <span className="ubicaciones-compartidas__insignia">1</span>}
+          {compartida && !vista && <span className="ubicaciones-compartidas__insignia">1</span>}
         </span>
         <span className="ubicaciones-compartidas__flecha">{abierta ? '▲' : '▼'}</span>
       </button>

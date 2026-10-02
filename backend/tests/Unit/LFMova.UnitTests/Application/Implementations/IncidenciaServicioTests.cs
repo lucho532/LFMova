@@ -222,7 +222,9 @@ public class IncidenciaServicioTests
     [InlineData(TipoIncidencia.NO_SE_ENCUENTRA)]
     [InlineData(TipoIncidencia.DIRECCION_INCORRECTA)]
     [InlineData(TipoIncidencia.NO_SE_PUDO_RECOGER)]
-    public async Task CrearAsync_DejaAlPasajeroComoNoRecogido_CuandoLaIncidenciaImpideLaRecogida(TipoIncidencia tipo)
+    [InlineData(TipoIncidencia.UBICACION_MODIFICADA)]
+    [InlineData(TipoIncidencia.OTRA)]
+    public async Task CrearAsync_DejaAlPasajeroComoNoRecogido_ConCualquierTipoDeIncidencia(TipoIncidencia tipo)
     {
         var (servicio, _, _) = CrearServicio();
         _pasajeroCreado.Estado = EstadoServicioPasajero.CONDUCTOR_LLEGO;
@@ -231,19 +233,6 @@ public class IncidenciaServicioTests
 
         Assert.Equal(EstadoServicioPasajero.NO_RECOGIDO, _pasajeroCreado.Estado);
         Assert.NotNull(_pasajeroCreado.HoraProcesado);
-    }
-
-    [Theory]
-    [InlineData(TipoIncidencia.UBICACION_MODIFICADA)]
-    [InlineData(TipoIncidencia.OTRA)]
-    public async Task CrearAsync_NoCambiaElEstadoDelPasajero_CuandoLaIncidenciaEsSoloInformativa(TipoIncidencia tipo)
-    {
-        var (servicio, _, _) = CrearServicio();
-        _pasajeroCreado.Estado = EstadoServicioPasajero.CONDUCTOR_LLEGO;
-
-        await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = tipo, Descripcion = "x" });
-
-        Assert.Equal(EstadoServicioPasajero.CONDUCTOR_LLEGO, _pasajeroCreado.Estado);
     }
 
     [Theory]

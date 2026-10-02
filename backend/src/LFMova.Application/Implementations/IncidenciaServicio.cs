@@ -94,8 +94,8 @@ public class IncidenciaServicio : IIncidenciaServicio
         await _incidenciaRepositorio.AgregarAsync(incidencia);
         await _incidenciaRepositorio.GuardarCambiosAsync();
 
-        // Una incidencia que impide la recogida deja al pasajero como NO_RECOGIDO: el conductor no necesita un botón aparte.
-        if (ReglasEstadoServicioPasajero.IncidenciaImpideLaRecogida(datos.Tipo) && ReglasEstadoServicioPasajero.PuedeQuedarNoRecogido(servicioPasajero.Estado))
+        // Cualquier incidencia deja al pasajero como NO_RECOGIDO: el conductor no necesita un botón aparte.
+        if (ReglasEstadoServicioPasajero.PuedeQuedarNoRecogido(servicioPasajero.Estado))
         {
             servicioPasajero.Estado = EstadoServicioPasajero.NO_RECOGIDO;
             servicioPasajero.HoraProcesado = DateTime.UtcNow;

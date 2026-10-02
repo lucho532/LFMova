@@ -15,18 +15,6 @@ public class ReglasEstadoServicioPasajeroTests
     }
 
     [Theory]
-    [InlineData(TipoIncidencia.NO_CONTESTA, true)]
-    [InlineData(TipoIncidencia.NO_SE_ENCUENTRA, true)]
-    [InlineData(TipoIncidencia.DIRECCION_INCORRECTA, true)]
-    [InlineData(TipoIncidencia.NO_SE_PUDO_RECOGER, true)]
-    [InlineData(TipoIncidencia.UBICACION_MODIFICADA, false)]
-    [InlineData(TipoIncidencia.OTRA, false)]
-    public void IncidenciaImpideLaRecogida_DevuelveElValorEsperado(TipoIncidencia tipo, bool esperado)
-    {
-        Assert.Equal(esperado, ReglasEstadoServicioPasajero.IncidenciaImpideLaRecogida(tipo));
-    }
-
-    [Theory]
     [InlineData(EstadoServicioPasajero.PROGRAMADO, true)]
     [InlineData(EstadoServicioPasajero.CONFIRMADO, true)]
     [InlineData(EstadoServicioPasajero.CONDUCTOR_LLEGO, true)]
