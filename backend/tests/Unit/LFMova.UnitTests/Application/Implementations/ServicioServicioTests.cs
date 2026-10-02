@@ -249,7 +249,7 @@ public class ServicioServicioTests
         ServicioPasajeroRepositorioFalso? pasajeros = null,
         EmpleadoRepositorioFalso? empleados = null,
         NotificacionRepositorioFalso? notificaciones = null)
-        => new(
+        => ServicioServicioFabrica.Crear(
             servicios,
             jornadas,
             sedes,

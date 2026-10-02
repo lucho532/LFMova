@@ -1,5 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using LFMova.Application.Implementations;
+using LFMova.Application.Implementations.Conductores;
+using LFMova.Application.Implementations.Importaciones;
+using LFMova.Application.Implementations.Invitaciones;
+using LFMova.Application.Implementations.Jornadas;
+using LFMova.Application.Implementations.Servicios;
+using LFMova.Application.Implementations.ServiciosPasajero;
 using LFMova.Application.Interfaces;
 using LFMova.Application.Utils;
 
@@ -47,6 +53,46 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IIncidenciaServicio, IncidenciaServicio>();
         servicios.AddScoped<IAlertaEjecucionServicio, AlertaEjecucionServicio>();
 
+        AgregarColaboradores(servicios);
+
         return servicios;
+    }
+
+    /// <summary>
+    /// Registra los colaboradores en los que se dividen los servicios más grandes. No tienen interfaz
+    /// porque no son contratos de la capa: cada uno lo usa únicamente el servicio al que pertenece.
+    /// </summary>
+    private static void AgregarColaboradores(IServiceCollection servicios)
+    {
+        // ConductorServicio, JornadaServicio e InvitacionEmpresaServicio.
+        servicios.AddScoped<RegistroConductor>();
+        servicios.AddScoped<DepuradorJornada>();
+        servicios.AddScoped<EmisorInvitacionEmpresa>();
+
+        // ServicioServicio.
+        servicios.AddScoped<AccesoServicio>();
+        servicios.AddScoped<AsignadorUnidadServicio>();
+        servicios.AddScoped<ModificadorRutaArmada>();
+        servicios.AddScoped<EjecucionServicio>();
+
+        // ServicioPasajeroServicio.
+        servicios.AddScoped<AccesoServicioPasajero>();
+        servicios.AddScoped<ConsultasServicioPasajero>();
+        servicios.AddScoped<NotificadorServicioPasajero>();
+        servicios.AddScoped<GestorParticipacionPasajero>();
+        servicios.AddScoped<GestorUbicacionPasajero>();
+        servicios.AddScoped<ReorganizadorPasajeros>();
+        servicios.AddScoped<AprendizCorredorVial>();
+
+        // ImportacionExcelServicio.
+        servicios.AddScoped<AnalizadorImportacion>();
+        servicios.AddScoped<EjecutorImportacion>();
+        servicios.AddScoped<CargadorJornadasImportacion>();
+        servicios.AddScoped<AgrupadorPendientesRuta>();
+        servicios.AddScoped<PlanificadorDestinosRuta>();
+        servicios.AddScoped<AseguradorEmpleadoImportacion>();
+        servicios.AddScoped<ResolutorSedeImportacion>();
+        servicios.AddScoped<CreadorRutaVacia>();
+        servicios.AddScoped<CreadorRutaPegada>();
     }
 }

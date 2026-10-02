@@ -233,7 +233,7 @@ public class JornadaServicioTests
         IEmpleadoRepositorio? empleadoRepositorio = null,
         IProgramacionTransporteRepositorio? programacionRepositorio = null,
         NotificacionRepositorioFalso? notificacionRepositorio = null)
-        => new(
+        => JornadaServicioFabrica.Crear(
             jornadaRepositorio,
             servicioRepositorio,
             unidadOperativaRepositorio ?? new UnidadOperativaRepositorioFalso(),

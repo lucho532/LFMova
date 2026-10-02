@@ -1,4 +1,5 @@
 using LFMova.Application.DTOs.Jornadas;
+using LFMova.Application.Implementations.Jornadas;
 using LFMova.Application.Interfaces;
 using LFMova.Application.Utils;
 using LFMova.Application.Mappers;
@@ -22,10 +23,10 @@ public class JornadaServicio : IJornadaServicio
     private readonly IConductorRepositorio _conductorRepositorio;
     private readonly IServicioPasajeroRepositorio _servicioPasajeroRepositorio;
     private readonly IEmpleadoRepositorio _empleadoRepositorio;
-    private readonly IProgramacionTransporteRepositorio _programacionRepositorio;
     private readonly INotificacionServicio _notificacionServicio;
+    private readonly DepuradorJornada _depurador;
 
-    /// <summary>Crea el servicio con sus repositorios.</summary>
+    /// <summary>Crea el servicio con sus repositorios y colaboradores.</summary>
     public JornadaServicio(
         IJornadaRepositorio jornadaRepositorio,
         IServicioRepositorio servicioRepositorio,
@@ -33,8 +34,8 @@ public class JornadaServicio : IJornadaServicio
         IConductorRepositorio conductorRepositorio,
         IServicioPasajeroRepositorio servicioPasajeroRepositorio,
         IEmpleadoRepositorio empleadoRepositorio,
-        IProgramacionTransporteRepositorio programacionRepositorio,
-        INotificacionServicio notificacionServicio)
+        INotificacionServicio notificacionServicio,
+        DepuradorJornada depurador)
     {
         _jornadaRepositorio = jornadaRepositorio;
         _servicioRepositorio = servicioRepositorio;
@@ -42,8 +43,8 @@ public class JornadaServicio : IJornadaServicio
         _conductorRepositorio = conductorRepositorio;
         _servicioPasajeroRepositorio = servicioPasajeroRepositorio;
         _empleadoRepositorio = empleadoRepositorio;
-        _programacionRepositorio = programacionRepositorio;
         _notificacionServicio = notificacionServicio;
+        _depurador = depurador;
     }
 
     /// <inheritdoc />
@@ -109,108 +110,12 @@ public class JornadaServicio : IJornadaServicio
     }
 
     /// <inheritdoc />
-    public async Task<DeshacerRepartoDto> DeshacerRepartoAsync(int empresaId, int jornadaId)
-    {
-        var jornada = await _jornadaRepositorio.ObtenerPorIdAsync(jornadaId);
-        if (jornada is null || !ReglasMultiempresa.JornadaPerteneceAEmpresa(jornada, empresaId))
-        {
-            throw new InvalidOperationException("La jornada indicada no existe en esta empresa.");
-        }
-
-        var servicios = await _servicioRepositorio.ObtenerPorJornadaAsync(jornadaId);
-        var aDeshacer = servicios.Where(s => s.Estado is EstadoServicio.BORRADOR or EstadoServicio.PENDIENTE_ASIGNACION or EstadoServicio.ASIGNADO).ToList();
-
-        var resultado = new DeshacerRepartoDto();
-        foreach (var servicio in aDeshacer)
-        {
-            var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicio.ServicioId);
-            foreach (var pasajero in pasajeros)
-            {
-                await _servicioPasajeroRepositorio.EliminarAsync(pasajero);
-                resultado.PasajerosLiberados++;
-            }
-
-            await _servicioRepositorio.EliminarAsync(servicio);
-            resultado.ServiciosEliminados++;
-        }
-
-        // Ambos repositorios comparten el mismo contexto de datos: un solo guardado persiste tanto
-        // los pasajeros como los servicios eliminados, en el orden correcto según sus relaciones.
-        await _servicioRepositorio.GuardarCambiosAsync();
-
-        return resultado;
-    }
+    public Task<DeshacerRepartoDto> DeshacerRepartoAsync(int empresaId, int jornadaId)
+        => _depurador.DeshacerRepartoAsync(empresaId, jornadaId);
 
     /// <inheritdoc />
-    public async Task<EliminarRastroDto> EliminarRastroAsync(int empresaId, int jornadaId)
-    {
-        var jornada = await _jornadaRepositorio.ObtenerPorIdAsync(jornadaId);
-        if (jornada is null || !ReglasMultiempresa.JornadaPerteneceAEmpresa(jornada, empresaId))
-        {
-            throw new InvalidOperationException("La jornada indicada no existe en esta empresa.");
-        }
-
-        var servicios = await _servicioRepositorio.ObtenerPorJornadaAsync(jornadaId);
-        var protegidos = servicios.Where(s => s.Estado is EstadoServicio.PUBLICADO or EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO).ToList();
-        if (protegidos.Count > 0)
-        {
-            throw new InvalidOperationException(
-                "No se puede eliminar: esta jornada ya tiene servicios publicados, en curso o finalizados, que son operación real y no se pueden deshacer.");
-        }
-
-        var resultado = new EliminarRastroDto();
-
-        var aDeshacer = servicios.Where(s => s.Estado is EstadoServicio.BORRADOR or EstadoServicio.PENDIENTE_ASIGNACION or EstadoServicio.ASIGNADO).ToList();
-        foreach (var servicio in aDeshacer)
-        {
-            var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicio.ServicioId);
-            foreach (var pasajero in pasajeros)
-            {
-                await _servicioPasajeroRepositorio.EliminarAsync(pasajero);
-                resultado.PasajerosEliminados++;
-            }
-
-            await _servicioRepositorio.EliminarAsync(servicio);
-            resultado.ServiciosEliminados++;
-        }
-
-        // Además de los servicios y pasajeros, se eliminan las ProgramacionTransporte de esta fecha que
-        // hayan quedado sin ningún ServicioPasajero (por ejemplo, filas de una importación que falló a
-        // medias): esas son "rastro" de la importación que impedirían reconocer la cédula como nueva en
-        // un reimport desde cero. Se consideran las dos fechas posibles de una importación (ver
-        // ImportacionExcelServicio.EjecutarAsync): la fecha operativa y el día siguiente, para las filas
-        // de un horario que cruza medianoche.
-        var fechas = new[] { jornada.FechaOperativa, jornada.FechaOperativa.AddDays(1) };
-        var programacionesDeLaFecha = (await _programacionRepositorio.ObtenerPorEmpresaAsync(empresaId))
-            .Where(p => fechas.Contains(p.Fecha))
-            .ToList();
-        foreach (var programacion in programacionesDeLaFecha)
-        {
-            // Si todavía tiene un pasajero de servicio (de un servicio protegido que no se tocó, como uno
-            // cancelado con historial), no se elimina: violaría la relación con ese ServicioPasajero.
-            if (await _servicioPasajeroRepositorio.ObtenerPorProgramacionAsync(programacion.ProgramacionTransporteId) is not null)
-            {
-                continue;
-            }
-
-            await _programacionRepositorio.EliminarAsync(programacion);
-            resultado.ProgramacionesEliminadas++;
-        }
-
-        await _servicioRepositorio.GuardarCambiosAsync();
-
-        // Si no quedó ningún servicio (ni siquiera uno cancelado), la jornada también se elimina: así una
-        // nueva importación de esa fecha arma una jornada nueva, como si nunca se hubiera importado nada.
-        var serviciosRestantes = await _servicioRepositorio.ObtenerPorJornadaAsync(jornadaId);
-        if (serviciosRestantes.Count == 0)
-        {
-            await _jornadaRepositorio.EliminarAsync(jornada);
-            await _jornadaRepositorio.GuardarCambiosAsync();
-            resultado.JornadaEliminada = true;
-        }
-
-        return resultado;
-    }
+    public Task<EliminarRastroDto> EliminarRastroAsync(int empresaId, int jornadaId)
+        => _depurador.EliminarRastroAsync(empresaId, jornadaId);
 
     /// <summary>
     /// Notifica al conductor de la unidad asignada y a cada empleado

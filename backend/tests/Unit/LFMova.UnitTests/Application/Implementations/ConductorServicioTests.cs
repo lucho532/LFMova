@@ -235,7 +235,7 @@ public class ConductorServicioTests
     public async Task CrearAsync_LanzaExcepcion_CuandoLaPersonaNoSeHaRegistrado()
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), new UsuarioRepositorioFalso(), empresaRepo, new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
@@ -248,7 +248,7 @@ public class ConductorServicioTests
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         var conductor = await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
 
@@ -266,7 +266,7 @@ public class ConductorServicioTests
             new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true },
             new Empresa { EmpresaId = 2, Nombre = "Otra", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
 
@@ -281,7 +281,7 @@ public class ConductorServicioTests
             new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true },
             new Empresa { EmpresaId = 2, Nombre = "Otra", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
         var vinculacion = await servicio.VincularAsync(2, new VincularConductorDto { Cedula = "555" });
@@ -297,7 +297,7 @@ public class ConductorServicioTests
     public async Task VincularAsync_LanzaExcepcion_CuandoElConductorNoExiste()
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             servicio.VincularAsync(1, new VincularConductorDto { Cedula = "no-existe" }));
@@ -308,7 +308,7 @@ public class ConductorServicioTests
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
 
@@ -321,7 +321,7 @@ public class ConductorServicioTests
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
         var conductor = await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
 
         await servicio.DesactivarVinculacionAsync(1, conductor.ConductorId);
@@ -334,7 +334,7 @@ public class ConductorServicioTests
     public async Task CrearAsync_LanzaExcepcion_CuandoLaCedulaEstaVacia()
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             servicio.CrearAsync(1, new CrearConductorDto { Cedula = "", Vehiculo = VehiculoValido() }));
@@ -344,7 +344,7 @@ public class ConductorServicioTests
     public async Task VincularAsync_LanzaExcepcion_CuandoLaCedulaEstaVacia()
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
-        var servicio = new ConductorServicio(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
+        var servicio = ConductorServicioFabrica.Crear(new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             servicio.VincularAsync(1, new VincularConductorDto { Cedula = "   " }));
@@ -356,7 +356,7 @@ public class ConductorServicioTests
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var usuarioRepo = UsuarioRegistrado();
         var conductorRepo = new ConductorRepositorioFalso();
-        var servicioDeCreacion = new ConductorServicio(
+        var servicioDeCreacion = ConductorServicioFabrica.Crear(
             conductorRepo, usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
         var conductor = await servicioDeCreacion.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido() });
 
@@ -381,7 +381,7 @@ public class ConductorServicioTests
             Tipo = TipoServicio.ENTRADA, Estado = EstadoServicio.ASIGNADO, Jornada = servicioAsignado.Jornada
         };
 
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             conductorRepo, usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(unidad), new ServicioRepositorioFalso(servicioAsignado, servicioSinPublicar), new VehiculoRepositorioFalso());
 
@@ -396,7 +396,7 @@ public class ConductorServicioTests
     public async Task ObtenerServiciosPropiosAsync_LanzaExcepcion_CuandoNoTienePerfilDeConductor()
     {
         var empresaRepo = new EmpresaRepositorioFalso();
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
@@ -409,7 +409,7 @@ public class ConductorServicioTests
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var vehiculos = new VehiculoRepositorioFalso();
         var unidades = new UnidadOperativaRepositorioFalso();
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(), unidades, new ServicioRepositorioFalso(), vehiculos);
 
         var conductor = await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido("XYZ987") });
@@ -431,7 +431,7 @@ public class ConductorServicioTests
         var conductorRepo = new ConductorRepositorioFalso();
         var vehiculos = new VehiculoRepositorioFalso();
         var unidades = new UnidadOperativaRepositorioFalso();
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             conductorRepo, usuarioRepo, empresaRepo, new UsuarioRolRepositorioFalso(), unidades, new ServicioRepositorioFalso(), vehiculos);
         var conductor = await servicio.CrearAsync(1, new CrearConductorDto { Cedula = "555", Vehiculo = VehiculoValido("XYZ987") });
 
@@ -446,7 +446,7 @@ public class ConductorServicioTests
     [Fact]
     public async Task ObtenerUnidadesPropiasAsync_LanzaExcepcion_CuandoNoTienePerfilDeConductor()
     {
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), new UsuarioRepositorioFalso(), new EmpresaRepositorioFalso(), new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
 
@@ -457,7 +457,7 @@ public class ConductorServicioTests
     public async Task CrearAsync_LanzaExcepcion_CuandoFaltaLaVigenciaDelSoat()
     {
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), new VehiculoRepositorioFalso());
         var vehiculo = VehiculoValido();
@@ -472,7 +472,7 @@ public class ConductorServicioTests
         var empresaRepo = new EmpresaRepositorioFalso(new Empresa { EmpresaId = 1, Nombre = "ACME", Activa = true });
         var vehiculos = new VehiculoRepositorioFalso();
         await vehiculos.AgregarAsync(new Vehiculo { Placa = "ABC123", ConductorId = 99 });
-        var servicio = new ConductorServicio(
+        var servicio = ConductorServicioFabrica.Crear(
             new ConductorRepositorioFalso(), UsuarioRegistrado(), empresaRepo, new UsuarioRolRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(), new ServicioRepositorioFalso(), vehiculos);
 

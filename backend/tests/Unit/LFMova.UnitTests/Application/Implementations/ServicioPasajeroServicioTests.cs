@@ -398,7 +398,7 @@ public class ServicioPasajeroServicioTests
         var notificacionRepo = new NotificacionRepositorioFalso();
         var notificacionServicio = new NotificacionServicio(notificacionRepo);
 
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, programacionRepo, servicioRepo, empleadoRepo, ubicacionRepo, unidadRepo, conductorRepo, notificacionServicio, new ServicioServicioFalso(),
             new ZonaRepositorioFalso(), new CorredorVialRepositorioFalso(), new BarreraGeograficaRepositorioFalso());
 
@@ -645,7 +645,7 @@ public class ServicioPasajeroServicioTests
         var servicioRepo = new ServicioRepositorioFalso(servicioEntidad);
         var empleado = new Empleado { EmpleadoId = 1, EmpresaId = EmpresaId, NombreCompleto = "Ana Gómez", Telefono = "3001234567", Activo = true };
         var empleadoRepo = new EmpleadoRepositorioFalso(empleado);
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             new ServicioPasajeroRepositorioFalso(), programacionRepo, servicioRepo, empleadoRepo,
             new UbicacionHistoricaRepositorioFalso(),
             new UnidadOperativaRepositorioFalso(new UnidadOperativa { UnidadOperativaId = 1, ConductorId = 1, VehiculoId = 1, Activa = true }),
@@ -769,7 +769,7 @@ public class ServicioPasajeroServicioTests
             Servicio = servicioEntidad
         });
 
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), new ServicioRepositorioFalso(servicioEntidad), empleadoRepo,
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(),
@@ -795,7 +795,7 @@ public class ServicioPasajeroServicioTests
         servicioEntidad.Estado = estado;
         var pasajeroRepo = new ServicioPasajeroRepositorioFalso();
         await pasajeroRepo.AgregarAsync(new ServicioPasajero { EmpleadoId = 1, ServicioId = servicioEntidad.ServicioId, ProgramacionTransporteId = 1, Servicio = servicioEntidad });
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), new ServicioRepositorioFalso(servicioEntidad), new EmpleadoRepositorioFalso(new Empleado { EmpleadoId = 1, UsuarioId = 300, EmpresaId = EmpresaId, Activo = true }),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(),
@@ -807,7 +807,7 @@ public class ServicioPasajeroServicioTests
     [Fact]
     public async Task ObtenerPorUsuarioEmpleadoAsync_LanzaExcepcion_CuandoNoTienePerfilDeEmpleado()
     {
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             new ServicioPasajeroRepositorioFalso(), new ProgramacionRepositorioFalso(), new ServicioRepositorioFalso(), new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(),
@@ -832,7 +832,7 @@ public class ServicioPasajeroServicioTests
 
     private static ServicioPasajeroServicio CrearServicioPasajeroServicio(
         ServicioPasajeroRepositorioFalso pasajeroRepo, Servicio servicioEntidad, ServicioServicioFalso? servicioServicio = null)
-        => new(
+        => ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), new ServicioRepositorioFalso(servicioEntidad), new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), servicioServicio ?? new ServicioServicioFalso(),
@@ -841,7 +841,7 @@ public class ServicioPasajeroServicioTests
     /// <summary>Igual que <see cref="CrearServicioPasajeroServicio"/> pero con varios servicios en el repositorio falso (para MoverAsync, que busca origen y destino por id).</summary>
     private static ServicioPasajeroServicio CrearServicioPasajeroServicioConVariosServicios(
         ServicioPasajeroRepositorioFalso pasajeroRepo, params Servicio[] servicios)
-        => new(
+        => ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), new ServicioRepositorioFalso(servicios), new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(servicios.ToList()),
@@ -945,7 +945,7 @@ public class ServicioPasajeroServicioTests
 
         var entidades = new List<Servicio> { origen, destino, pendiente };
         var servicioRepo = new ServicioRepositorioFalso(entidades.ToArray());
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(entidades),
@@ -988,7 +988,7 @@ public class ServicioPasajeroServicioTests
 
         var entidades = new List<Servicio> { origen, destino, otraRutaDeLaMismaUnidad, pendienteEnConflicto };
         var servicioRepo = new ServicioRepositorioFalso(entidades.ToArray());
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(entidades),
@@ -1022,7 +1022,7 @@ public class ServicioPasajeroServicioTests
 
         var entidades = new List<Servicio> { origen, destino };
         var servicioRepo = new ServicioRepositorioFalso(entidades.ToArray());
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(entidades),
@@ -1063,7 +1063,7 @@ public class ServicioPasajeroServicioTests
         var corredoresRepo = new CorredorVialRepositorioFalso();
         var barrerasRepo = new BarreraGeograficaRepositorioFalso(barreras);
 
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, empleadoRepo,
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(entidades),
@@ -1163,7 +1163,7 @@ public class ServicioPasajeroServicioTests
         var servicioRepo = new ServicioRepositorioFalso(entidades.ToArray());
         var zonasRepo = new ZonaRepositorioFalso(zonaMovido, zonaExistente1, zonaExistente2, zonaExistente3, zonaDestino);
 
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, empleadoRepo,
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(entidades),
@@ -1218,7 +1218,7 @@ public class ServicioPasajeroServicioTests
         });
         var pasajero = (await pasajeroRepo.ObtenerPorServicioAsync(servicioEntidad.ServicioId)).Single();
         var servicioRepo = new ServicioRepositorioFalso(servicioEntidad);
-        var servicio = new ServicioPasajeroServicio(
+        var servicio = ServicioPasajeroServicioFabrica.Crear(
             pasajeroRepo, new ProgramacionRepositorioFalso(), servicioRepo, new EmpleadoRepositorioFalso(),
             new UbicacionHistoricaRepositorioFalso(), new UnidadOperativaRepositorioFalso(), new ConductorRepositorioFalso(),
             new NotificacionServicio(new NotificacionRepositorioFalso()), new ServicioServicioFalso(),

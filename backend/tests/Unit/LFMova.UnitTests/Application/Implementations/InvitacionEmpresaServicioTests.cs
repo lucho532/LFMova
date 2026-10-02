@@ -172,7 +172,7 @@ public class InvitacionEmpresaServicioTests
         var personas = new PersonaServicioFalso();
         var notificaciones = new NotificacionServicioFalso();
         var correo = new CorreoFalso();
-        var servicio = new InvitacionEmpresaServicio(
+        var servicio = InvitacionEmpresaServicioFabrica.Crear(
             invitaciones, usuarios, new UsuarioRolRepositorioFalso(), empleados, new EmpresaRepositorioFalso(), personas,
             notificaciones, new HasheadorContrasenas(), correo, new OpcionesFrontend { UrlBase = "http://front.test" });
         return new Contexto(servicio, invitaciones, usuarios, empleados, personas, notificaciones, correo);

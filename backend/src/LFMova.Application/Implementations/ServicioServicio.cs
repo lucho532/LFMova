@@ -1,6 +1,6 @@
 using LFMova.Application.DTOs.Servicios;
+using LFMova.Application.Implementations.Servicios;
 using LFMova.Application.Interfaces;
-using LFMova.Application.Utils;
 using LFMova.Application.Mappers;
 using LFMova.Application.Validators;
 using LFMova.Domain.Entities;
@@ -14,9 +14,10 @@ namespace LFMova.Application.Implementations;
 /// servicios, incluida la asignación individual de su unidad operativa (ver
 /// <c>tasks.md</c> T066/T067). Aplica <see cref="ReglasMultiempresa"/> para
 /// garantizar que la jornada y la sede de un servicio pertenezcan a la misma
-/// empresa, <see cref="ReglasEstadoServicio"/> para validar las transiciones
-/// de estado, y <see cref="ReglasUnidadOperativa"/> para validar la unidad
-/// asignada. No decide autorización: eso se verifica en la capa de Api.
+/// empresa y <see cref="ReglasEstadoServicio"/> para validar las transiciones
+/// de estado; la asignación de unidad, la ejecución y los cambios sobre rutas
+/// ya armadas los delega en los colaboradores de <c>Implementations/Servicios</c>.
+/// No decide autorización: eso se verifica en la capa de Api.
 /// </summary>
 public class ServicioServicio : IServicioServicio
 {
@@ -25,29 +26,32 @@ public class ServicioServicio : IServicioServicio
     private readonly ISedeRepositorio _sedeRepositorio;
     private readonly IUnidadOperativaRepositorio _unidadOperativaRepositorio;
     private readonly IConductorRepositorio _conductorRepositorio;
-    private readonly IServicioPasajeroRepositorio _servicioPasajeroRepositorio;
-    private readonly IEmpleadoRepositorio _empleadoRepositorio;
-    private readonly INotificacionServicio _notificacionServicio;
+    private readonly AccesoServicio _acceso;
+    private readonly AsignadorUnidadServicio _asignadorUnidad;
+    private readonly ModificadorRutaArmada _modificadorRuta;
+    private readonly EjecucionServicio _ejecucion;
 
-    /// <summary>Crea el servicio con sus repositorios.</summary>
+    /// <summary>Crea el servicio con sus repositorios y colaboradores.</summary>
     public ServicioServicio(
         IServicioRepositorio servicioRepositorio,
         IJornadaRepositorio jornadaRepositorio,
         ISedeRepositorio sedeRepositorio,
         IUnidadOperativaRepositorio unidadOperativaRepositorio,
         IConductorRepositorio conductorRepositorio,
-        IServicioPasajeroRepositorio servicioPasajeroRepositorio,
-        IEmpleadoRepositorio empleadoRepositorio,
-        INotificacionServicio notificacionServicio)
+        AccesoServicio acceso,
+        AsignadorUnidadServicio asignadorUnidad,
+        ModificadorRutaArmada modificadorRuta,
+        EjecucionServicio ejecucion)
     {
         _servicioRepositorio = servicioRepositorio;
         _jornadaRepositorio = jornadaRepositorio;
         _sedeRepositorio = sedeRepositorio;
         _unidadOperativaRepositorio = unidadOperativaRepositorio;
         _conductorRepositorio = conductorRepositorio;
-        _servicioPasajeroRepositorio = servicioPasajeroRepositorio;
-        _empleadoRepositorio = empleadoRepositorio;
-        _notificacionServicio = notificacionServicio;
+        _acceso = acceso;
+        _asignadorUnidad = asignadorUnidad;
+        _modificadorRuta = modificadorRuta;
+        _ejecucion = ejecucion;
     }
 
     /// <inheritdoc />
@@ -87,7 +91,7 @@ public class ServicioServicio : IServicioServicio
 
         if (datos.UnidadOperativaId is not null)
         {
-            await AsegurarUnidadAsignableAsync(empresaId, datos.UnidadOperativaId.Value, servicio);
+            await _asignadorUnidad.AsegurarUnidadAsignableAsync(empresaId, datos.UnidadOperativaId.Value, servicio);
             servicio.UnidadOperativaId = datos.UnidadOperativaId;
         }
 
@@ -100,7 +104,7 @@ public class ServicioServicio : IServicioServicio
     /// <inheritdoc />
     public async Task<ServicioDto?> ObtenerPorIdAsync(int empresaId, int servicioId)
     {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
+        var servicio = await _acceso.ObtenerDeLaEmpresaAsync(empresaId, servicioId);
         return servicio is null ? null : ServicioMapper.AServicioDto(servicio, empresaId);
     }
 
@@ -130,7 +134,7 @@ public class ServicioServicio : IServicioServicio
     /// <inheritdoc />
     public async Task CambiarEstadoAsync(int empresaId, int servicioId, CambiarEstadoServicioDto datos)
     {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
+        var servicio = await _acceso.ObtenerDeLaEmpresaAsync(empresaId, servicioId);
         if (servicio is null)
         {
             throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
@@ -146,149 +150,9 @@ public class ServicioServicio : IServicioServicio
     }
 
     /// <inheritdoc />
-    public async Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
-
-        var conductorAnteriorId = servicio.UnidadOperativaId is null
-            ? (int?)null
-            : (await _unidadOperativaRepositorio.ObtenerPorIdAsync(servicio.UnidadOperativaId.Value))?.ConductorId;
-
-        var conductorNuevo = await AsegurarUnidadAsignableAsync(empresaId, datos.UnidadOperativaId, servicio);
-
-        // La reasignación modifica exclusivamente UnidadOperativaId; JornadaId no cambia. Si el servicio
-        // todavía no tenía conductor (recién creado o sin unidad hasta ahora), esta asignación lo resuelve:
-        // pasa a ASIGNADO. Si ya estaba asignado, publicado, etc., solo cambia el conductor, sin tocar su estado.
-        servicio.UnidadOperativaId = datos.UnidadOperativaId;
-        if (servicio.Estado is EstadoServicio.BORRADOR or EstadoServicio.PENDIENTE_ASIGNACION)
-        {
-            servicio.Estado = EstadoServicio.ASIGNADO;
-        }
-
-        await _servicioRepositorio.GuardarCambiosAsync();
-
-        // Solo se avisa si la ruta ya la ven el conductor y los pasajeros (publicada o en curso): mientras el
-        // coordinador la arma, cambiarle el conductor es trabajo interno y todos se enteran al publicarla.
-        if (conductorAnteriorId is not null && conductorAnteriorId != conductorNuevo.ConductorId
-            && ReglasEstadoServicio.EsVisibleParaConductorYEmpleado(servicio.Estado))
-        {
-            await NotificarCambioDeConductorAsync(servicio, conductorNuevo.UsuarioId);
-        }
-    }
-
-    /// <summary>
-    /// Notifica al nuevo conductor y a cada empleado participante del
-    /// servicio cuando la reasignación de unidad cambia efectivamente el
-    /// conductor responsable (ver <c>data-model.md</c> §23 y <c>tasks.md</c>
-    /// T074). El conductor anterior no se notifica.
-    /// </summary>
-    private async Task NotificarCambioDeConductorAsync(Servicio servicio, int usuarioIdConductorNuevo)
-    {
-        await _notificacionServicio.CrearAsync(
-            usuarioIdConductorNuevo,
-            "CAMBIO_CONDUCTOR",
-            "Nueva ruta asignada",
-            $"Se te asignó la {FormatoOperacion.DescribirRuta(servicio)}.");
-
-        var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicio.ServicioId);
-        foreach (var pasajero in pasajeros)
-        {
-            var empleado = await _empleadoRepositorio.ObtenerPorIdAsync(pasajero.EmpleadoId);
-            if (empleado is null)
-            {
-                continue;
-            }
-
-            await _notificacionServicio.CrearAsync(
-                empleado.UsuarioId,
-                "CAMBIO_CONDUCTOR",
-                "Cambió tu conductor asignado",
-                $"Tu {FormatoOperacion.DescribirRuta(servicio)} ahora la hace otro conductor.");
-        }
-    }
-
-    /// <inheritdoc />
-    public async Task DespublicarAsync(int empresaId, int servicioId)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
-
-        if (!ReglasEstadoServicio.EsTransicionValida(servicio.Estado, EstadoServicio.ASIGNADO))
-        {
-            throw new InvalidOperationException($"No se puede volver a editar un servicio en estado {servicio.Estado}.");
-        }
-
-        servicio.Estado = EstadoServicio.ASIGNADO;
-        await _servicioRepositorio.GuardarCambiosAsync();
-
-        if (servicio.UnidadOperativaId is not null)
-        {
-            var unidadOperativa = await _unidadOperativaRepositorio.ObtenerPorIdAsync(servicio.UnidadOperativaId.Value);
-            var conductor = unidadOperativa is null ? null : await _conductorRepositorio.ObtenerPorIdAsync(unidadOperativa.ConductorId);
-            if (conductor is not null)
-            {
-                await _notificacionServicio.CrearAsync(
-                    conductor.UsuarioId,
-                    "RUTA_MODIFICADA",
-                    "Tu ruta volvió a edición",
-                    $"El coordinador volvió a abrir tu {FormatoOperacion.DescribirRuta(servicio)} para hacerle cambios. Te avisaremos cuando esté lista de nuevo.");
-            }
-        }
-    }
-
-    /// <inheritdoc />
-    public async Task EliminarAsync(int empresaId, int servicioId)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
-
-        if (servicio.Estado is EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO)
-        {
-            throw new InvalidOperationException("No se puede eliminar una ruta en curso o ya realizada.");
-        }
-
-        var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicioId);
-        foreach (var pasajero in pasajeros)
-        {
-            await _servicioPasajeroRepositorio.EliminarAsync(pasajero);
-        }
-        await _servicioPasajeroRepositorio.GuardarCambiosAsync();
-
-        // Solo se avisa al conductor si ya veía la ruta (publicada): una ruta sin publicar nunca le llegó.
-        var unidadOperativaId = ReglasEstadoServicio.EsVisibleParaConductorYEmpleado(servicio.Estado) ? servicio.UnidadOperativaId : null;
-        var rutaEliminada = FormatoOperacion.DescribirRuta(servicio);
-        await _servicioRepositorio.EliminarAsync(servicio);
-        await _servicioRepositorio.GuardarCambiosAsync();
-
-        if (unidadOperativaId is not null)
-        {
-            var unidadOperativa = await _unidadOperativaRepositorio.ObtenerPorIdAsync(unidadOperativaId.Value);
-            var conductor = unidadOperativa is null ? null : await _conductorRepositorio.ObtenerPorIdAsync(unidadOperativa.ConductorId);
-            if (conductor is not null)
-            {
-                await _notificacionServicio.CrearAsync(
-                    conductor.UsuarioId,
-                    "RUTA_MODIFICADA",
-                    "Tu ruta fue eliminada",
-                    $"El coordinador eliminó tu {rutaEliminada}.");
-            }
-        }
-    }
-
-    /// <inheritdoc />
     public async Task<int?> ObtenerUsuarioIdConductorAsignadoAsync(int empresaId, int servicioId)
     {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
+        var servicio = await _acceso.ObtenerDeLaEmpresaAsync(empresaId, servicioId);
         if (servicio?.UnidadOperativaId is null)
         {
             return null;
@@ -305,97 +169,22 @@ public class ServicioServicio : IServicioServicio
     }
 
     /// <inheritdoc />
-    public async Task IniciarAsync(int empresaId, int servicioId, IniciarServicioDto? datos = null)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
-
-        if (!ReglasEstadoServicio.EsTransicionValida(servicio.Estado, EstadoServicio.EN_CURSO))
-        {
-            throw new InvalidOperationException($"No se puede iniciar el servicio desde el estado {servicio.Estado}.");
-        }
-
-        servicio.Estado = EstadoServicio.EN_CURSO;
-        servicio.HoraInicioReal = DateTime.UtcNow;
-        servicio.LatitudInicio = datos?.Latitud;
-        servicio.LongitudInicio = datos?.Longitud;
-        await _servicioRepositorio.GuardarCambiosAsync();
-    }
+    public Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos)
+        => _asignadorUnidad.AsignarUnidadAsync(empresaId, servicioId, datos);
 
     /// <inheritdoc />
-    public async Task FinalizarAsync(int empresaId, int servicioId, FinalizarServicioDto? datos = null)
-    {
-        var servicio = await ObtenerServicioDeLaEmpresaAsync(empresaId, servicioId);
-        if (servicio is null)
-        {
-            throw new InvalidOperationException("El servicio indicado no existe en esta empresa.");
-        }
+    public Task DespublicarAsync(int empresaId, int servicioId)
+        => _modificadorRuta.DespublicarAsync(empresaId, servicioId);
 
-        if (!ReglasEstadoServicio.EsTransicionValida(servicio.Estado, EstadoServicio.FINALIZADO))
-        {
-            throw new InvalidOperationException($"No se puede finalizar el servicio desde el estado {servicio.Estado}.");
-        }
+    /// <inheritdoc />
+    public Task EliminarAsync(int empresaId, int servicioId)
+        => _modificadorRuta.EliminarAsync(empresaId, servicioId);
 
-        if (servicio.Tipo == TipoServicio.ENTRADA)
-        {
-            var pasajeros = await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicioId);
-            if (pasajeros.Any(p => !ReglasEstadoServicioPasajero.EstaProcesado(p.Estado)))
-            {
-                throw new InvalidOperationException(
-                    "No se puede finalizar el servicio: existen pasajeros pendientes de procesar.");
-            }
-        }
+    /// <inheritdoc />
+    public Task IniciarAsync(int empresaId, int servicioId, IniciarServicioDto? datos = null)
+        => _ejecucion.IniciarAsync(empresaId, servicioId, datos);
 
-        servicio.Estado = EstadoServicio.FINALIZADO;
-        servicio.HoraFinReal = DateTime.UtcNow;
-        servicio.LatitudFinalizacion = datos?.Latitud;
-        servicio.LongitudFinalizacion = datos?.Longitud;
-        await _servicioRepositorio.GuardarCambiosAsync();
-    }
-
-    /// <summary>
-    /// Valida que la unidad operativa indicada pueda asignarse al servicio:
-    /// debe existir y estar activa, su conductor debe tener una vinculación
-    /// activa con la empresa, y no debe generar conflicto temporal con otro
-    /// servicio ya asignado a esa misma unidad. Devuelve el conductor
-    /// resuelto para evitar volver a consultarlo.
-    /// </summary>
-    private async Task<Conductor> AsegurarUnidadAsignableAsync(int empresaId, int unidadOperativaId, Servicio candidato)
-    {
-        var unidadOperativa = await _unidadOperativaRepositorio.ObtenerPorIdAsync(unidadOperativaId);
-        if (unidadOperativa is null || !unidadOperativa.Activa)
-        {
-            throw new InvalidOperationException("La unidad operativa indicada no existe o no está activa.");
-        }
-
-        var conductor = await _conductorRepositorio.ObtenerPorIdAsync(unidadOperativa.ConductorId);
-        if (conductor is null || !conductor.VinculacionesConductorEmpresa.Any(v => v.EmpresaId == empresaId && v.Activa))
-        {
-            throw new InvalidOperationException(
-                "El conductor de la unidad operativa no tiene una vinculación activa con esta empresa.");
-        }
-
-        var otrosServiciosDeLaUnidad = await _servicioRepositorio.ObtenerPorUnidadOperativaAsync(unidadOperativaId);
-        if (ReglasUnidadOperativa.HayConflictoTemporal(candidato, otrosServiciosDeLaUnidad))
-        {
-            throw new InvalidOperationException(
-                "La unidad operativa ya tiene otro servicio asignado en la misma fecha y hora. Solo puede hacer a la misma hora una entrada y una salida de la misma sede.");
-        }
-
-        return conductor;
-    }
-
-    private async Task<Servicio?> ObtenerServicioDeLaEmpresaAsync(int empresaId, int servicioId)
-    {
-        var servicio = await _servicioRepositorio.ObtenerPorIdAsync(servicioId);
-        if (servicio is null || servicio.Jornada is null || !ReglasMultiempresa.JornadaPerteneceAEmpresa(servicio.Jornada, empresaId))
-        {
-            return null;
-        }
-
-        return servicio;
-    }
+    /// <inheritdoc />
+    public Task FinalizarAsync(int empresaId, int servicioId, FinalizarServicioDto? datos = null)
+        => _ejecucion.FinalizarAsync(empresaId, servicioId, datos);
 }
