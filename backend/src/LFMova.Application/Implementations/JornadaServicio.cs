@@ -25,6 +25,7 @@ public class JornadaServicio : IJornadaServicio
     private readonly IEmpleadoRepositorio _empleadoRepositorio;
     private readonly INotificacionServicio _notificacionServicio;
     private readonly DepuradorJornada _depurador;
+    private readonly EnviadorSoporteRutas _enviadorSoporte;
 
     /// <summary>Crea el servicio con sus repositorios y colaboradores.</summary>
     public JornadaServicio(
@@ -35,7 +36,8 @@ public class JornadaServicio : IJornadaServicio
         IServicioPasajeroRepositorio servicioPasajeroRepositorio,
         IEmpleadoRepositorio empleadoRepositorio,
         INotificacionServicio notificacionServicio,
-        DepuradorJornada depurador)
+        DepuradorJornada depurador,
+        EnviadorSoporteRutas enviadorSoporte)
     {
         _jornadaRepositorio = jornadaRepositorio;
         _servicioRepositorio = servicioRepositorio;
@@ -45,6 +47,7 @@ public class JornadaServicio : IJornadaServicio
         _empleadoRepositorio = empleadoRepositorio;
         _notificacionServicio = notificacionServicio;
         _depurador = depurador;
+        _enviadorSoporte = enviadorSoporte;
     }
 
     /// <inheritdoc />
@@ -107,6 +110,9 @@ public class JornadaServicio : IJornadaServicio
         {
             await NotificarPublicacionAsync(servicioPublicado);
         }
+
+        // Además del aviso en la aplicación, cada conductor recibe por correo un Excel con sus rutas.
+        await _enviadorSoporte.EnviarAsync(jornada, serviciosAPublicar);
     }
 
     /// <inheritdoc />

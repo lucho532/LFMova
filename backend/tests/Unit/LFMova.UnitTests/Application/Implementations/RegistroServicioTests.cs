@@ -73,6 +73,9 @@ public class RegistroServicioTests
     {
         public readonly List<(string Destino, string Asunto, string Cuerpo)> Enviados = new();
 
+        public Task EnviarConAdjuntoAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml, AdjuntoCorreo adjunto)
+            => EnviarAsync(destinatarioEmail, destinatarioNombre, asunto, cuerpoHtml);
+
         public Task EnviarAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml)
         {
             Enviados.Add((destinatarioEmail, asunto, cuerpoHtml));

@@ -67,6 +67,7 @@ public static class ApplicationServiceCollectionExtensions
         // ConductorServicio, JornadaServicio e InvitacionEmpresaServicio.
         servicios.AddScoped<RegistroConductor>();
         servicios.AddScoped<DepuradorJornada>();
+        servicios.AddScoped<EnviadorSoporteRutas>();
         servicios.AddScoped<EmisorInvitacionEmpresa>();
 
         // ServicioServicio.

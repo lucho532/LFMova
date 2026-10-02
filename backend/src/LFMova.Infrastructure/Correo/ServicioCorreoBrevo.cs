@@ -30,7 +30,14 @@ public class ServicioCorreoBrevo : IServicioCorreo
     }
 
     /// <inheritdoc />
-    public async Task EnviarAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml)
+    public Task EnviarAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml)
+        => EnviarSolicitudAsync(destinatarioEmail, destinatarioNombre, asunto, cuerpoHtml, adjunto: null);
+
+    /// <inheritdoc />
+    public Task EnviarConAdjuntoAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml, AdjuntoCorreo adjunto)
+        => EnviarSolicitudAsync(destinatarioEmail, destinatarioNombre, asunto, cuerpoHtml, adjunto);
+
+    private async Task EnviarSolicitudAsync(string destinatarioEmail, string destinatarioNombre, string asunto, string cuerpoHtml, AdjuntoCorreo? adjunto)
     {
         var solicitud = new SolicitudEnvioBrevo
         {
@@ -39,7 +46,9 @@ public class ServicioCorreoBrevo : IServicioCorreo
             // venga: pasa, por ejemplo, al invitar a alguien que todavía no tiene cuenta (no se sabe su nombre).
             To = [new ContactoBrevo { Email = destinatarioEmail, Name = string.IsNullOrWhiteSpace(destinatarioNombre) ? null : destinatarioNombre }],
             Subject = asunto,
-            HtmlContent = cuerpoHtml
+            HtmlContent = cuerpoHtml,
+            // Brevo recibe el adjunto en base64; sin adjunto el campo no se envía (rechaza una lista vacía).
+            Attachment = adjunto is null ? null : [new AdjuntoBrevo { Name = adjunto.NombreArchivo, Content = Convert.ToBase64String(adjunto.Contenido) }]
         };
 
         var respuesta = await _cliente.PostAsJsonAsync(RutaEnvio, solicitud);
@@ -63,6 +72,19 @@ public class ServicioCorreoBrevo : IServicioCorreo
 
         [JsonPropertyName("htmlContent")]
         public string HtmlContent { get; set; } = string.Empty;
+
+        [JsonPropertyName("attachment")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<AdjuntoBrevo>? Attachment { get; set; }
+    }
+
+    private class AdjuntoBrevo
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonPropertyName("content")]
+        public string Content { get; set; } = string.Empty;
     }
 
     private class ContactoBrevo

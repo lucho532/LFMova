@@ -479,6 +479,13 @@ Después de publicar, el coordinador puede realizar modificaciones.
 
 Si una modificación afecta directamente a determinados usuarios, solo ellos deben recibir la notificación correspondiente.
 
+**Decisión del usuario (2026-10-02): soporte de rutas por correo.** Al publicar, cada conductor al que se le publicó alguna ruta recibe además, en el correo de su cuenta, un archivo Excel de soporte para consultar sus rutas si la aplicación no está disponible:
+
+* contiene únicamente **sus propias rutas** de esa jornada que ya son visibles para él (nunca las de otros conductores ni sus pasajeros);
+* es una sola hoja con un bloque por ruta (sentido, sede, fecha y hora) y, debajo, sus pasajeros en orden de recogida con nombre, teléfono, dirección y barrio;
+* cada nueva publicación reenvía el soporte actualizado; el correo más reciente es el vigente;
+* si el conductor no tiene correo o el envío falla, la publicación no se deshace.
+
 ---
 
 # 21. Servicio pasajero

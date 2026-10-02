@@ -173,6 +173,18 @@ public class FlujoCompletoTests
         var respuestaPublicar = await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/publicar", content: null);
         respuestaPublicar.EnsureSuccessStatusCode();
 
+        // Al publicar, el conductor recibe por correo un Excel de soporte con su ruta y sus pasajeros.
+        var (asuntoSoporte, adjuntoSoporte) = Assert.Single(_fixture.Fabrica.Correo.ObtenerAdjuntos("cond.e2e@pruebas.test"));
+        Assert.Contains("02/03/2026", asuntoSoporte);
+        Assert.Equal("rutas-2026-03-02.xlsx", adjuntoSoporte.NombreArchivo);
+        using (var libroSoporte = new ClosedXML.Excel.XLWorkbook(new MemoryStream(adjuntoSoporte.Contenido)))
+        {
+            var textos = libroSoporte.Worksheet(1).CellsUsed().Select(c => c.GetString()).ToList();
+            Assert.Contains(textos, t => t.StartsWith("ENTRADA SEDE PRINCIPAL"));
+            Assert.Contains("Emilia Empleada", textos);
+            Assert.Contains("Calle 10 # 20-30", textos);
+        }
+
         // --- Ejecución del servicio como el propio conductor ---
         await AutenticarAsync(cliente, "E2E-COND", "ClaveCond123");
 

@@ -6,7 +6,7 @@ using LFMova.Domain.Enums;
 
 namespace LFMova.UnitTests.Application.Implementations;
 
-public class JornadaServicioTests
+public partial class JornadaServicioTests
 {
     private class ServicioRepositorioFalso : IServicioRepositorio
     {
@@ -232,7 +232,8 @@ public class JornadaServicioTests
         IServicioPasajeroRepositorio? servicioPasajeroRepositorio = null,
         IEmpleadoRepositorio? empleadoRepositorio = null,
         IProgramacionTransporteRepositorio? programacionRepositorio = null,
-        NotificacionRepositorioFalso? notificacionRepositorio = null)
+        NotificacionRepositorioFalso? notificacionRepositorio = null,
+        IServicioCorreo? servicioCorreo = null)
         => JornadaServicioFabrica.Crear(
             jornadaRepositorio,
             servicioRepositorio,
@@ -241,7 +242,8 @@ public class JornadaServicioTests
             servicioPasajeroRepositorio ?? new ServicioPasajeroRepositorioFalso(),
             empleadoRepositorio ?? new EmpleadoRepositorioFalso(),
             programacionRepositorio ?? new ProgramacionRepositorioFalso(),
-            new NotificacionServicio(notificacionRepositorio ?? new NotificacionRepositorioFalso()));
+            new NotificacionServicio(notificacionRepositorio ?? new NotificacionRepositorioFalso()),
+            servicioCorreo);
 
     [Fact]
     public async Task CrearAsync_Crea_SinRequerirUnidadOperativa()
