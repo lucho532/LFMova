@@ -38,6 +38,15 @@ public class ServicioPasajeroDto
     /// <summary>Longitud utilizada para este servicio, si está disponible.</summary>
     public double? Longitud { get; set; }
 
+    /// <summary>Latitud del punto que el propio empleado compartió para este servicio, o <c>null</c> si no ha compartido.</summary>
+    public double? LatitudCompartida { get; set; }
+
+    /// <summary>Longitud del punto que el propio empleado compartió para este servicio, o <c>null</c> si no ha compartido.</summary>
+    public double? LongitudCompartida { get; set; }
+
+    /// <summary>Momento (UTC) en que el empleado compartió su ubicación por última vez, o <c>null</c> si no ha compartido.</summary>
+    public DateTime? FechaHoraUbicacionCompartida { get; set; }
+
     /// <summary>
     /// Nombre completo del empleado. Se incluye para que el conductor pueda
     /// identificarlo durante la ejecución del servicio (ver <c>spec.md</c>

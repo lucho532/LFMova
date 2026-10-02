@@ -63,6 +63,20 @@ public class ServicioPasajero
     /// <summary>Longitud utilizada para este servicio. Puede ser <c>null</c> si no está disponible.</summary>
     public double? Longitud { get; set; }
 
+    /// <summary>
+    /// Latitud del punto que el propio empleado compartió para este servicio.
+    /// Es <c>null</c> mientras no comparta nada. A diferencia de
+    /// <see cref="Latitud"/>, nunca la escribe el conductor: permite saber
+    /// que el punto viene del pasajero y no de una ubicación guardada.
+    /// </summary>
+    public double? LatitudCompartida { get; set; }
+
+    /// <summary>Longitud del punto que el propio empleado compartió para este servicio; <c>null</c> mientras no comparta nada.</summary>
+    public double? LongitudCompartida { get; set; }
+
+    /// <summary>Momento (UTC) en que el empleado compartió su ubicación por última vez; <c>null</c> mientras no comparta nada.</summary>
+    public DateTime? FechaHoraUbicacionCompartida { get; set; }
+
     /// <summary>Servicio en el que participa el pasajero.</summary>
     public Servicio? Servicio { get; set; }
 

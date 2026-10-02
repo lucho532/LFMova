@@ -38,6 +38,11 @@ public class GestorUbicacionPasajero
         var servicioPasajero = await _acceso.ObtenerPasajeroDeLaEmpresaOFallarAsync(empresaId, servicioPasajeroId);
         servicioPasajero.Latitud = datos.Latitud;
         servicioPasajero.Longitud = datos.Longitud;
+        // Se guarda además aparte, con su hora: Latitud/Longitud también las escribe el conductor al
+        // guardar el punto de recogida, y así no se sabría cuál de los dos lo puso.
+        servicioPasajero.LatitudCompartida = datos.Latitud;
+        servicioPasajero.LongitudCompartida = datos.Longitud;
+        servicioPasajero.FechaHoraUbicacionCompartida = DateTime.UtcNow;
         await _servicioPasajeroRepositorio.GuardarCambiosAsync();
 
         // Sin esta notificación, la pantalla del conductor solo se enteraría en el siguiente sondeo (hasta

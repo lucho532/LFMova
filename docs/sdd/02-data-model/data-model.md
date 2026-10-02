@@ -763,6 +763,11 @@ Campos:
 * `DireccionRecogida`
 * `Latitud`
 * `Longitud`
+* `LatitudCompartida` (opcional)
+* `LongitudCompartida` (opcional)
+* `FechaHoraUbicacionCompartida` (opcional, UTC)
+
+**Decisión del usuario (2026-10-01):** `LatitudCompartida`/`LongitudCompartida`/`FechaHoraUbicacionCompartida` guardan el punto que el propio empleado compartió para ese servicio y cuándo lo hizo. `Latitud`/`Longitud` siguen siendo el punto de recogida utilizado (también los escribe el conductor al guardar la ubicación), por lo que no sirven para saber quién lo puso. Solo se conserva la última ubicación compartida, sin historial (ver `AGENTS.md` §18).
 
 Restricción:
 

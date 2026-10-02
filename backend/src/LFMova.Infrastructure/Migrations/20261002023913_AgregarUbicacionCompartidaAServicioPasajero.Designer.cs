@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LFMova.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LFMova.Infrastructure.Migrations
 {
     [DbContext(typeof(LFMovaDbContext))]
-    partial class LFMovaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261002023913_AgregarUbicacionCompartidaAServicioPasajero")]
+    partial class AgregarUbicacionCompartidaAServicioPasajero
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

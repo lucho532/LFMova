@@ -688,6 +688,10 @@ public class ServicioPasajeroServicioTests
         var pasajeros = await servicio.ObtenerPorServicioAsync(EmpresaId, servicioEntidad.ServicioId);
         Assert.Equal(4.65, pasajeros[0].Latitud);
         Assert.Equal(-74.05, pasajeros[0].Longitud);
+        // Queda además como ubicación compartida por el empleado, con su hora, distinta del punto que guarda el conductor.
+        Assert.Equal(4.65, pasajeros[0].LatitudCompartida);
+        Assert.Equal(-74.05, pasajeros[0].LongitudCompartida);
+        Assert.NotNull(pasajeros[0].FechaHoraUbicacionCompartida);
         // Sin esta notificación, la pantalla del conductor podría no enterarse de la nueva ubicación hasta
         // el siguiente sondeo, y "Navegar" usaría un punto desactualizado mientras tanto.
         Assert.Contains(notificaciones.Notificaciones, n => n.Tipo == "UBICACION_COMPARTIDA");
@@ -705,6 +709,9 @@ public class ServicioPasajeroServicioTests
 
         var pasajeros = await servicio.ObtenerPorServicioAsync(EmpresaId, servicioEntidad.ServicioId);
         Assert.Equal(4.7, pasajeros[0].Latitud);
+        // El punto que guarda el conductor no cuenta como ubicación compartida por el empleado.
+        Assert.Null(pasajeros[0].LatitudCompartida);
+        Assert.Null(pasajeros[0].FechaHoraUbicacionCompartida);
         var anteriores = await servicio.ObtenerUbicacionesAnterioresAsync(EmpresaId, pasajero.ServicioPasajeroId);
         var anterior = Assert.Single(anteriores);
         Assert.Equal(4.7, anterior.Latitud);
