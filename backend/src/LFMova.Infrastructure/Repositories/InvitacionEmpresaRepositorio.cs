@@ -54,6 +54,12 @@ public class InvitacionEmpresaRepositorio : IInvitacionEmpresaRepositorio
     }
 
     /// <inheritdoc />
+    public void Eliminar(InvitacionEmpresa invitacion)
+    {
+        _contexto.InvitacionesEmpresa.Remove(invitacion);
+    }
+
+    /// <inheritdoc />
     public async Task GuardarCambiosAsync()
     {
         await _contexto.SaveChangesAsync();

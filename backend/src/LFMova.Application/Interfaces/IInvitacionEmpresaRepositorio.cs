@@ -21,6 +21,9 @@ public interface IInvitacionEmpresaRepositorio
     /// <summary>Agrega una nueva invitación.</summary>
     Task AgregarAsync(InvitacionEmpresa invitacion);
 
+    /// <summary>Marca la invitación para borrarla al guardar los cambios.</summary>
+    void Eliminar(InvitacionEmpresa invitacion);
+
     /// <summary>Persiste los cambios pendientes en el contexto de datos.</summary>
     Task GuardarCambiosAsync();
 }

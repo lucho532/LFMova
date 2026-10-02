@@ -103,6 +103,7 @@ public class RegistroServicioTests
         public Task<List<LFMova.Application.DTOs.Invitaciones.InvitacionEmpresaDto>> ObtenerPorEmpresaAsync(int empresaId) => throw new NotSupportedException();
         public Task<LFMova.Application.DTOs.Invitaciones.DetalleInvitacionDto> ObtenerDetalleAsync(string token) => throw new NotSupportedException();
         public Task AceptarAsync(string token, int usuarioId) => throw new NotSupportedException();
+        public Task EliminarAsync(int empresaId, int invitacionEmpresaId) => throw new NotSupportedException();
         public Task<InvitacionEmpresa> ObtenerParaRegistroAsync(string token, string cedula) => throw new NotSupportedException();
         public Task AceptarParaUsuarioAsync(InvitacionEmpresa invitacion, Usuario usuario) => throw new NotSupportedException();
     }

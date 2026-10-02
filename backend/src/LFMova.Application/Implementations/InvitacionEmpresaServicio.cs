@@ -75,6 +75,19 @@ public class InvitacionEmpresaServicio : IInvitacionEmpresaServicio
     }
 
     /// <inheritdoc />
+    public async Task EliminarAsync(int empresaId, int invitacionEmpresaId)
+    {
+        var invitacion = await _invitacionRepositorio.ObtenerPorIdAsync(invitacionEmpresaId);
+        if (invitacion is null || invitacion.EmpresaId != empresaId)
+        {
+            throw new InvalidOperationException("La invitación indicada no existe en esta empresa.");
+        }
+
+        _invitacionRepositorio.Eliminar(invitacion);
+        await _invitacionRepositorio.GuardarCambiosAsync();
+    }
+
+    /// <inheritdoc />
     public async Task<DetalleInvitacionDto> ObtenerDetalleAsync(string token)
     {
         var invitacion = await ObtenerPorTokenAsync(token);

@@ -12,4 +12,7 @@ public interface IAlmacenamientoArchivos
 
     /// <summary>Abre el archivo de la referencia, o <c>null</c> si no existe.</summary>
     Task<Stream?> AbrirAsync(string referencia);
+
+    /// <summary>Borra el archivo de la referencia indicada. No falla si ya no existe.</summary>
+    Task EliminarAsync(string referencia);
 }

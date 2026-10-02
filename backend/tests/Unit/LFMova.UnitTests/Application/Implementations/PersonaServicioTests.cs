@@ -116,6 +116,8 @@ public class PersonaServicioTests
         public Task<List<InvitacionEmpresa>> ObtenerPorEmpresaYCedulaAsync(int empresaId, string cedula)
             => Task.FromResult(_invitaciones.Where(i => i.EmpresaId == empresaId && i.Cedula == cedula).ToList());
 
+        public void Eliminar(InvitacionEmpresa invitacion) => _invitaciones.Remove(invitacion);
+
         public Task AgregarAsync(InvitacionEmpresa invitacion)
         {
             _invitaciones.Add(invitacion);

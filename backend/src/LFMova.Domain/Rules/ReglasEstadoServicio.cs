@@ -43,4 +43,12 @@ public static class ReglasEstadoServicio
     /// </summary>
     public static bool EsVisibleParaConductorYEmpleado(EstadoServicio estado)
         => estado is EstadoServicio.PUBLICADO or EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO;
+
+    /// <summary>
+    /// Estado en que queda un servicio al perder su unidad operativa (por
+    /// ejemplo, al eliminarse su conductor): uno asignado o publicado vuelve
+    /// a <c>PENDIENTE_ASIGNACION</c>; el resto conserva su estado.
+    /// </summary>
+    public static EstadoServicio EstadoAlQuedarSinUnidad(EstadoServicio estado)
+        => estado is EstadoServicio.ASIGNADO or EstadoServicio.PUBLICADO ? EstadoServicio.PENDIENTE_ASIGNACION : estado;
 }

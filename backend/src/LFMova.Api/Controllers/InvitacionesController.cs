@@ -61,6 +61,26 @@ public class InvitacionesController : ControllerBase
         return Ok(await _invitacionServicio.ObtenerPorEmpresaAsync(empresaId));
     }
 
+    /// <summary>Borra una invitación de la lista de la empresa. Solo un coordinador de esa empresa puede hacerlo.</summary>
+    [HttpDelete("api/empresas/{empresaId:int}/invitaciones/{invitacionEmpresaId:int}")]
+    public async Task<IActionResult> EliminarAsync(int empresaId, int invitacionEmpresaId)
+    {
+        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            await _invitacionServicio.EliminarAsync(empresaId, invitacionEmpresaId);
+            return NoContent();
+        }
+        catch (InvalidOperationException excepcion)
+        {
+            return NotFound(new { mensaje = excepcion.Message });
+        }
+    }
+
     /// <summary>
     /// Detalle de una invitación para quien abre el enlace del correo
     /// (<c>?token=</c>). No requiere sesión: el token solo lo tiene quien

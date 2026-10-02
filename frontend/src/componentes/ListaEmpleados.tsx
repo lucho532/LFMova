@@ -3,12 +3,13 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Empleado } from '../modelos/empleado'
 import type { Persona } from '../modelos/persona'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { obtenerEmpleados } from '../servicios/servicioEmpleados'
+import { eliminarEmpleado, obtenerEmpleados } from '../servicios/servicioEmpleados'
 import { buscarPersona } from '../servicios/servicioPersonas'
 import { BotonSecundario } from './BotonSecundario'
 import { FormularioInvitarPersona } from './FormularioInvitarPersona'
 import { ListaInvitaciones } from './ListaInvitaciones'
 import { MensajeAlerta } from './MensajeAlerta'
+import { ModalConfirmacion } from './ModalConfirmacion'
 import { PanelCambiarRolPersona } from './PanelCambiarRolPersona'
 import { TablaDatos } from './TablaDatos'
 import '../estilos/componentes/ListaEmpleados.css'
@@ -20,7 +21,7 @@ interface PropiedadesListaEmpleados {
 /**
  * Directorio de empleados de la empresa, con búsqueda por cédula, nombre o
  * correo. Cada fila se puede desplegar para asignarle el rol de coordinador
- * o de conductor. Solo muestra personas que ya son parte de la empresa: a
+ * o de conductor, o eliminar a la persona. Solo muestra personas que ya son parte de la empresa: a
  * cualquier otra (por ejemplo, alguien que se registró para ser conductor)
  * se la invita por correo, y solo aparece aquí cuando acepta.
  */
@@ -37,6 +38,7 @@ export function ListaEmpleados({ empresaId }: PropiedadesListaEmpleados) {
   const [version, setVersion] = useState(0)
   const [invitando, setInvitando] = useState(false)
   const [versionInvitaciones, setVersionInvitaciones] = useState(0)
+  const [porEliminar, setPorEliminar] = useState<Empleado | null>(null)
 
   useEffect(() => {
     if (!token) return
@@ -83,6 +85,27 @@ export function ListaEmpleados({ empresaId }: PropiedadesListaEmpleados) {
     setPersona(null)
     setMensajeExito(mensaje)
     setVersion((v) => v + 1)
+  }
+
+  async function alEliminar() {
+    if (!token || !porEliminar) return
+    const empleado = porEliminar
+    setPorEliminar(null)
+    setMensajeError(null)
+    setMensajeExito(null)
+    try {
+      const { cuentaEliminada } = await eliminarEmpleado(empresaId, empleado.empleadoId, token)
+      setMensajeExito(
+        cuentaEliminada
+          ? `Se eliminó a ${empleado.nombreCompleto} y todo su registro: puede volver a registrarse con la misma cédula.`
+          : `${empleado.nombreCompleto} también pertenece a otra empresa: se le quitó de esta, pero su cuenta se conserva.`,
+      )
+      setAbierto(null)
+      setVersion((v) => v + 1)
+      setVersionInvitaciones((v) => v + 1)
+    } catch (error) {
+      setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo eliminar a esta persona.')
+    }
   }
 
   // Lo escrito en la lupa se aprovecha para rellenar la invitación: una cédula o un correo.
@@ -153,6 +176,9 @@ export function ListaEmpleados({ empresaId }: PropiedadesListaEmpleados) {
                   <BotonSecundario type="button" onClick={() => alAlternar(empleado)}>
                     {abierto === empleado.empleadoId ? 'Cerrar' : 'Cambiar rol'}
                   </BotonSecundario>
+                  <BotonSecundario type="button" className="lista-empleados__eliminar" onClick={() => setPorEliminar(empleado)}>
+                    Eliminar
+                  </BotonSecundario>
                 </td>
               </tr>
               {abierto === empleado.empleadoId && (
@@ -175,6 +201,15 @@ export function ListaEmpleados({ empresaId }: PropiedadesListaEmpleados) {
           setMensajeExito(mensaje)
           setVersion((v) => v + 1)
         }}
+      />
+
+      <ModalConfirmacion
+        abierto={porEliminar !== null}
+        titulo="¿Eliminar a esta persona?"
+        mensaje={`Se borrará a ${porEliminar?.nombreCompleto ?? ''} (CC ${porEliminar?.cedula ?? ''}) con todo su registro: cuenta, rol de conductor, vehículos y su historial de rutas, mensajes e incidencias. No se puede deshacer.`}
+        textoConfirmar="Eliminar"
+        alConfirmar={alEliminar}
+        alCancelar={() => setPorEliminar(null)}
       />
     </section>
   )

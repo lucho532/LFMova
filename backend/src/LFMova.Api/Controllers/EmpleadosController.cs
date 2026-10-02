@@ -21,11 +21,13 @@ namespace LFMova.Api.Controllers;
 public class EmpleadosController : ControllerBase
 {
     private readonly IEmpleadoServicio _empleadoServicio;
+    private readonly IEliminacionPersonaServicio _eliminacionServicio;
 
-    /// <summary>Crea el controlador con su servicio.</summary>
-    public EmpleadosController(IEmpleadoServicio empleadoServicio)
+    /// <summary>Crea el controlador con sus servicios.</summary>
+    public EmpleadosController(IEmpleadoServicio empleadoServicio, IEliminacionPersonaServicio eliminacionServicio)
     {
         _empleadoServicio = empleadoServicio;
+        _eliminacionServicio = eliminacionServicio;
     }
 
     /// <summary>
@@ -76,6 +78,29 @@ public class EmpleadosController : ControllerBase
         catch (InvalidOperationException excepcion)
         {
             return NotFound(new { mensaje = excepcion.Message });
+        }
+    }
+
+    /// <summary>
+    /// Elimina a la persona: su cuenta completa si solo pertenece a esta
+    /// empresa, o solo su relación con esta empresa si también pertenece a
+    /// otra. Solo un coordinador de esa empresa puede hacerlo.
+    /// </summary>
+    [HttpDelete("{empleadoId:int}")]
+    public async Task<ActionResult<ResultadoEliminacionPersonaDto>> EliminarAsync(int empresaId, int empleadoId)
+    {
+        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            return Ok(await _eliminacionServicio.EliminarAsync(empresaId, empleadoId, User.ObtenerUsuarioId()));
+        }
+        catch (InvalidOperationException excepcion)
+        {
+            return Conflict(new { mensaje = excepcion.Message });
         }
     }
 }

@@ -38,6 +38,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IVehiculoServicio, VehiculoServicio>();
         servicios.AddScoped<IUnidadOperativaServicio, UnidadOperativaServicio>();
         servicios.AddScoped<IEmpleadoServicio, EmpleadoServicio>();
+        servicios.AddScoped<IEliminacionPersonaServicio, EliminacionPersonaServicio>();
         servicios.AddScoped<IProgramacionTransporteServicio, ProgramacionTransporteServicio>();
         servicios.AddScoped<IJornadaServicio, JornadaServicio>();
         servicios.AddScoped<IServicioServicio, ServicioServicio>();

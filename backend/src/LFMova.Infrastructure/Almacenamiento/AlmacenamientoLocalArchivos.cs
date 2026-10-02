@@ -38,6 +38,18 @@ public class AlmacenamientoLocalArchivos : IAlmacenamientoArchivos
         return Task.FromResult<Stream?>(File.Exists(ruta) ? File.OpenRead(ruta) : null);
     }
 
+    /// <inheritdoc />
+    public Task EliminarAsync(string referencia)
+    {
+        var ruta = ResolverRuta(referencia);
+        if (File.Exists(ruta))
+        {
+            File.Delete(ruta);
+        }
+
+        return Task.CompletedTask;
+    }
+
     private string ResolverRuta(string referencia)
     {
         var ruta = Path.GetFullPath(Path.Combine(_rutaBase, referencia));

@@ -21,6 +21,13 @@ public interface IInvitacionEmpresaServicio
     /// <summary>Invitaciones enviadas por la empresa, de la más reciente a la más antigua.</summary>
     Task<List<InvitacionEmpresaDto>> ObtenerPorEmpresaAsync(int empresaId);
 
+    /// <summary>
+    /// Borra una invitación de la empresa para limpiar la lista. Si estaba
+    /// pendiente, su enlace deja de servir. Borrar una ya aceptada no saca a
+    /// la persona de la empresa. Falla si la invitación no es de la empresa.
+    /// </summary>
+    Task EliminarAsync(int empresaId, int invitacionEmpresaId);
+
     /// <summary>Detalle de la invitación para quien abre el enlace del correo. Falla si el token no es válido.</summary>
     Task<DetalleInvitacionDto> ObtenerDetalleAsync(string token);
 

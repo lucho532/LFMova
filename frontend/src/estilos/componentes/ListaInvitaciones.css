@@ -37,8 +37,13 @@
 }
 
 .lista-invitaciones__celda-accion {
-  width: 140px;
+  width: 220px;
   text-align: right;
+  white-space: nowrap;
+}
+
+.lista-invitaciones__celda-accion .boton-secundario + .boton-secundario {
+  margin-left: 8px;
 }
 
 .lista-invitaciones__detalle td {

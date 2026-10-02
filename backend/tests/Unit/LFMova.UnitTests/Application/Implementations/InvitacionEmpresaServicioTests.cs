@@ -10,7 +10,7 @@ using LFMova.Domain.Enums;
 
 namespace LFMova.UnitTests.Application.Implementations;
 
-public class InvitacionEmpresaServicioTests
+public partial class InvitacionEmpresaServicioTests
 {
     private const int EmpresaId = 5;
     private const int CoordinadorId = 100;
@@ -35,6 +35,8 @@ public class InvitacionEmpresaServicioTests
             Invitaciones.Add(invitacion);
             return Task.CompletedTask;
         }
+
+        public void Eliminar(InvitacionEmpresa invitacion) => Invitaciones.Remove(invitacion);
 
         public Task GuardarCambiosAsync() => Task.CompletedTask;
     }

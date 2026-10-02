@@ -524,7 +524,7 @@ Los estados disponibles son:
 
 **Decisión del usuario (2026-09-19):** el conductor solo registra dos pasos por pasajero: la llegada al punto de recogida (`CONDUCTOR_LLEGO`) y el resultado final (`RECOGIDO` o el tipo de incidencia). Se eliminaron `ESPERANDO`, `EN_VEHICULO` y `DEJADO_EN_DESTINO`: un pasajero `RECOGIDO` se considera transportado cuando el servicio se finaliza, sin acción adicional del conductor.
 
-**Decisión del usuario (2026-09-19, ajuste):** los motivos por los que no se recoge a un pasajero (`NO_CONTESTA`, `NO_SE_ENCUENTRA`, `DIRECCION_INCORRECTA`, `NO_SE_PUDO_RECOGER`) ya no son estados: se registran como **incidencias** (con foto y ubicación). Una incidencia de esos cuatro tipos deja al pasajero automáticamente como `NO_RECOGIDO`. `UBICACION_MODIFICADA` y `OTRA` son informativas y no cambian el estado.
+**Decisión del usuario (2026-09-19, ajuste):** los motivos por los que no se recoge a un pasajero (`NO_CONTESTA`, `NO_SE_ENCUENTRA`, `DIRECCION_INCORRECTA`, `NO_SE_PUDO_RECOGER`) ya no son estados: se registran como **incidencias** (con foto y ubicación). Una incidencia de esos cuatro tipos deja al pasajero automáticamente como `NO_RECOGIDO`. `UBICACION_MODIFICADA` y `OTRA` son informativas y no cambian el estado. **Ajuste del 2026-10-02:** ya no hay incidencias solo informativas; una incidencia de cualquier tipo (también `UBICACION_MODIFICADA` y `OTRA`) deja al pasajero como `NO_RECOGIDO`. Además, tampoco una ruta de `SALIDA` puede finalizarse con pasajeros pendientes de procesar.
 
 No se implementará inicialmente un historial automático de todos los cambios de estado.
 
@@ -902,6 +902,8 @@ No se crea un segundo usuario.
 Los registros históricos mantienen el contexto empresarial original.
 
 Una empresa nueva no obtiene automáticamente acceso a la información histórica de la persona en otra empresa.
+
+**Decisión del usuario (2026-10-02): eliminar a una persona desde la gestión de empleados.** Un `COORDINADOR` puede eliminar a un empleado de su empresa para corregir registros erróneos y permitir que la persona vuelva a registrarse. Si la persona solo pertenece a esa empresa, se borra todo rastro de su cédula: cuenta, roles, ficha de conductor con sus vehículos y unidades, invitaciones y también su historial (rutas en las que fue pasajera, mensajes, incidencias y evidencias); es una excepción expresa a la regla de no modificar el histórico. Las rutas que conducía se conservan, pero quedan sin unidad (las asignadas o publicadas vuelven a `PENDIENTE_ASIGNACION`). Si la persona también pertenece a otra empresa (rol, vinculación como conductora o invitación aceptada), solo se la quita de la empresa del coordinador y su cuenta se conserva. No se puede eliminar a un coordinador o administrador (hay que quitarle antes el rol), a quien tiene una ruta en curso, ni a uno mismo. El coordinador también puede quitar cualquier invitación de la lista de invitaciones enviadas; quitar una pendiente anula su enlace. Ver `EliminacionPersonaServicio`.
 
 ---
 

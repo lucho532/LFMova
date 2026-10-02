@@ -20,3 +20,8 @@ export function obtenerDetalleInvitacion(tokenInvitacion: string): Promise<Detal
 export function aceptarInvitacion(tokenInvitacion: string, token: string): Promise<void> {
   return solicitarApi<void>('/api/invitaciones/aceptar', { metodo: 'POST', cuerpo: { token: tokenInvitacion }, token })
 }
+
+/** Consume DELETE /api/empresas/{empresaId}/invitaciones/{invitacionEmpresaId}: quita una invitación de la lista. */
+export function eliminarInvitacion(empresaId: number, invitacionEmpresaId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/invitaciones/${invitacionEmpresaId}`, { metodo: 'DELETE', token })
+}

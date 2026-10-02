@@ -3,7 +3,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { EstadoInvitacion, InvitacionEmpresa } from '../modelos/invitacion'
 import type { Persona } from '../modelos/persona'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { obtenerInvitaciones } from '../servicios/servicioInvitaciones'
+import { eliminarInvitacion, obtenerInvitaciones } from '../servicios/servicioInvitaciones'
 import { buscarPersona } from '../servicios/servicioPersonas'
 import { BotonSecundario } from './BotonSecundario'
 import { MensajeAlerta } from './MensajeAlerta'
@@ -35,7 +35,8 @@ function fechaCorta(fechaUtc: string): string {
  * Invitaciones que envió la empresa y su estado. Una persona que aceptó ya
  * aparece como empleado en la lista principal; si no aparece ahí (porque ya
  * era empleado de otra empresa y no se la mueve), se le puede cambiar el rol
- * desde aquí.
+ * desde aquí. Cualquier invitación se puede quitar de la lista; quitar una
+ * pendiente anula su enlace.
  */
 export function ListaInvitaciones({ empresaId, version, cedulasEnLista, alCambiarRol }: PropiedadesListaInvitaciones) {
   const { token } = useAutenticacion()
@@ -65,6 +66,18 @@ export function ListaInvitaciones({ empresaId, version, cedulasEnLista, alCambia
     } catch (error) {
       setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo cargar la cuenta de esta persona.')
       setAbierta(null)
+    }
+  }
+
+  async function alQuitar(invitacion: InvitacionEmpresa) {
+    if (!token) return
+    setMensajeError(null)
+    try {
+      await eliminarInvitacion(empresaId, invitacion.invitacionEmpresaId, token)
+      setAbierta(null)
+      setRefresco((r) => r + 1)
+    } catch (error) {
+      setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo quitar la invitación.')
     }
   }
 
@@ -101,6 +114,13 @@ export function ListaInvitaciones({ empresaId, version, cedulasEnLista, alCambia
                       {abierta === invitacion.invitacionEmpresaId ? 'Cerrar' : 'Cambiar rol'}
                     </BotonSecundario>
                   )}
+                  <BotonSecundario
+                    type="button"
+                    title={invitacion.estado === 'PENDIENTE' ? 'El enlace del correo dejará de servir.' : undefined}
+                    onClick={() => alQuitar(invitacion)}
+                  >
+                    Quitar
+                  </BotonSecundario>
                 </td>
               </tr>
               {abierta === invitacion.invitacionEmpresaId && (
