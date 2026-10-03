@@ -4,12 +4,8 @@ const config: CapacitorConfig = {
   appId: 'com.lfmova.app',
   appName: 'LFMova',
   webDir: 'dist',
-  server: {
-    // La app corre en http (no https) para poder llamar al backend de desarrollo por HTTP plano sin
-    // que el WebView bloquee la petición como "Mixed Content" (HTTPS pidiendo a HTTP). Cuando el
-    // backend tenga HTTPS real, esto se puede quitar (o dejar en 'https', su valor por defecto).
-    androidScheme: 'http',
-  },
+  // La app se sirve dentro del teléfono en https://localhost (valor por defecto de Capacitor) y la
+  // API de producción también es HTTPS: no hay tráfico sin cifrar ni excepciones de red.
 }
 
 export default config
