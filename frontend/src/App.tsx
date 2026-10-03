@@ -6,6 +6,7 @@ import { ProveedorAutenticacion } from './contexto/ContextoAutenticacion'
 import { ProveedorNotificaciones } from './contexto/ContextoNotificaciones'
 import { ProveedorTema } from './contexto/ContextoTema'
 import { PaginaConfirmarCorreo } from './paginas/PaginaConfirmarCorreo'
+import { PaginaDescargar } from './paginas/PaginaDescargar'
 import { PaginaCrearCuenta } from './paginas/PaginaCrearCuenta'
 import { PaginaEmpresaSegunRol } from './paginas/PaginaEmpresaSegunRol'
 import { PaginaEmpresas } from './paginas/PaginaEmpresas'
@@ -53,6 +54,7 @@ function App() {
                 <Route path="/olvide-contrasena" element={<PaginaOlvideContrasena />} />
                 <Route path="/restablecer-contrasena" element={<PaginaRestablecerContrasena />} />
                 <Route path="/invitacion" element={<PaginaInvitacion />} />
+                <Route path="/descargar" element={<PaginaDescargar />} />
                 <Route
                   path="/conductor"
                   element={
