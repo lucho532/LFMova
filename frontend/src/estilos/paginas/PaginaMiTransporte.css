@@ -19,41 +19,6 @@
   text-align: left;
 }
 
-.pagina-mi-transporte__refrescar {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--bg);
-  color: var(--text-h);
-  cursor: pointer;
-}
-
-.pagina-mi-transporte__refrescar:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.pagina-mi-transporte__refrescar:disabled {
-  cursor: default;
-}
-
-.pagina-mi-transporte__refrescar--girando svg {
-  animation: pagina-mi-transporte-girar 0.8s linear infinite;
-}
-
-@keyframes pagina-mi-transporte-girar {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .pagina-mi-transporte__error {
   padding: 12px 14px;
   border: 1px solid var(--error-border);

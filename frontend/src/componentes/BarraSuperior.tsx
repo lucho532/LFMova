@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { obtenerCuenta } from '../servicios/servicioCuenta'
 import { etiquetaDelRolPrincipal, obtenerNombreDelToken, obtenerRolesDelToken, rutaInicialSegunRoles } from '../servicios/tokenJwt'
+import { BotonRefrescar } from './BotonRefrescar'
 import { CampanaNotificaciones } from './CampanaNotificaciones'
 import { MenuConfiguracion } from './MenuConfiguracion'
 import '../estilos/componentes/BarraSuperior.css'
@@ -10,11 +11,16 @@ import '../estilos/componentes/BarraSuperior.css'
 /**
  * Barra superior fija de toda la aplicación: marca a la izquierda (lleva
  * al inicio que corresponde al rol de la persona); a la
- * derecha, las notificaciones, el nombre y el rol de la persona cuando hay
+ * derecha, el botón de actualizar la pantalla, las notificaciones, el nombre y el rol de la persona cuando hay
  * sesión (lleva a "Mi cuenta") y la rueda de configuración, que guarda el
  * cambio de tema y cerrar sesión.
  */
-export function BarraSuperior() {
+interface PropiedadesBarraSuperior {
+  /** Recarga la pantalla actual con los datos más recientes. */
+  alRefrescar: () => void
+}
+
+export function BarraSuperior({ alRefrescar }: PropiedadesBarraSuperior) {
   const { token, nombreActualizado } = useAutenticacion()
   const nombre = nombreActualizado ?? (token ? obtenerNombreDelToken(token) : '')
   const rol = token ? etiquetaDelRolPrincipal(obtenerRolesDelToken(token)) : ''
@@ -51,6 +57,7 @@ export function BarraSuperior() {
         {empresas.length > 0 && <span className="barra-superior__empresa">{empresas.join(' · ')}</span>}
       </div>
       <div className="barra-superior__acciones">
+        {token && <BotonRefrescar alRefrescar={alRefrescar} />}
         <CampanaNotificaciones />
       </div>
       {token && (

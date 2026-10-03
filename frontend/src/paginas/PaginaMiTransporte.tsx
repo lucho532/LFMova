@@ -28,7 +28,6 @@ export function PaginaMiTransporte() {
   const { version } = useNotificaciones()
   const [servicios, setServicios] = useState<ServicioDelEmpleado[]>([])
   const [cargando, setCargando] = useState(true)
-  const [actualizando, setActualizando] = useState(false)
   const [mensajeError, setMensajeError] = useState<string | null>(null)
   const [pestana, setPestana] = useState<'programados' | 'finalizados'>('programados')
   const miUsuarioId = token ? obtenerUsuarioIdDelToken(token) : null
@@ -52,13 +51,6 @@ export function PaginaMiTransporte() {
       .finally(() => setCargando(false))
   }
 
-  async function alRefrescar() {
-    if (!token || actualizando) return
-    setActualizando(true)
-    await cargar()
-    setActualizando(false)
-  }
-
   // Se recarga al llegar una notificación nueva (nueva ruta, cambio de conductor…) y, además, cada
   // pocos segundos mientras la ruta está en curso: así el cronómetro de espera y el estado del pasajero
   // (por ejemplo, si el conductor lo deja como "no recogido" al reportar una incidencia) no se quedan
@@ -76,19 +68,6 @@ export function PaginaMiTransporte() {
     <main className="pagina-mi-transporte">
       <header className="pagina-mi-transporte__encabezado">
         <h1>Mi transporte</h1>
-        <button
-          type="button"
-          className={`pagina-mi-transporte__refrescar${actualizando ? ' pagina-mi-transporte__refrescar--girando' : ''}`}
-          onClick={alRefrescar}
-          disabled={actualizando}
-          aria-label="Actualizar"
-          title="Actualizar"
-        >
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 12a9 9 0 1 1-3-6.7" />
-            <polyline points="21 3 21 9 15 9" />
-          </svg>
-        </button>
       </header>
 
       {cargando && <p>Cargando…</p>}

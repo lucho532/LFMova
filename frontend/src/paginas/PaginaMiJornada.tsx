@@ -51,7 +51,6 @@ export function PaginaMiJornada() {
   const [servicios, setServicios] = useState<Servicio[]>([])
   const [unidades, setUnidades] = useState<UnidadDeTrabajo[]>([])
   const [cargando, setCargando] = useState(true)
-  const [actualizando, setActualizando] = useState(false)
   const [mensajeError, setMensajeError] = useState<string | null>(null)
   const pestana: Pestana = location.pathname.endsWith('/finalizadas') ? 'finalizadas' : location.pathname.endsWith('/vehiculo') ? 'vehiculo' : 'asignadas'
 
@@ -72,13 +71,6 @@ export function PaginaMiJornada() {
     setCargando(true)
     cargarDatos(token).finally(() => setCargando(false))
   }, [token, version])
-
-  async function alRefrescar() {
-    if (!token || actualizando) return
-    setActualizando(true)
-    await cargarDatos(token)
-    setActualizando(false)
-  }
 
   // Pide el permiso de ubicación apenas entra a su jornada, para que ya esté concedido cuando haga falta (llegada, finalizar ruta).
   useEffect(() => {
@@ -101,19 +93,6 @@ export function PaginaMiJornada() {
     <main className="pagina-mi-jornada">
       <div className="pagina-mi-jornada__encabezado">
         <h1>Mi jornada</h1>
-        <button
-          type="button"
-          className={`pagina-mi-jornada__refrescar${actualizando ? ' pagina-mi-jornada__refrescar--girando' : ''}`}
-          onClick={alRefrescar}
-          disabled={actualizando}
-          aria-label="Actualizar"
-          title="Actualizar"
-        >
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 12a9 9 0 1 1-3-6.7" />
-            <polyline points="21 3 21 9 15 9" />
-          </svg>
-        </button>
       </div>
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}

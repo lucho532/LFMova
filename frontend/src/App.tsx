@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './estilos/App.css'
 import { BarraLateral } from './componentes/BarraLateral'
@@ -41,16 +42,19 @@ import { RutaProtegida } from './rutas/RutaProtegida'
 
 /** Componente raíz: configura los proveedores globales (tema, autenticación) y las rutas. */
 function App() {
+  // Al cambiar, la pantalla actual se vuelve a montar y recarga sus datos (botón de actualizar de la barra superior).
+  const [recarga, setRecarga] = useState(0)
+
   return (
     <ProveedorTema>
       <ProveedorAutenticacion>
         <ProveedorNotificaciones>
         <Router>
           <AvisoActualizacion />
-          <BarraSuperior />
+          <BarraSuperior alRefrescar={() => setRecarga((valor) => valor + 1)} />
           <div className="app-cuerpo">
             <BarraLateral />
-            <div className="app-contenido">
+            <div className="app-contenido" key={recarga}>
               <Routes>
                 <Route path="/iniciar-sesion" element={<PaginaIniciarSesion />} />
                 <Route path="/crear-cuenta" element={<PaginaCrearCuenta />} />
