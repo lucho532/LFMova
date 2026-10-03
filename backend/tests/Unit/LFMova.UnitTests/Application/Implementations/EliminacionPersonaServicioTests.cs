@@ -2,6 +2,7 @@ using LFMova.Application.Implementations;
 using LFMova.Application.Interfaces;
 using LFMova.Domain.Entities;
 using LFMova.Domain.Enums;
+using LFMova.Application.Utils;
 
 namespace LFMova.UnitTests.Application.Implementations;
 
@@ -14,6 +15,7 @@ public class EliminacionPersonaServicioTests
 {
     private const int EmpresaId = 1;
     private const int CoordinadorId = 900;
+    private const string Clave = "ClaveSegura123";
 
     private class EmpleadoRepositorioFalso : IEmpleadoRepositorio
     {
@@ -43,13 +45,13 @@ public class EliminacionPersonaServicioTests
     private class EliminacionRepositorioFalso : IEliminacionPersonaRepositorio
     {
         public bool RutaEnCurso;
-        public bool RegistrosDeCoordinacion;
+        public int OtrosAdministradores;
         public List<int> Empresas = new() { EmpresaId };
         public int? CuentaEliminada;
         public (int UsuarioId, int EmpresaId)? QuitadaDeEmpresa;
 
         public Task<bool> TieneRutaEnCursoAsync(int usuarioId) => Task.FromResult(RutaEnCurso);
-        public Task<bool> TieneRegistrosDeCoordinacionAsync(int usuarioId) => Task.FromResult(RegistrosDeCoordinacion);
+        public Task<int> ContarOtrosAdministradoresAsync(int usuarioId) => Task.FromResult(OtrosAdministradores);
         public Task<List<int>> ObtenerEmpresasRelacionadasAsync(int usuarioId) => Task.FromResult(Empresas);
 
         public Task<List<string>> EliminarCuentaAsync(int usuarioId)
@@ -84,7 +86,7 @@ public class EliminacionPersonaServicioTests
     /// <summary>Arma el servicio con un empleado (id 10, usuario 100) de la empresa 1 y el rol indicado además de EMPLEADO.</summary>
     private static Contexto Crear(Rol? rolAdicional = null)
     {
-        var usuario = new Usuario { UsuarioId = 100, Cedula = "1001", NombreCompleto = "Pedro Pérez" };
+        var usuario = new Usuario { UsuarioId = 100, Cedula = "1001", NombreCompleto = "Pedro Pérez", PasswordHash = new HasheadorContrasenas().Hashear(Clave) };
         usuario.UsuarioRoles.Add(new UsuarioRol { UsuarioId = 100, Rol = Rol.EMPLEADO, EmpresaId = EmpresaId, Activo = true });
         if (rolAdicional is not null)
         {
@@ -97,7 +99,7 @@ public class EliminacionPersonaServicioTests
         usuarios.Usuarios.Add(usuario);
         var eliminacion = new EliminacionRepositorioFalso();
         var almacenamiento = new AlmacenamientoFalso();
-        return new Contexto(new EliminacionPersonaServicio(empleados, usuarios, eliminacion, almacenamiento), eliminacion, almacenamiento, usuario);
+        return new Contexto(new EliminacionPersonaServicio(empleados, usuarios, eliminacion, almacenamiento, new HasheadorContrasenas()), eliminacion, almacenamiento, usuario);
     }
 
     [Fact]
@@ -169,14 +171,59 @@ public class EliminacionPersonaServicioTests
         Assert.Null(c.Eliminacion.CuentaEliminada);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData(Rol.CONDUCTOR)]
+    [InlineData(Rol.COORDINADOR)]
+    public async Task EliminarPropiaCuentaAsync_BorraLaCuentaCompleta_SeaCualSeaElRol(Rol? rol)
+    {
+        var c = Crear(rol);
+
+        await c.Servicio.EliminarPropiaCuentaAsync(100, Clave);
+
+        Assert.Equal(100, c.Eliminacion.CuentaEliminada);
+        Assert.Single(c.Almacenamiento.Eliminados);
+    }
+
     [Fact]
-    public async Task EliminarAsync_LanzaExcepcion_CuandoLaCuentaDejoRegistrosDeCoordinacion()
+    public async Task EliminarPropiaCuentaAsync_LanzaExcepcion_CuandoLaContrasenaEsIncorrecta()
     {
         var c = Crear();
-        c.Eliminacion.RegistrosDeCoordinacion = true;
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => c.Servicio.EliminarAsync(EmpresaId, 10, CoordinadorId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => c.Servicio.EliminarPropiaCuentaAsync(100, "OtraClave123"));
 
         Assert.Null(c.Eliminacion.CuentaEliminada);
+    }
+
+    [Fact]
+    public async Task EliminarPropiaCuentaAsync_LanzaExcepcion_CuandoTieneUnaRutaEnCurso()
+    {
+        var c = Crear(Rol.CONDUCTOR);
+        c.Eliminacion.RutaEnCurso = true;
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => c.Servicio.EliminarPropiaCuentaAsync(100, Clave));
+
+        Assert.Null(c.Eliminacion.CuentaEliminada);
+    }
+
+    [Fact]
+    public async Task EliminarPropiaCuentaAsync_LanzaExcepcion_CuandoEsLaUnicaAdministradora()
+    {
+        var c = Crear(Rol.ADMINISTRADOR_PLATAFORMA);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => c.Servicio.EliminarPropiaCuentaAsync(100, Clave));
+
+        Assert.Null(c.Eliminacion.CuentaEliminada);
+    }
+
+    [Fact]
+    public async Task EliminarPropiaCuentaAsync_PermiteALaAdministradora_CuandoHayOtra()
+    {
+        var c = Crear(Rol.ADMINISTRADOR_PLATAFORMA);
+        c.Eliminacion.OtrosAdministradores = 1;
+
+        await c.Servicio.EliminarPropiaCuentaAsync(100, Clave);
+
+        Assert.Equal(100, c.Eliminacion.CuentaEliminada);
     }
 }

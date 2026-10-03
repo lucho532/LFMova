@@ -11,12 +11,8 @@ public interface IEliminacionPersonaRepositorio
     /// <summary>Indica si la persona es conductora o pasajera de una ruta que está en curso.</summary>
     Task<bool> TieneRutaEnCursoAsync(int usuarioId);
 
-    /// <summary>
-    /// Indica si la persona dejó registros hechos como coordinadora
-    /// (importaciones de Excel o invitaciones enviadas), que no pueden
-    /// borrarse sin afectar a otras personas.
-    /// </summary>
-    Task<bool> TieneRegistrosDeCoordinacionAsync(int usuarioId);
+    /// <summary>Cuenta cuántas personas distintas de la indicada tienen activo el rol de administrador de plataforma.</summary>
+    Task<int> ContarOtrosAdministradoresAsync(int usuarioId);
 
     /// <summary>
     /// Empresas con las que la persona tiene relación: por un rol, como
@@ -26,8 +22,10 @@ public interface IEliminacionPersonaRepositorio
 
     /// <summary>
     /// Borra la cuenta y todo lo que depende de ella. Las rutas que conducía
-    /// quedan sin unidad asignada. Devuelve las referencias de los archivos de
-    /// evidencia que quedaron huérfanos, para borrarlos del almacenamiento.
+    /// quedan sin unidad asignada; las importaciones que registró y las
+    /// invitaciones que envió como coordinadora se conservan, sin autor.
+    /// Devuelve las referencias de los archivos de evidencia que quedaron
+    /// huérfanos, para borrarlos del almacenamiento.
     /// </summary>
     Task<List<string>> EliminarCuentaAsync(int usuarioId);
 

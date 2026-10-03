@@ -93,7 +93,9 @@ public class InvitacionEmpresaServicio : IInvitacionEmpresaServicio
         var invitacion = await ObtenerPorTokenAsync(token);
         var usuario = await _usuarioRepositorio.ObtenerPorCedulaConRolesAsync(invitacion.Cedula);
         var empresa = invitacion.Empresa ?? await _empresaRepositorio.ObtenerPorIdAsync(invitacion.EmpresaId);
-        var invitador = invitacion.UsuarioInvitador ?? await _usuarioRepositorio.ObtenerPorIdAsync(invitacion.UsuarioInvitadorId);
+        // Quien envió la invitación pudo haber eliminado su cuenta después: la invitación sigue valiendo.
+        var invitador = invitacion.UsuarioInvitador
+            ?? (invitacion.UsuarioInvitadorId is null ? null : await _usuarioRepositorio.ObtenerPorIdAsync(invitacion.UsuarioInvitadorId.Value));
 
         return new DetalleInvitacionDto
         {
@@ -176,9 +178,14 @@ public class InvitacionEmpresaServicio : IInvitacionEmpresaServicio
         // Todos los repositorios comparten el mismo contexto de datos: un solo guardado persiste todo junto.
         await _invitacionRepositorio.GuardarCambiosAsync();
 
+        if (invitacion.UsuarioInvitadorId is null)
+        {
+            return;
+        }
+
         var empresa = invitacion.Empresa ?? await _empresaRepositorio.ObtenerPorIdAsync(invitacion.EmpresaId);
         await _notificacionServicio.CrearAsync(
-            invitacion.UsuarioInvitadorId,
+            invitacion.UsuarioInvitadorId.Value,
             "INVITACION_ACEPTADA",
             "Invitación aceptada",
             $"{usuario.NombreCompleto} aceptó unirse a {empresa?.Nombre}. Ya puedes asignarle un rol desde Empleados.");

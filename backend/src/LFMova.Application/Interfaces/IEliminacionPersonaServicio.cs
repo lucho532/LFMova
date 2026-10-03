@@ -20,4 +20,13 @@ public interface IEliminacionPersonaServicio
     /// una ruta en curso.
     /// </summary>
     Task<ResultadoEliminacionPersonaDto> EliminarAsync(int empresaId, int empleadoId, int usuarioSolicitanteId);
+
+    /// <summary>
+    /// La propia persona elimina su cuenta completa, sea cual sea su rol
+    /// (decisión del 2026-10-03): se borra todo rastro suyo, igual que en
+    /// <see cref="EliminarAsync"/>. Exige su contraseña actual. Falla si la
+    /// contraseña no coincide, si tiene una ruta en curso o si es la única
+    /// administradora de la plataforma.
+    /// </summary>
+    Task EliminarPropiaCuentaAsync(int usuarioId, string contrasena);
 }

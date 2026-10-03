@@ -1,0 +1,42 @@
+.panel-eliminar-cuenta {
+  margin-top: 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--error-border);
+  border-radius: 14px;
+  background: var(--error-bg);
+}
+
+.panel-eliminar-cuenta h2 {
+  margin: 0 0 8px;
+  color: var(--error);
+}
+
+.panel-eliminar-cuenta p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.panel-eliminar-cuenta form {
+  display: grid;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.panel-eliminar-cuenta__boton {
+  justify-self: start;
+  padding: 10px 18px;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  background: var(--error);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.panel-eliminar-cuenta__boton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

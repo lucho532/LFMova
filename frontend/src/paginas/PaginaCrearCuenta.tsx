@@ -114,6 +114,9 @@ export function PaginaCrearCuenta() {
 
         {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
 
+        <p className="pagina-crear-cuenta__privacidad">
+          Al crear tu cuenta autorizas el tratamiento de tus datos según la <Link to="/privacidad">Política de privacidad</Link>.
+        </p>
         <BotonPrimario disabled={enviando}>{enviando ? 'Creando cuenta…' : 'Crear cuenta'}</BotonPrimario>
       </form>
     </TarjetaAutenticacion>

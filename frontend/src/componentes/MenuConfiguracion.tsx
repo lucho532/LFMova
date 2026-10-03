@@ -6,8 +6,8 @@ import '../estilos/componentes/MenuConfiguracion.css'
 
 /**
  * Rueda dentada de la barra superior: al pulsarla despliega las opciones de
- * configuración (cambiar entre tema claro y oscuro y, con sesión iniciada,
- * ir a "Mi cuenta" y cerrar sesión). Se cierra al elegir una opción, al
+ * configuración (cambiar entre tema claro y oscuro, la política de
+ * privacidad y, con sesión iniciada, ir a "Mi cuenta" y cerrar sesión). Se cierra al elegir una opción, al
  * pulsar fuera o con Escape. Al cerrar sesión, `RutaProtegida` redirige a
  * `/iniciar-sesion` porque deja de haber token.
  */
@@ -57,6 +57,10 @@ export function MenuConfiguracion() {
             <span aria-hidden="true">{esOscuro ? '☀️' : '🌙'}</span>
             {esOscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
           </button>
+          <Link to="/privacidad" role="menuitem" className="menu-configuracion__opcion" onClick={() => setAbierto(false)}>
+            <span aria-hidden="true">🔒</span>
+            Política de privacidad
+          </Link>
           {estaAutenticado && (
             <>
               <Link to="/mi-cuenta" role="menuitem" className="menu-configuracion__opcion" onClick={() => setAbierto(false)}>

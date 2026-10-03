@@ -104,6 +104,46 @@ public class EliminacionPersonaTests
         Assert.True(await verificacion.ServiceProvider.GetRequiredService<LFMovaDbContext>().Usuarios.AnyAsync(u => u.UsuarioId == usuarioId));
     }
 
+    [Fact]
+    public async Task EliminarMiCuenta_BorraAlCoordinadorYConservaSinAutorLoQueRegistro()
+    {
+        int usuarioId, empresaId;
+        using (var alcance = _fixture.CrearAlcance())
+        {
+            var contexto = alcance.ServiceProvider.GetRequiredService<LFMovaDbContext>();
+            var hasheador = alcance.ServiceProvider.GetRequiredService<IHasheadorContrasenas>();
+            empresaId = (await SemillaDatosHelper.CrearEmpresaAsync(contexto, "ELIM-D empresa")).EmpresaId;
+            usuarioId = (await SemillaDatosHelper.CrearUsuarioConRolAsync(contexto, hasheador, "ELIM-D-COORD", "ClaveCoord123", Rol.COORDINADOR, empresaId)).UsuarioId;
+            contexto.ImportacionesExcel.Add(new ImportacionExcel { EmpresaId = empresaId, CoordinadorId = usuarioId, NombreArchivo = "hoja.xlsx", FechaImportacion = DateTime.UtcNow });
+            contexto.InvitacionesEmpresa.Add(new InvitacionEmpresa
+            {
+                EmpresaId = empresaId, Cedula = "ELIM-D-INVITADA", Correo = "invitada@pruebas.test", UsuarioInvitadorId = usuarioId,
+                TokenHash = "hash-elim-d", FechaCreacion = DateTime.UtcNow, FechaExpiracion = DateTime.UtcNow.AddDays(7)
+            });
+            await contexto.SaveChangesAsync();
+        }
+
+        using var coordinador = _fixture.Fabrica.CreateClient();
+        await AutenticarAsync(coordinador, "ELIM-D-COORD", "ClaveCoord123");
+
+        var conClaveMala = await coordinador.PostAsJsonAsync("/api/cuenta/eliminar", new { Contrasena = "OtraClave123" });
+        Assert.Equal(HttpStatusCode.BadRequest, conClaveMala.StatusCode);
+
+        var respuesta = await coordinador.PostAsJsonAsync("/api/cuenta/eliminar", new { Contrasena = "ClaveCoord123" });
+
+        Assert.Equal(HttpStatusCode.NoContent, respuesta.StatusCode);
+        using var verificacion = _fixture.CrearAlcance();
+        var datos = verificacion.ServiceProvider.GetRequiredService<LFMovaDbContext>();
+        Assert.False(await datos.Usuarios.AnyAsync(u => u.UsuarioId == usuarioId));
+        Assert.Null((await datos.ImportacionesExcel.SingleAsync(i => i.EmpresaId == empresaId)).CoordinadorId);
+        Assert.Null((await datos.InvitacionesEmpresa.SingleAsync(i => i.EmpresaId == empresaId)).UsuarioInvitadorId);
+
+        // Con la cuenta borrada ya no se puede iniciar sesión.
+        using var anonimo = _fixture.Fabrica.CreateClient();
+        var reingreso = await anonimo.PostAsJsonAsync("/api/autenticacion/iniciar-sesion", new IniciarSesionDto { Identificador = "ELIM-D-COORD", Password = "ClaveCoord123" });
+        Assert.Equal(HttpStatusCode.Unauthorized, reingreso.StatusCode);
+    }
+
     /// <summary>
     /// Crea una empresa con su coordinador y una persona que es a la vez
     /// empleada y conductora: fue pasajera de una ruta finalizada (con chat,

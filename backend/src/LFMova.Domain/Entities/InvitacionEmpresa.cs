@@ -30,7 +30,7 @@ public class InvitacionEmpresa
     public string Correo { get; set; } = string.Empty;
 
     /// <summary>Usuario (coordinador) que envió la invitación.</summary>
-    public int UsuarioInvitadorId { get; set; }
+    public int? UsuarioInvitadorId { get; set; }
 
     /// <summary>Hash del token del enlace. El token en texto plano nunca se persiste.</summary>
     public string TokenHash { get; set; } = string.Empty;

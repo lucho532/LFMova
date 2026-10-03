@@ -18,11 +18,13 @@ namespace LFMova.Api.Controllers;
 public class CuentaController : ControllerBase
 {
     private readonly ICuentaServicio _cuentaServicio;
+    private readonly IEliminacionPersonaServicio _eliminacionServicio;
 
     /// <summary>Crea el controlador con su servicio.</summary>
-    public CuentaController(ICuentaServicio cuentaServicio)
+    public CuentaController(ICuentaServicio cuentaServicio, IEliminacionPersonaServicio eliminacionServicio)
     {
         _cuentaServicio = cuentaServicio;
+        _eliminacionServicio = eliminacionServicio;
     }
 
     /// <summary>Consulta los datos de la cuenta del usuario autenticado.</summary>
@@ -60,6 +62,24 @@ public class CuentaController : ControllerBase
         try
         {
             await _cuentaServicio.CambiarContrasenaAsync(User.ObtenerUsuarioId(), datos);
+            return NoContent();
+        }
+        catch (InvalidOperationException excepcion)
+        {
+            return BadRequest(new { mensaje = excepcion.Message });
+        }
+    }
+
+    /// <summary>
+    /// La persona autenticada elimina su propia cuenta y todo su rastro,
+    /// confirmando con su contraseña. No se puede deshacer.
+    /// </summary>
+    [HttpPost("eliminar")]
+    public async Task<IActionResult> EliminarAsync(EliminarCuentaDto datos)
+    {
+        try
+        {
+            await _eliminacionServicio.EliminarPropiaCuentaAsync(User.ObtenerUsuarioId(), datos.Contrasena);
             return NoContent();
         }
         catch (InvalidOperationException excepcion)

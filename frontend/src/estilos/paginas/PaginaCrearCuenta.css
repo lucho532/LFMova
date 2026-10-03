@@ -3,3 +3,14 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.pagina-crear-cuenta__privacidad {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.pagina-crear-cuenta__privacidad a {
+  color: var(--accent);
+}

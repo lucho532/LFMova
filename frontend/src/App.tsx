@@ -8,6 +8,7 @@ import { ProveedorNotificaciones } from './contexto/ContextoNotificaciones'
 import { ProveedorTema } from './contexto/ContextoTema'
 import { PaginaConfirmarCorreo } from './paginas/PaginaConfirmarCorreo'
 import { PaginaDescargar } from './paginas/PaginaDescargar'
+import { PaginaEliminarCuenta } from './paginas/PaginaEliminarCuenta'
 import { PaginaCrearCuenta } from './paginas/PaginaCrearCuenta'
 import { PaginaEmpresaSegunRol } from './paginas/PaginaEmpresaSegunRol'
 import { PaginaEmpresas } from './paginas/PaginaEmpresas'
@@ -17,6 +18,7 @@ import { PaginaMiJornada } from './paginas/PaginaMiJornada'
 import { PaginaMiCuenta } from './paginas/PaginaMiCuenta'
 import { PaginaMiTransporte } from './paginas/PaginaMiTransporte'
 import { PaginaNuevaEmpresa } from './paginas/PaginaNuevaEmpresa'
+import { PaginaPrivacidad } from './paginas/PaginaPrivacidad'
 import { PaginaOlvideContrasena } from './paginas/PaginaOlvideContrasena'
 import { PaginaRestablecerContrasena } from './paginas/PaginaRestablecerContrasena'
 import { PaginaConductores } from './paginas/PaginaConductores'
@@ -57,6 +59,8 @@ function App() {
                 <Route path="/restablecer-contrasena" element={<PaginaRestablecerContrasena />} />
                 <Route path="/invitacion" element={<PaginaInvitacion />} />
                 <Route path="/descargar" element={<PaginaDescargar />} />
+                <Route path="/privacidad" element={<PaginaPrivacidad />} />
+                <Route path="/eliminar-cuenta" element={<PaginaEliminarCuenta />} />
                 <Route
                   path="/conductor"
                   element={

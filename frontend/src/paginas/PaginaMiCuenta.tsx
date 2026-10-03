@@ -5,6 +5,7 @@ import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { EnlaceBoton } from '../componentes/EnlaceBoton'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
+import { PanelEliminarCuenta } from '../componentes/PanelEliminarCuenta'
 import { PanelMiVehiculo } from '../componentes/PanelMiVehiculo'
 import { PreferenciaNavegacion } from '../componentes/PreferenciaNavegacion'
 import { TarjetaFormulario } from '../componentes/TarjetaFormulario'
@@ -17,7 +18,7 @@ import { obtenerRolesDelToken, rutaInicialSegunRoles } from '../servicios/tokenJ
 /**
  * Datos de la propia cuenta: la cédula y el correo se muestran pero no se
  * editan (identifican la cuenta); el nombre y el teléfono sí, y se puede
- * cambiar la contraseña. Disponible para cualquier rol.
+ * cambiar la contraseña y eliminar la cuenta. Disponible para cualquier rol.
  */
 export function PaginaMiCuenta() {
   const { token, actualizarNombre } = useAutenticacion()
@@ -118,6 +119,8 @@ export function PaginaMiCuenta() {
         {exitoContrasena && <MensajeAlerta tipo="exito">{exitoContrasena}</MensajeAlerta>}
         <BotonPrimario disabled={ocupado}>Cambiar contraseña</BotonPrimario>
       </TarjetaFormulario>
+
+      <PanelEliminarCuenta />
     </ContenedorPagina>
   )
 }

@@ -20,7 +20,7 @@ public class ImportacionExcel
     /// Identificador del <c>Usuario</c> (con rol COORDINADOR) que realizó la
     /// importación. No existe una entidad independiente <c>Coordinador</c>.
     /// </summary>
-    public int CoordinadorId { get; set; }
+    public int? CoordinadorId { get; set; }
 
     /// <summary>Nombre del archivo importado.</summary>
     public string NombreArchivo { get; set; } = string.Empty;

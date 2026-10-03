@@ -32,10 +32,11 @@ public class EliminacionPersonaRepositorio : IEliminacionPersonaRepositorio
     }
 
     /// <inheritdoc />
-    public async Task<bool> TieneRegistrosDeCoordinacionAsync(int usuarioId)
+    public async Task<int> ContarOtrosAdministradoresAsync(int usuarioId)
     {
-        return await _contexto.ImportacionesExcel.AnyAsync(i => i.CoordinadorId == usuarioId)
-            || await _contexto.InvitacionesEmpresa.AnyAsync(i => i.UsuarioInvitadorId == usuarioId);
+        return await _contexto.UsuarioRoles
+            .Where(r => r.Activo && r.Rol == Rol.ADMINISTRADOR_PLATAFORMA && r.UsuarioId != usuarioId)
+            .Select(r => r.UsuarioId).Distinct().CountAsync();
     }
 
     /// <inheritdoc />
@@ -67,6 +68,10 @@ public class EliminacionPersonaRepositorio : IEliminacionPersonaRepositorio
         await _contexto.Vehiculos.Where(v => conductorIds.Contains(v.ConductorId)).ExecuteDeleteAsync();
         await _contexto.VinculacionesConductorEmpresa.Where(v => conductorIds.Contains(v.ConductorId)).ExecuteDeleteAsync();
         await _contexto.Conductores.Where(c => c.UsuarioId == usuarioId).ExecuteDeleteAsync();
+
+        // Lo que registró como coordinadora afecta a otras personas: se conserva, pero ya sin autor.
+        await _contexto.ImportacionesExcel.Where(i => i.CoordinadorId == usuarioId).ExecuteUpdateAsync(c => c.SetProperty(i => i.CoordinadorId, (int?)null));
+        await _contexto.InvitacionesEmpresa.Where(i => i.UsuarioInvitadorId == usuarioId).ExecuteUpdateAsync(c => c.SetProperty(i => i.UsuarioInvitadorId, (int?)null));
 
         await _contexto.Notificaciones.Where(n => n.UsuarioId == usuarioId).ExecuteDeleteAsync();
         await _contexto.TokensVerificacion.Where(t => t.UsuarioId == usuarioId).ExecuteDeleteAsync();
