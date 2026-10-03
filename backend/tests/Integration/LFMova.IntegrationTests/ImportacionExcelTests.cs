@@ -28,7 +28,7 @@ namespace LFMova.IntegrationTests;
 /// (idempotencia), publicar la jornada y ver los servicios como conductor.
 /// </summary>
 [Collection(IntegrationTestCollection.Nombre)]
-public class ImportacionExcelTests
+public partial class ImportacionExcelTests
 {
     private readonly IntegrationTestFixture _fixture;
 

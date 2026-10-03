@@ -7,7 +7,7 @@ using LFMova.Domain.Enums;
 
 namespace LFMova.UnitTests.Application.Implementations;
 
-public class ServicioPasajeroServicioTests
+public partial class ServicioPasajeroServicioTests
 {
     private class ServicioPasajeroRepositorioFalso : IServicioPasajeroRepositorio
     {

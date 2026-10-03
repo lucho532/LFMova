@@ -51,4 +51,12 @@ public static class ReglasEstadoServicio
     /// </summary>
     public static EstadoServicio EstadoAlQuedarSinUnidad(EstadoServicio estado)
         => estado is EstadoServicio.ASIGNADO or EstadoServicio.PUBLICADO ? EstadoServicio.PENDIENTE_ASIGNACION : estado;
+
+    /// <summary>
+    /// Indica si a un servicio en este estado se le pueden sumar pasajeros
+    /// nuevos: no a uno que ya está en curso, finalizado o cancelado (el
+    /// conductor ya salió o la ruta ya no existe).
+    /// </summary>
+    public static bool AdmitePasajerosNuevos(EstadoServicio estado)
+        => estado is not (EstadoServicio.EN_CURSO or EstadoServicio.FINALIZADO or EstadoServicio.CANCELADO);
 }

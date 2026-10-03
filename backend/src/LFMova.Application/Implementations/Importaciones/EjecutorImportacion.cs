@@ -4,6 +4,7 @@ using LFMova.Application.DTOs.Servicios;
 using LFMova.Application.DTOs.ServiciosPasajero;
 using LFMova.Application.Interfaces;
 using LFMova.Domain.Enums;
+using LFMova.Domain.Rules;
 
 namespace LFMova.Application.Implementations.Importaciones;
 
@@ -109,7 +110,7 @@ public class EjecutorImportacion
             var servicio = servicioExistente ?? (reutilizarServicioDelHorario
                 ? servicios.FirstOrDefault(s =>
                     s.SedeId == clave.SedeId && s.Tipo == clave.Tipo && s.Fecha == clave.FechaServicio && s.HoraProgramada == clave.Hora
-                    && s.Estado is not (EstadoServicio.FINALIZADO or EstadoServicio.CANCELADO))
+                    && ReglasEstadoServicio.AdmitePasajerosNuevos(s.Estado))
                 : null);
 
             if (servicio is null)
@@ -127,6 +128,7 @@ public class EjecutorImportacion
                 resultado.ServiciosCreados++;
             }
 
+            var agregados = 0;
             foreach (var pendiente in filas)
             {
                 try
@@ -134,6 +136,7 @@ public class EjecutorImportacion
                     await _servicioPasajeroServicio.CrearAsync(
                         empresaId, servicio.ServicioId, new CrearServicioPasajeroDto { ProgramacionTransporteId = pendiente.Programacion.ProgramacionTransporteId });
                     resultado.PasajerosAsignados++;
+                    agregados++;
                 }
                 catch (InvalidOperationException)
                 {
@@ -149,7 +152,30 @@ public class EjecutorImportacion
                     resultado.FilasOmitidas++;
                 }
             }
+
+            if (agregados > 0)
+            {
+                await DespublicarSiCambioAsync(contexto, servicio);
+            }
         }
+    }
+
+    /// <summary>
+    /// Una ruta ya publicada que recibe pasajeros nuevos vuelve a <c>ASIGNADO</c> (decisión del
+    /// 2026-10-02): el conductor deja de verla hasta que el coordinador la revise y la publique de
+    /// nuevo, y al publicarla recibe el aviso y el correo con el Excel actualizado.
+    /// </summary>
+    private async Task DespublicarSiCambioAsync(ContextoImportacion contexto, ServicioDto servicio)
+    {
+        if (servicio.Estado != EstadoServicio.PUBLICADO)
+        {
+            return;
+        }
+
+        await _servicioServicio.CambiarEstadoAsync(contexto.EmpresaId, servicio.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
+        servicio.Estado = EstadoServicio.ASIGNADO;
+        contexto.Resultado.Advertencias.Add(
+            $"La ruta de las {servicio.HoraProgramada:HH\\:mm} del {servicio.Fecha:yyyy-MM-dd} ya estaba publicada y recibió pasajeros nuevos: volvió a quedar sin publicar para que la revises y la publiques de nuevo.");
     }
 
     private async Task AvanzarEstadoDeServiciosAsync(int empresaId, List<ServicioDto> serviciosNuevos)

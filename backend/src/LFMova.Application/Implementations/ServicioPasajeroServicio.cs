@@ -51,6 +51,10 @@ public class ServicioPasajeroServicio : IServicioPasajeroServicio
     public async Task<ServicioPasajeroDto> CrearAsync(int empresaId, int servicioId, CrearServicioPasajeroDto datos)
     {
         var servicio = await _acceso.ObtenerServicioDeLaEmpresaOFallarAsync(empresaId, servicioId);
+        if (!ReglasEstadoServicio.AdmitePasajerosNuevos(servicio.Estado))
+        {
+            throw new InvalidOperationException("No se pueden agregar pasajeros a una ruta en curso, finalizada o cancelada.");
+        }
 
         var programacion = await _programacionRepositorio.ObtenerPorIdAsync(datos.ProgramacionTransporteId);
         if (programacion is null || !ReglasServicioPasajero.ProgramacionEsDelMismoContextoEmpresarial(programacion, empresaId))

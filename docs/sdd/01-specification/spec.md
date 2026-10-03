@@ -362,6 +362,8 @@ El formato exacto de Excel queda pendiente hasta disponer del archivo real.
 
 La plataforma no debe inventar columnas o reglas que no hayan sido definidas a partir del archivo real.
 
+**Decisión del usuario (2026-10-02): importación sobre rutas ya publicadas o en curso.** Una importación nunca agrega pasajeros a una ruta que ya está en curso, finalizada o cancelada: esos pasajeros van a otra ruta. Si completa una ruta que ya estaba publicada, la ruta vuelve a `ASIGNADO` (el conductor deja de verla) y el resultado de la importación lo advierte; al volver a publicarla, el conductor recibe el aviso y el correo con el Excel actualizado.
+
 ---
 
 # 16. Historial de ubicación

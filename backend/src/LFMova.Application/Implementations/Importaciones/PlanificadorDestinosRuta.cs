@@ -79,7 +79,7 @@ public class PlanificadorDestinosRuta
         // en un mismo vehículo solo porque coincidan en sede/hora/tipo entre importaciones separadas.
         var candidatos = servicios.Where(s =>
             s.SedeId == clave.SedeId && s.Tipo == clave.Tipo && s.Fecha == clave.FechaServicio && s.HoraProgramada == clave.Hora
-            && s.UnidadOperativaId is not null && s.Estado is not (EstadoServicio.FINALIZADO or EstadoServicio.CANCELADO)).ToList();
+            && s.UnidadOperativaId is not null && ReglasEstadoServicio.AdmitePasajerosNuevos(s.Estado)).ToList();
 
         var zonaPorCandidato = new Dictionary<int, string>();
         foreach (var candidato in candidatos)
