@@ -11,8 +11,9 @@ import '../estilos/componentes/BarraSuperior.css'
 /**
  * Barra superior fija de toda la aplicación: marca a la izquierda (lleva
  * al inicio que corresponde al rol de la persona); a la
- * derecha, cuando hay sesión, el nombre y el rol de la persona, y las
- * acciones globales (cerrar sesión, tema).
+ * derecha, las acciones globales (tema, notificaciones) y, cuando hay
+ * sesión, el nombre y el rol de la persona (que lleva a "Mi cuenta") y, al
+ * final, cerrar sesión.
  */
 export function BarraSuperior() {
   const { token, nombreActualizado } = useAutenticacion()
@@ -53,7 +54,6 @@ export function BarraSuperior() {
       <div className="barra-superior__acciones">
         <BotonTema />
         <CampanaNotificaciones />
-        <BotonCerrarSesion /> 
       </div>
       {token && (
         <Link to="/mi-cuenta" className="barra-superior__usuario" title="Mi cuenta">
@@ -61,6 +61,7 @@ export function BarraSuperior() {
           <span className="barra-superior__rol">{rol}</span>
         </Link>
       )}
+      <BotonCerrarSesion />
     </header>
   )
 }
