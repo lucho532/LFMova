@@ -83,6 +83,12 @@
   color: #fff;
 }
 
+.pagina-servicio-conductor__ayuda {
+  margin: 0 0 8px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
 .pagina-servicio-conductor__pasajeros {
   display: flex;
   flex-direction: column;

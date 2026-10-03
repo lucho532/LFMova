@@ -38,8 +38,8 @@ interface PropiedadesTarjetaPasajeroConductor {
   enviarMensaje: (contenido: string) => Promise<Mensaje>
   /** Abre el chat de entrada (por ejemplo, al llegar desde una notificación). */
   chatAbiertoInicial?: boolean
-  /** Sube o baja al pasajero en el orden de recogida (-1 sube, 1 baja); no se ofrece si es <code>undefined</code>. */
-  moverOrden?: (delta: number) => Promise<void>
+  /** Indica que la tarjeta se puede arrastrar para cambiar el orden de recogida (lo gestiona la lista). */
+  arrastrable?: boolean
   guardarUbicacion: (latitud: number, longitud: number) => Promise<void>
   cargarUbicacionesAnteriores: () => Promise<UbicacionAnterior[]>
   eliminarUbicacionGuardada: () => Promise<void>
@@ -66,7 +66,7 @@ export function TarjetaPasajeroConductor({
   cargarMensajes,
   enviarMensaje,
   chatAbiertoInicial = false,
-  moverOrden,
+  arrastrable = false,
   guardarUbicacion,
   cargarUbicacionesAnteriores,
   eliminarUbicacionGuardada,
@@ -148,15 +148,10 @@ export function TarjetaPasajeroConductor({
           </span>
         </button>
         <span className="tarjeta-pasajero-conductor__orden">
-          {moverOrden && (
-            <>
-              <button type="button" className="tarjeta-pasajero-conductor__mover" disabled={ocupado} onClick={() => ejecutar(() => moverOrden(-1))} aria-label="Subir en el orden">
-                ▲
-              </button>
-              <button type="button" className="tarjeta-pasajero-conductor__mover" disabled={ocupado} onClick={() => ejecutar(() => moverOrden(1))} aria-label="Bajar en el orden">
-                ▼
-              </button>
-            </>
+          {arrastrable && (
+            <span className="tarjeta-pasajero-conductor__agarre" aria-hidden="true" title="Mantén presionada la tarjeta para moverla">
+              ⠿
+            </span>
           )}
           #{pasajero.orden}
         </span>

@@ -115,7 +115,19 @@ public class ServicioPasajeroServicio : IServicioPasajeroServicio
     {
         var servicioPasajero = await _acceso.ObtenerPasajeroDeLaEmpresaOFallarAsync(empresaId, servicioPasajeroId);
 
-        servicioPasajero.Orden = datos.NuevoOrden;
+        // Se coloca al pasajero en la posición pedida y se renumera toda la ruta (1, 2, 3…): así nunca
+        // quedan dos pasajeros con el mismo orden ni huecos, venga de las flechas o de arrastrar la tarjeta.
+        var ordenados = (await _servicioPasajeroRepositorio.ObtenerPorServicioAsync(servicioPasajero.ServicioId))
+            .OrderBy(p => p.Orden).ThenBy(p => p.ServicioPasajeroId)
+            .Where(p => p.ServicioPasajeroId != servicioPasajero.ServicioPasajeroId)
+            .ToList();
+        var posicion = Math.Clamp(datos.NuevoOrden, 1, ordenados.Count + 1) - 1;
+        ordenados.Insert(posicion, servicioPasajero);
+        for (var indice = 0; indice < ordenados.Count; indice++)
+        {
+            ordenados[indice].Orden = indice + 1;
+        }
+
         await _servicioPasajeroRepositorio.GuardarCambiosAsync();
     }
 

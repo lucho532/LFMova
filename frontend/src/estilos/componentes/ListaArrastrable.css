@@ -1,0 +1,17 @@
+/* Mantener presionado no debe seleccionar texto ni abrir el menú del sistema. */
+.lista-arrastrable--habilitada > * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.lista-arrastrable--arrastrando {
+  cursor: grabbing;
+}
+
+.lista-arrastrable__elemento--arrastrando {
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.28);
+  opacity: 0.95;
+}

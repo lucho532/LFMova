@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
+import { ListaArrastrable } from '../componentes/ListaArrastrable'
 import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
 import { TarjetaPasajeroConductor } from '../componentes/TarjetaPasajeroConductor'
 import { useAutenticacion } from '../contexto/useAutenticacion'
@@ -179,6 +180,22 @@ export function PaginaServicioConductor() {
   const pendientes = ordenados.filter((p) => !ESTADOS_GESTIONADOS.includes(p.estado))
   const gestionados = ordenados.filter((p) => ESTADOS_GESTIONADOS.includes(p.estado))
 
+  const puedeReordenar = servicio.estado === EstadoServicio.PUBLICADO || enCurso
+
+  /**
+   * Suelta una tarjeta de "Por recoger" en otra posición: se reordena en pantalla al instante y el
+   * pasajero pasa a ocupar el lugar (orden) del que estaba ahí; el servidor renumera la ruta.
+   */
+  function alMoverPendiente(desde: number, hasta: number) {
+    const movido = pendientes[desde]
+    const destino = pendientes[hasta]
+    const nuevos = [...pendientes]
+    nuevos.splice(hasta, 0, ...nuevos.splice(desde, 1))
+    const ordenes = pendientes.map((p) => p.orden)
+    setPasajeros([...gestionados, ...nuevos.map((p, i) => ({ ...p, orden: ordenes[i] }))])
+    ejecutar(() => reordenarPasajeroConductor(referencia, movido.servicioPasajeroId, destino.orden, token!), 'No se pudo cambiar el orden.')
+  }
+
   const tarjetaDe = (pasajero: ServicioPasajero) => {
     return (
       <TarjetaPasajeroConductor
@@ -192,11 +209,7 @@ export function PaginaServicioConductor() {
         alCambiarEstado={(nuevoEstado) => ejecutar(() => cambiarEstadoPasajero(referencia, pasajero.servicioPasajeroId, nuevoEstado, token), 'No se pudo cambiar el estado del pasajero.')}
         cargarMensajes={() => obtenerMensajes(referencia, pasajero.servicioPasajeroId, token)}
         enviarMensaje={(contenido) => enviarMensaje(referencia, pasajero.servicioPasajeroId, contenido, token)}
-        moverOrden={
-          servicio.estado === EstadoServicio.PUBLICADO || enCurso
-            ? (delta) => ejecutar(() => reordenarPasajeroConductor(referencia, pasajero.servicioPasajeroId, Math.max(1, pasajero.orden + delta), token), 'No se pudo cambiar el orden.')
-            : undefined
-        }
+        arrastrable={puedeReordenar}
         guardarUbicacion={async (latitud, longitud) => {
           await guardarUbicacionRecogida(referencia, pasajero.servicioPasajeroId, latitud, longitud, token)
           await cargar()
@@ -276,7 +289,14 @@ export function PaginaServicioConductor() {
             pendientes.length === 0 ? (
               <p className="pagina-servicio-conductor__vacio">Ya gestionaste a todos los pasajeros: solo falta finalizar la ruta.</p>
             ) : (
-              <ul className="pagina-servicio-conductor__pasajeros">{pendientes.map(tarjetaDe)}</ul>
+              <>
+                {puedeReordenar && pendientes.length > 1 && (
+                  <p className="pagina-servicio-conductor__ayuda">Mantén presionada una tarjeta y arrástrala para cambiar el orden de recogida.</p>
+                )}
+                <ListaArrastrable className="pagina-servicio-conductor__pasajeros" alMover={puedeReordenar ? alMoverPendiente : undefined}>
+                  {pendientes.map(tarjetaDe)}
+                </ListaArrastrable>
+              </>
             )
           ) : gestionados.length === 0 ? (
             <p className="pagina-servicio-conductor__vacio">Todavía no has gestionado a ningún pasajero.</p>

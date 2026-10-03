@@ -36,7 +36,10 @@ public interface IServicioPasajeroServicio
     /// </summary>
     Task MarcarNoAsistiraAsync(int empresaId, int servicioPasajeroId);
 
-    /// <summary>Modifica el orden operativo del pasajero dentro del servicio.</summary>
+    /// <summary>
+    /// Mueve al pasajero a la posición indicada dentro del servicio (1 es el
+    /// primero) y renumera a todos los demás de forma consecutiva.
+    /// </summary>
     Task ReordenarAsync(int empresaId, int servicioPasajeroId, ReordenarServicioPasajeroDto datos);
 
     /// <summary>

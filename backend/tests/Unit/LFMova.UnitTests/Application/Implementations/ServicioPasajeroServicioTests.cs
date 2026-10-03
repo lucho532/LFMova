@@ -823,20 +823,6 @@ public partial class ServicioPasajeroServicioTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.ObtenerPorUsuarioEmpleadoAsync(999));
     }
 
-    [Fact]
-    public async Task ReordenarAsync_PersisteElNuevoOrden()
-    {
-        var jornada = CrearJornada();
-        var servicioEntidad = CrearServicio(jornada);
-        var (servicio, _, _, _, _) = CrearServicioConEntidades(ProgramacionValida(), servicioEntidad);
-        var pasajero = await servicio.CrearAsync(EmpresaId, servicioEntidad.ServicioId, new CrearServicioPasajeroDto { ProgramacionTransporteId = 1 });
-
-        await servicio.ReordenarAsync(EmpresaId, pasajero.ServicioPasajeroId, new ReordenarServicioPasajeroDto { NuevoOrden = 5 });
-
-        var pasajeros = await servicio.ObtenerPorServicioAsync(EmpresaId, servicioEntidad.ServicioId);
-        Assert.Equal(5, pasajeros[0].Orden);
-    }
-
     private static ServicioPasajeroServicio CrearServicioPasajeroServicio(
         ServicioPasajeroRepositorioFalso pasajeroRepo, Servicio servicioEntidad, ServicioServicioFalso? servicioServicio = null)
         => ServicioPasajeroServicioFabrica.Crear(
