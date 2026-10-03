@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { obtenerCuenta } from '../servicios/servicioCuenta'
 import { etiquetaDelRolPrincipal, obtenerNombreDelToken, obtenerRolesDelToken, rutaInicialSegunRoles } from '../servicios/tokenJwt'
-import { BotonCerrarSesion } from './BotonCerrarSesion'
 import { CampanaNotificaciones } from './CampanaNotificaciones'
-import { BotonTema } from './BotonTema'
+import { MenuConfiguracion } from './MenuConfiguracion'
 import '../estilos/componentes/BarraSuperior.css'
 
 /**
  * Barra superior fija de toda la aplicación: marca a la izquierda (lleva
  * al inicio que corresponde al rol de la persona); a la
- * derecha, las acciones globales (tema, notificaciones) y, cuando hay
- * sesión, el nombre y el rol de la persona (que lleva a "Mi cuenta") y, al
- * final, cerrar sesión.
+ * derecha, las notificaciones, el nombre y el rol de la persona cuando hay
+ * sesión (lleva a "Mi cuenta") y la rueda de configuración, que guarda el
+ * cambio de tema y cerrar sesión.
  */
 export function BarraSuperior() {
   const { token, nombreActualizado } = useAutenticacion()
@@ -52,7 +51,6 @@ export function BarraSuperior() {
         {empresas.length > 0 && <span className="barra-superior__empresa">{empresas.join(' · ')}</span>}
       </div>
       <div className="barra-superior__acciones">
-        <BotonTema />
         <CampanaNotificaciones />
       </div>
       {token && (
@@ -61,7 +59,7 @@ export function BarraSuperior() {
           <span className="barra-superior__rol">{rol}</span>
         </Link>
       )}
-      <BotonCerrarSesion />
+      <MenuConfiguracion />
     </header>
   )
 }
