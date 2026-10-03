@@ -1,6 +1,7 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './estilos/App.css'
 import { BarraLateral } from './componentes/BarraLateral'
+import { AvisoActualizacion } from './componentes/AvisoActualizacion'
 import { BarraSuperior } from './componentes/BarraSuperior'
 import { ProveedorAutenticacion } from './contexto/ContextoAutenticacion'
 import { ProveedorNotificaciones } from './contexto/ContextoNotificaciones'
@@ -43,6 +44,7 @@ function App() {
       <ProveedorAutenticacion>
         <ProveedorNotificaciones>
         <Router>
+          <AvisoActualizacion />
           <BarraSuperior />
           <div className="app-cuerpo">
             <BarraLateral />

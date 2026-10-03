@@ -4,6 +4,15 @@
 :80 {
 	root * /srv
 	encode gzip
+
+	# Los archivos de /assets llevan una huella en el nombre: no cambian nunca y se pueden guardar.
+	# Todo lo demás (la página, el manifiesto, el service worker) se comprueba siempre con el
+	# servidor, para que cada despliegue llegue al instante al navegador y a la app instalada.
+	@huella path /assets/*
+	header @huella Cache-Control "public, max-age=31536000, immutable"
+	@sinHuella not path /assets/*
+	header @sinHuella Cache-Control "no-cache"
+
 	try_files {path} /index.html
 	file_server
 }
