@@ -1,0 +1,53 @@
+.pagina-probar {
+  display: grid;
+  gap: 18px;
+  text-align: left;
+}
+
+.pagina-probar p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pagina-probar p.pagina-probar__nota {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.pagina-probar__nota a {
+  color: var(--accent);
+}
+
+.pagina-probar__pasos {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagina-probar__pasos li {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.pagina-probar__pasos h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.pagina-probar__boton {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}

@@ -20,6 +20,7 @@ import { PaginaMiCuenta } from './paginas/PaginaMiCuenta'
 import { PaginaMiTransporte } from './paginas/PaginaMiTransporte'
 import { PaginaNuevaEmpresa } from './paginas/PaginaNuevaEmpresa'
 import { PaginaPrivacidad } from './paginas/PaginaPrivacidad'
+import { PaginaProbar } from './paginas/PaginaProbar'
 import { PaginaOlvideContrasena } from './paginas/PaginaOlvideContrasena'
 import { PaginaRestablecerContrasena } from './paginas/PaginaRestablecerContrasena'
 import { PaginaConductores } from './paginas/PaginaConductores'
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/invitacion" element={<PaginaInvitacion />} />
                 <Route path="/descargar" element={<PaginaDescargar />} />
                 <Route path="/privacidad" element={<PaginaPrivacidad />} />
+                <Route path="/probar" element={<PaginaProbar />} />
                 <Route path="/eliminar-cuenta" element={<PaginaEliminarCuenta />} />
                 <Route
                   path="/conductor"
