@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BotonSecundario } from '../componentes/BotonSecundario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
@@ -8,6 +8,7 @@ import { FilaTarjetasResumen } from '../componentes/FilaTarjetasResumen'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { TablaDatos } from '../componentes/TablaDatos'
 import { PanelAsignarCoordinador } from '../componentes/PanelAsignarCoordinador'
+import { PanelEditarEmpresa } from '../componentes/PanelEditarEmpresa'
 import { TarjetaResumen } from '../componentes/TarjetaResumen'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Coordinador, Empresa } from '../modelos/empresa'
@@ -25,7 +26,8 @@ import '../estilos/paginas/PaginaDetalleEmpresa.css'
 
 /**
  * Ficha de una empresa. El administrador de plataforma ve los datos
- * completos de cada coordinador, puede activar/desactivar la empresa y a sus
+ * completos de cada coordinador, puede corregir o eliminar la empresa,
+ * activarla o desactivarla (a ella y a sus
  * coordinadores, y asignar un coordinador (obligatorio cuando la empresa no
  * tiene ninguno activo). Un coordinador de la empresa ve la ficha y los
  * accesos a su operación.
@@ -33,6 +35,7 @@ import '../estilos/paginas/PaginaDetalleEmpresa.css'
 export function PaginaDetalleEmpresa() {
   const { empresaId } = useParams<{ empresaId: string }>()
   const { token } = useAutenticacion()
+  const navegar = useNavigate()
   const esAdministrador = token ? obtenerRolesDelToken(token).some((claim) => claim.rol === 'ADMINISTRADOR_PLATAFORMA') : false
 
   const [empresa, setEmpresa] = useState<Empresa | null>(null)
@@ -192,6 +195,7 @@ export function PaginaDetalleEmpresa() {
           </ul>
         </>
       )}
+      {esAdministrador && <PanelEditarEmpresa empresa={empresa} alGuardar={setEmpresa} alEliminar={() => navegar('/empresas')} />}
     </ContenedorPagina>
   )
 }

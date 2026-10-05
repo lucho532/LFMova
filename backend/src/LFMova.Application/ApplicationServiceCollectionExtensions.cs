@@ -40,6 +40,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IEmpleadoServicio, EmpleadoServicio>();
         servicios.AddScoped<IEliminacionPersonaServicio, EliminacionPersonaServicio>();
         servicios.AddScoped<IFacturacionServicio, FacturacionServicio>();
+        servicios.AddScoped<IEdicionEmpresaServicio, EdicionEmpresaServicio>();
         servicios.AddScoped<IProgramacionTransporteServicio, ProgramacionTransporteServicio>();
         servicios.AddScoped<IJornadaServicio, JornadaServicio>();
         servicios.AddScoped<IServicioServicio, ServicioServicio>();

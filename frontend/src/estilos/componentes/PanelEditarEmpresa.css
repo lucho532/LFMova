@@ -1,0 +1,58 @@
+.panel-editar-empresa {
+  margin-top: 28px;
+}
+
+.panel-editar-empresa form {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.panel-editar-empresa__peligro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 1px solid var(--error-border);
+  border-radius: 14px;
+  background: var(--error-bg);
+}
+
+.panel-editar-empresa__peligro > div {
+  flex: 1 1 320px;
+}
+
+.panel-editar-empresa__peligro strong {
+  color: var(--error);
+}
+
+.panel-editar-empresa__peligro p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.panel-editar-empresa__eliminar {
+  padding: 10px 18px;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  background: var(--error);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.panel-editar-empresa__eliminar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

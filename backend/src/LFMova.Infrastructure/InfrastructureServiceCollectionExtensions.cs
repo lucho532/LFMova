@@ -55,6 +55,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IUnidadOperativaRepositorio, UnidadOperativaRepositorio>();
         servicios.AddScoped<IEmpleadoRepositorio, EmpleadoRepositorio>();
         servicios.AddScoped<IEliminacionPersonaRepositorio, EliminacionPersonaRepositorio>();
+        servicios.AddScoped<IEliminacionEmpresaRepositorio, EliminacionEmpresaRepositorio>();
         servicios.AddScoped<IImportacionExcelRepositorio, ImportacionExcelRepositorio>();
         servicios.AddScoped<IEstadisticasRepositorio, EstadisticasRepositorio>();
         servicios.AddScoped<IFacturacionRepositorio, FacturacionRepositorio>();

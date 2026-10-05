@@ -22,7 +22,8 @@ function mesColombia(desplazamiento: number): string {
  * Facturación del administrador de plataforma: cuántos conductores
  * finalizaron rutas en cada empresa en el mes elegido (la base del cobro
  * mensual), con el detalle por conductor, el cierre del mes y su Excel.
- * Abre en el mes anterior, que es el que se factura. No maneja precios.
+ * Abre en el mes anterior, que es el que se factura, y permite ver el mes
+ * en curso para seguir cómo va. No maneja precios.
  */
 export function PaginaFacturacion() {
   const { token } = useAutenticacion()
@@ -65,6 +66,25 @@ export function PaginaFacturacion() {
         titulo="Facturación"
         subtitulo="Conductores que finalizaron al menos una ruta en el mes, por empresa. Es la base del cobro mensual."
         acciones={
+          <div className="pagina-facturacion__selector">
+            <div className="pagina-facturacion__atajos">
+              {[
+                { texto: 'Mes en curso', valor: mesColombia(0) },
+                { texto: 'Mes anterior', valor: mesColombia(-1) },
+              ].map((atajo) => (
+                <button
+                  key={atajo.valor}
+                  type="button"
+                  className={`pagina-facturacion__atajo${mesElegido === atajo.valor ? ' pagina-facturacion__atajo--activo' : ''}`}
+                  onClick={() => {
+                    setMesElegido(atajo.valor)
+                    setAbierta(null)
+                  }}
+                >
+                  {atajo.texto}
+                </button>
+              ))}
+            </div>
           <label className="pagina-facturacion__mes">
             Mes
             <input
@@ -78,11 +98,17 @@ export function PaginaFacturacion() {
               }}
             />
           </label>
+          </div>
         }
       />
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
-      {!mesTerminado && <p className="pagina-facturacion__nota">Este mes todavía está en curso: las cifras pueden seguir subiendo y aún no se puede cerrar.</p>}
+      {!mesTerminado && (
+        <p className="pagina-facturacion__nota">
+          Mes en curso: las cifras se actualizan a medida que los conductores finalizan rutas (usa el botón de actualizar de arriba). Se podrá cerrar
+          cuando termine.
+        </p>
+      )}
 
       {cargando ? (
         <p className="contenedor-pagina__estado">Cargando…</p>

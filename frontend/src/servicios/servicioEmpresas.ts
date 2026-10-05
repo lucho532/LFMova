@@ -45,3 +45,13 @@ export function reactivarCoordinador(empresaId: number, usuarioRolId: number, to
 export function asignarCoordinador(empresaId: number, datos: AsignarCoordinadorDatos, token: string): Promise<void> {
   return solicitarApi<void>(`/api/empresas/${empresaId}/coordinadores`, { metodo: 'POST', cuerpo: datos, token })
 }
+
+/** Consume PUT /api/empresas/{empresaId}: el administrador corrige el nombre, el CIF y la dirección. */
+export function actualizarEmpresa(empresaId: number, datos: { nombre: string; cif: string; direccion: string }, token: string): Promise<Empresa> {
+  return solicitarApi<Empresa>(`/api/empresas/${empresaId}`, { metodo: 'PUT', cuerpo: datos, token })
+}
+
+/** Consume DELETE /api/empresas/{empresaId}: el administrador elimina la empresa con todo su historial. */
+export function eliminarEmpresa(empresaId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}`, { metodo: 'DELETE', token })
+}

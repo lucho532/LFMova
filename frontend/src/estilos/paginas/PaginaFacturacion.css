@@ -1,3 +1,33 @@
+.pagina-facturacion__selector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.pagina-facturacion__atajos {
+  display: flex;
+  gap: 6px;
+}
+
+.pagina-facturacion__atajo {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagina-facturacion__atajo--activo {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
 .pagina-facturacion__mes {
   display: grid;
   gap: 4px;
