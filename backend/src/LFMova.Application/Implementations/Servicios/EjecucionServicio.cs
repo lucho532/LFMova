@@ -14,13 +14,16 @@ public class EjecucionServicio
     private readonly AccesoServicio _acceso;
     private readonly IServicioRepositorio _servicioRepositorio;
     private readonly IServicioPasajeroRepositorio _servicioPasajeroRepositorio;
+    private readonly RegistradorUsoConductor _registradorUso;
 
     /// <summary>Crea el colaborador con sus dependencias.</summary>
     public EjecucionServicio(
         AccesoServicio acceso,
         IServicioRepositorio servicioRepositorio,
-        IServicioPasajeroRepositorio servicioPasajeroRepositorio)
+        IServicioPasajeroRepositorio servicioPasajeroRepositorio,
+        RegistradorUsoConductor registradorUso)
     {
+        _registradorUso = registradorUso;
         _acceso = acceso;
         _servicioRepositorio = servicioRepositorio;
         _servicioPasajeroRepositorio = servicioPasajeroRepositorio;
@@ -47,7 +50,7 @@ public class EjecucionServicio
         await _servicioRepositorio.GuardarCambiosAsync();
     }
 
-    /// <summary>Pasa el servicio a FINALIZADO; una entrada no puede finalizar con pasajeros sin procesar.</summary>
+    /// <summary>Pasa el servicio a FINALIZADO (no se puede con pasajeros sin procesar) y anota la ruta para la facturación del mes.</summary>
     public async Task FinalizarAsync(int empresaId, int servicioId, FinalizarServicioDto? datos = null)
     {
         var servicio = await _acceso.ObtenerDeLaEmpresaAsync(empresaId, servicioId);
@@ -71,6 +74,8 @@ public class EjecucionServicio
 
         servicio.Estado = EstadoServicio.FINALIZADO;
         servicio.HoraFinReal = DateTime.UtcNow;
+        // El registro para facturación se guarda en el mismo guardado que la finalización: o quedan los dos o ninguno.
+        await _registradorUso.RegistrarAsync(servicio, pasajeros, servicio.HoraFinReal.Value);
         servicio.LatitudFinalizacion = datos?.Latitud;
         servicio.LongitudFinalizacion = datos?.Longitud;
         await _servicioRepositorio.GuardarCambiosAsync();

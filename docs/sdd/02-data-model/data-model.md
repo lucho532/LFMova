@@ -1474,3 +1474,11 @@ La configuración de zona horaria ya no es una decisión pendiente (decisión vi
 21. Auditoría de asignación y eliminación de roles.
 
 Estos puntos deben resolverse en `plan.md` sin inventar requisitos de negocio que todavía no hayan sido aprobados.
+
+---
+
+# Facturación (2026-10-05)
+
+`UsoConductor`: una fila por ruta finalizada. `EmpresaId` (relación), `ServicioId` (único, sin relación), `Fecha` (día de finalización en hora de Colombia), `ConductorId` (copia, sin relación), `Cedula`, `NombreConductor`, `Placa`, `PasajerosTransportados`. No se actualiza ni se borra.
+
+`CierreMensual`: una fila por empresa y mes (único). `EmpresaId`, `Anio`, `Mes`, `FechaCierre` (UTC), `ConductoresActivos`, `RutasFinalizadas`, `PasajerosTransportados`.

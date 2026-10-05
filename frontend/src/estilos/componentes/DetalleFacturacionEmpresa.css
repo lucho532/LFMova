@@ -1,0 +1,26 @@
+.detalle-facturacion-empresa {
+  display: grid;
+  gap: 12px;
+}
+
+.detalle-facturacion-empresa__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.detalle-facturacion-empresa__sub {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.detalle-facturacion-empresa__eliminado {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.detalle-facturacion-empresa__vacio {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+}

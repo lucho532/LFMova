@@ -20,14 +20,19 @@ internal static class ServicioServicioFabrica
         IConductorRepositorio conductorRepositorio,
         IServicioPasajeroRepositorio servicioPasajeroRepositorio,
         IEmpleadoRepositorio empleadoRepositorio,
-        INotificacionServicio notificacionServicio)
+        INotificacionServicio notificacionServicio,
+        IFacturacionRepositorio? facturacionRepositorio = null,
+        IVehiculoRepositorio? vehiculoRepositorio = null)
     {
         var acceso = new AccesoServicio(servicioRepositorio);
         var asignadorUnidad = new AsignadorUnidadServicio(
             acceso, servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, servicioPasajeroRepositorio, empleadoRepositorio, notificacionServicio);
         var modificadorRuta = new ModificadorRutaArmada(
             acceso, servicioRepositorio, unidadOperativaRepositorio, conductorRepositorio, servicioPasajeroRepositorio, notificacionServicio);
-        var ejecucion = new EjecucionServicio(acceso, servicioRepositorio, servicioPasajeroRepositorio);
+        var registradorUso = new RegistradorUsoConductor(
+            facturacionRepositorio ?? new FacturacionRepositorioEnMemoria(), unidadOperativaRepositorio, conductorRepositorio,
+            vehiculoRepositorio ?? new VehiculoRepositorioVacio());
+        var ejecucion = new EjecucionServicio(acceso, servicioRepositorio, servicioPasajeroRepositorio, registradorUso);
 
         return new ServicioServicio(
             servicioRepositorio, jornadaRepositorio, sedeRepositorio, unidadOperativaRepositorio, conductorRepositorio,

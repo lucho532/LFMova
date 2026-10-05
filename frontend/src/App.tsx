@@ -10,6 +10,7 @@ import { ProveedorTema } from './contexto/ContextoTema'
 import { PaginaConfirmarCorreo } from './paginas/PaginaConfirmarCorreo'
 import { PaginaDescargar } from './paginas/PaginaDescargar'
 import { PaginaEliminarCuenta } from './paginas/PaginaEliminarCuenta'
+import { PaginaFacturacion } from './paginas/PaginaFacturacion'
 import { PaginaCrearCuenta } from './paginas/PaginaCrearCuenta'
 import { PaginaEmpresaSegunRol } from './paginas/PaginaEmpresaSegunRol'
 import { PaginaEmpresas } from './paginas/PaginaEmpresas'
@@ -128,6 +129,14 @@ function App() {
                   element={
                     <RutaProtegida>
                       <PaginaMiTransporte />
+                    </RutaProtegida>
+                  }
+                />
+                <Route
+                  path="/facturacion"
+                  element={
+                    <RutaProtegida>
+                      <PaginaFacturacion />
                     </RutaProtegida>
                   }
                 />

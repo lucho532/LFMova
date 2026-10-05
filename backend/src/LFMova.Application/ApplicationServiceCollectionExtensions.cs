@@ -39,6 +39,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IUnidadOperativaServicio, UnidadOperativaServicio>();
         servicios.AddScoped<IEmpleadoServicio, EmpleadoServicio>();
         servicios.AddScoped<IEliminacionPersonaServicio, EliminacionPersonaServicio>();
+        servicios.AddScoped<IFacturacionServicio, FacturacionServicio>();
         servicios.AddScoped<IProgramacionTransporteServicio, ProgramacionTransporteServicio>();
         servicios.AddScoped<IJornadaServicio, JornadaServicio>();
         servicios.AddScoped<IServicioServicio, ServicioServicio>();
@@ -78,6 +79,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<AsignadorUnidadServicio>();
         servicios.AddScoped<ModificadorRutaArmada>();
         servicios.AddScoped<EjecucionServicio>();
+        servicios.AddScoped<RegistradorUsoConductor>();
 
         // ServicioPasajeroServicio.
         servicios.AddScoped<AccesoServicioPasajero>();

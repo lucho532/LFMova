@@ -6,7 +6,7 @@ using LFMova.Domain.Enums;
 
 namespace LFMova.UnitTests.Application.Implementations;
 
-public class ServicioServicioTests
+public partial class ServicioServicioTests
 {
     private class JornadaRepositorioFalso : IJornadaRepositorio
     {
@@ -248,7 +248,8 @@ public class ServicioServicioTests
         ConductorRepositorioFalso conductores,
         ServicioPasajeroRepositorioFalso? pasajeros = null,
         EmpleadoRepositorioFalso? empleados = null,
-        NotificacionRepositorioFalso? notificaciones = null)
+        NotificacionRepositorioFalso? notificaciones = null,
+        IFacturacionRepositorio? facturacion = null)
         => ServicioServicioFabrica.Crear(
             servicios,
             jornadas,
@@ -257,7 +258,8 @@ public class ServicioServicioTests
             conductores,
             pasajeros ?? new ServicioPasajeroRepositorioFalso(),
             empleados ?? new EmpleadoRepositorioFalso(),
-            new NotificacionServicio(notificaciones ?? new NotificacionRepositorioFalso()));
+            new NotificacionServicio(notificaciones ?? new NotificacionRepositorioFalso()),
+            facturacion);
 
     private static CrearServicioDto DtoValido(int? unidadOperativaId = null) => new()
     {

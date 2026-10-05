@@ -10,7 +10,7 @@ const CORREO = 'luisrak25@gmail.com'
  */
 export function PaginaEliminarCuenta() {
   return (
-    <DocumentoLegal titulo="Eliminar mi cuenta de LFMova" actualizado="3 de octubre de 2026">
+    <DocumentoLegal titulo="Eliminar mi cuenta de LFMova" actualizado="5 de octubre de 2026">
       <p>Puedes eliminar tu cuenta de LFMova y los datos asociados en cualquier momento, sin costo, de cualquiera de estas dos formas.</p>
 
       <h2>Desde la aplicación (inmediato)</h2>
@@ -42,6 +42,10 @@ export function PaginaEliminarCuenta() {
       <ul>
         <li>
           Las rutas que condujiste siguen existiendo para la empresa, pero ya sin tu nombre: quedan como rutas sin conductor asignado.
+        </li>
+        <li>
+          Si fuiste conductor, se conserva el registro de facturación de las rutas que finalizaste (tu nombre, cédula, placa y la fecha de cada
+          ruta), porque es el soporte del cobro del servicio a la empresa de transporte.
         </li>
         <li>
           Si fuiste coordinador, el registro de las importaciones e invitaciones que hiciste se conserva sin indicar quién las hizo, porque forman

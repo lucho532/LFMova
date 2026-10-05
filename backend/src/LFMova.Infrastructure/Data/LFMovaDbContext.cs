@@ -102,6 +102,12 @@ public class LFMovaDbContext : DbContext
     /// <summary>Invitaciones por correo para que una persona se una a una empresa.</summary>
     public DbSet<InvitacionEmpresa> InvitacionesEmpresa => Set<InvitacionEmpresa>();
 
+    /// <summary>Registro de rutas finalizadas por conductor, con el que se factura cada mes.</summary>
+    public DbSet<UsoConductor> UsosConductor => Set<UsoConductor>();
+
+    /// <summary>Cierres mensuales de facturación por empresa.</summary>
+    public DbSet<CierreMensual> CierresMensuales => Set<CierreMensual>();
+
     /// <summary>
     /// Aplica todas las configuraciones de entidades definidas mediante
     /// <see cref="Microsoft.EntityFrameworkCore.IEntityTypeConfiguration{TEntity}"/>

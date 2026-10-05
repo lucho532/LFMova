@@ -1,0 +1,61 @@
+.pagina-facturacion__mes {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pagina-facturacion__mes input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.pagina-facturacion__nota {
+  margin: 0 0 12px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.pagina-facturacion__total {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.pagina-facturacion__sub {
+  font-size: 12px;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.pagina-facturacion__cifra {
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.pagina-facturacion__estado {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pagina-facturacion__estado--cerrado {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.pagina-facturacion__accion {
+  width: 140px;
+  text-align: right;
+}
+
+.pagina-facturacion__detalle td {
+  background: var(--code-bg);
+}

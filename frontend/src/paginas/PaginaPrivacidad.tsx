@@ -10,7 +10,7 @@ const CORREO = 'luisrak25@gmail.com'
  */
 export function PaginaPrivacidad() {
   return (
-    <DocumentoLegal titulo="Política de privacidad" actualizado="3 de octubre de 2026">
+    <DocumentoLegal titulo="Política de privacidad" actualizado="5 de octubre de 2026">
       <p>
         LFMova es una plataforma para organizar y operar el transporte de empleados de una empresa: el coordinador programa las rutas, el conductor las
         ejecuta y el empleado sabe quién lo recoge y cuándo. Esta política explica qué datos personales trata la aplicación (versión web y app de
@@ -57,6 +57,7 @@ export function PaginaPrivacidad() {
         <li>Permitir que el conductor asignado te ubique, te llame o te escriba para la recogida.</li>
         <li>Dejar constancia de lo ocurrido en cada recogida (por ejemplo, una incidencia con su evidencia).</li>
         <li>Enviarte avisos del servicio: confirmación de correo, recuperación de contraseña, invitaciones y la programación de rutas.</li>
+        <li>Facturar el servicio a la empresa de transporte según los conductores que finalizaron rutas en el mes.</li>
       </ul>
       <p>No usamos tus datos para publicidad ni los vendemos.</p>
 
@@ -82,8 +83,9 @@ export function PaginaPrivacidad() {
       <h2>5. Cuánto tiempo los conservamos</h2>
       <p>
         Mientras tu cuenta exista. Al eliminarla se borran tu cuenta y tu rastro en la plataforma: datos personales, rutas en las que fuiste pasajero,
-        mensajes, incidencias y fotografías. Las copias de seguridad del servidor pueden conservar la información por un tiempo limitado antes de
-        sobrescribirse.
+        mensajes, incidencias y fotografías. Se conserva únicamente, como soporte contable del cobro del servicio, el registro de las rutas que un
+        conductor finalizó (su nombre, cédula, placa y la fecha). Las copias de seguridad del servidor pueden conservar la información por un tiempo
+        limitado antes de sobrescribirse.
       </p>
 
       <h2>6. Tus derechos</h2>

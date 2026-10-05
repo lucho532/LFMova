@@ -32,6 +32,7 @@ export function BarraLateral() {
     enlaces = [
       { ruta: '/empresas/nueva', texto: 'Nueva empresa', icono: '➕' },
       { ruta: '/empresas', texto: 'Empresas', icono: '🏢', exacto: true },
+      { ruta: '/facturacion', texto: 'Facturación', icono: '🧾' },
     ]
   } else {
     const esConductor = roles.some((claim) => claim.rol === 'CONDUCTOR')

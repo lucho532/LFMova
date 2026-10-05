@@ -240,6 +240,12 @@ public class FlujoCompletoTests
         Assert.Equal(4.6, servicioFinal.LatitudFinalizacion);
         Assert.Equal(-74.1, servicioFinal.LongitudFinalizacion);
 
+        // Al finalizar queda anotada la ruta para la facturación del mes, con los datos del conductor.
+        var usoFacturable = await contexto.UsosConductor.AsNoTracking().SingleAsync(u => u.ServicioId == servicio.ServicioId);
+        Assert.Equal("E2E-COND", usoFacturable.Cedula);
+        Assert.Equal(empresa.EmpresaId, usoFacturable.EmpresaId);
+        Assert.Equal(1, usoFacturable.PasajerosTransportados);
+
         var pasajeroFinal = await contexto.ServiciosPasajero.AsNoTracking().FirstAsync(p => p.ServicioPasajeroId == servicioPasajero.ServicioPasajeroId);
         Assert.Equal(EstadoServicioPasajero.RECOGIDO, pasajeroFinal.Estado);
 
