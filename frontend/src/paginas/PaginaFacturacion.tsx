@@ -61,7 +61,7 @@ export function PaginaFacturacion() {
   const totalConductores = resumen.reduce((suma, fila) => suma + fila.conductoresActivos, 0)
 
   return (
-    <ContenedorPagina>
+    <ContenedorPagina ancho="amplio">
       <EncabezadoPagina
         titulo="Facturación"
         subtitulo="Conductores que finalizaron al menos una ruta en el mes, por empresa. Es la base del cobro mensual."

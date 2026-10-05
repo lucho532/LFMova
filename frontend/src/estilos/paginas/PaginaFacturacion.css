@@ -89,3 +89,13 @@
 .pagina-facturacion__detalle td {
   background: var(--code-bg);
 }
+
+/* El detalle va anidado en la tabla: con el relleno normal de las celdas no cabía y obligaba a desplazarse de lado. */
+.pagina-facturacion__detalle > td {
+  padding: 14px 12px;
+}
+
+.pagina-facturacion__detalle .tabla-datos th,
+.pagina-facturacion__detalle .tabla-datos td {
+  padding: 12px 14px;
+}
