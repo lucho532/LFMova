@@ -1,5 +1,7 @@
 .boton-llamar {
+  box-sizing: border-box;
   width: min(92vw, 420px);
+  margin: auto;
   padding: 22px 22px 18px;
   border: 1px solid var(--border);
   border-radius: 14px;
