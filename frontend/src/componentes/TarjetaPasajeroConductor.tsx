@@ -5,6 +5,7 @@ import type { ServicioPasajero } from '../modelos/operacion'
 import { VentanaChat } from './VentanaChat'
 import type { Mensaje } from '../modelos/mensaje'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
+import { BotonLlamar } from './BotonLlamar'
 import { CronometroEspera } from './CronometroEspera'
 import { HerramientasPasajero } from './HerramientasPasajero'
 import { ModalConfirmacion } from './ModalConfirmacion'
@@ -27,6 +28,8 @@ interface AccionPasajero {
 
 interface PropiedadesTarjetaPasajeroConductor {
   pasajero: ServicioPasajero
+  /** Empresa y jornada del servicio (el pasajero solo trae el identificador del servicio). */
+  referenciaServicio: { empresaId: number; jornadaId: number }
   /** Solo se ofrecen acciones mientras el servicio está en curso. */
   servicioEnCurso: boolean
   /** La ruta ya finalizó: el chat queda solo de lectura, sin poder enviar más mensajes. */
@@ -58,6 +61,7 @@ interface PropiedadesTarjetaPasajeroConductor {
  */
 export function TarjetaPasajeroConductor({
   pasajero,
+  referenciaServicio,
   servicioEnCurso,
   servicioFinalizado = false,
   miUsuarioId,
@@ -91,6 +95,7 @@ export function TarjetaPasajeroConductor({
   const [ocupado, setOcupado] = useState(false)
 
   const estado = pasajero.estado
+  const referenciaPasajero = { ...referenciaServicio, servicioId: pasajero.servicioId, servicioPasajeroId: pasajero.servicioPasajeroId }
   const acciones: AccionPasajero[] = []
   const mensajesSinLeer = notificaciones.filter(
     (n) => !n.leida && n.tipo === 'MENSAJE_NUEVO' && esMensajeDelPasajero(n.enlace, pasajero.servicioPasajeroId),
@@ -166,7 +171,7 @@ export function TarjetaPasajeroConductor({
             </div>
             <div>
               <dt>Teléfono</dt>
-              <dd>{pasajero.telefonoEmpleado ? <a href={`tel:${pasajero.telefonoEmpleado}`}>{pasajero.telefonoEmpleado}</a> : '—'}</dd>
+              <dd>{pasajero.telefonoEmpleado || '—'}</dd>
             </div>
             <div>
               <dt>Dirección</dt>
@@ -184,19 +189,17 @@ export function TarjetaPasajeroConductor({
           )}
 
           <div className="tarjeta-pasajero-conductor__contacto">
-            <a href={`tel:${pasajero.telefonoEmpleado}`} className="tarjeta-pasajero-conductor__boton">
-              Llamar
-            </a>
+            <BotonLlamar pasajero={referenciaPasajero} nombre={pasajero.nombreCompletoEmpleado} telefono={pasajero.telefonoEmpleado} className="tarjeta-pasajero-conductor__boton" />
             <button type="button" className="tarjeta-pasajero-conductor__boton tarjeta-pasajero-conductor__boton-chat" onClick={alAbrirChat}>
               Chat
               {mensajesSinLeer.length > 0 && <span className="tarjeta-pasajero-conductor__insignia">{mensajesSinLeer.length > 9 ? '9+' : mensajesSinLeer.length}</span>}
             </button>
           </div>
-
           <CronometroEspera horaLlegadaConductor={pasajero.horaLlegadaConductor} activo={servicioEnCurso && estado === EstadoPasajero.CONDUCTOR_LLEGO} />
 
           <HerramientasPasajero
             pasajero={pasajero}
+            referenciaPasajero={referenciaPasajero}
             servicioEnCurso={servicioEnCurso}
             guardarUbicacion={guardarUbicacion}
             cargarUbicacionesAnteriores={cargarUbicacionesAnteriores}

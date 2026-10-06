@@ -87,6 +87,9 @@ public class LFMovaDbContext : DbContext
     /// <summary>Evidencias asociadas a incidencias.</summary>
     public DbSet<Evidencia> Evidencias => Set<Evidencia>();
 
+    /// <summary>Llamadas del conductor a los pasajeros de sus servicios.</summary>
+    public DbSet<RegistroLlamada> RegistrosLlamada => Set<RegistroLlamada>();
+
     /// <summary>Conversaciones entre conductor y empleado.</summary>
     public DbSet<Conversacion> Conversaciones => Set<Conversacion>();
 

@@ -6,6 +6,7 @@ import type { ServicioDelEmpleado } from '../modelos/servicioEmpleado'
 import type { DatosConfirmacion } from '../servicios/servicioEmpleadoPropio'
 import { VentanaChat } from './VentanaChat'
 import { CronometroEspera } from './CronometroEspera'
+import { HistorialLlamadas } from './HistorialLlamadas'
 import { MensajeAlerta } from './MensajeAlerta'
 import '../estilos/componentes/TarjetaServicioEmpleado.css'
 
@@ -188,6 +189,8 @@ export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAs
           {mensajesSinLeer.length > 0 && <span className="tarjeta-servicio-empleado__insignia">{mensajesSinLeer.length > 9 ? '9+' : mensajesSinLeer.length}</span>}
         </button>
       </div>
+
+      {servicio.conductorNombre && <HistorialLlamadas pasajero={servicio} plegable />}
 
       {aviso && <MensajeAlerta tipo={aviso.tipo}>{aviso.texto}</MensajeAlerta>}
       <VentanaChat abierto={chatAbierto} miUsuarioId={miUsuarioId} cargarMensajes={cargarMensajes} enviar={enviarMensaje} soloLectura={finalizado} alCerrar={() => setChatAbierto(false)} />

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { EstadoPasajero, NOMBRES_ESTADO_PASAJERO, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { Servicio, ServicioPasajero } from '../modelos/operacion'
 import { obtenerIncidenciasRuta, obtenerPasajeros, obtenerServicio, obtenerUrlFotoEvidenciaRuta, type IncidenciaRuta } from '../servicios/servicioOperacion'
+import { HistorialLlamadas } from './HistorialLlamadas'
 import { MensajeAlerta } from './MensajeAlerta'
 import '../estilos/componentes/DetalleRuta.css'
 
@@ -223,6 +224,10 @@ export function DetalleRuta({ abierto, empresaId, jornadaId, servicioId, encabez
                   </div>
                 </div>
 
+                {jornadaId !== null && servicioId !== null && (
+                  <HistorialLlamadas pasajero={{ empresaId, jornadaId, servicioId, servicioPasajeroId: pasajero.servicioPasajeroId }} plegable />
+                )}
+
                 {incidencias.length > 0 && (
                   <button type="button" className="detalle-ruta__boton-incidencias" onClick={() => alternarExpandido(pasajero.servicioPasajeroId)}>
                     ⚠ {incidencias.length} incidencia{incidencias.length > 1 ? 's' : ''} {expandido ? '▲' : '▼'}
@@ -257,6 +262,9 @@ export function DetalleRuta({ abierto, empresaId, jornadaId, servicioId, encabez
                             )}
                           </div>
                         ))}
+                        {incidencia.tipo === 0 && jornadaId !== null && servicioId !== null && (
+                          <HistorialLlamadas pasajero={{ empresaId, jornadaId, servicioId, servicioPasajeroId: pasajero.servicioPasajeroId }} />
+                        )}
                       </li>
                     ))}
                   </ul>

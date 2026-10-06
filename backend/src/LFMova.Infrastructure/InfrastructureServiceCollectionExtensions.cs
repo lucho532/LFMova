@@ -75,6 +75,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IMensajeRepositorio, MensajeRepositorio>();
         servicios.AddScoped<IIncidenciaRepositorio, IncidenciaRepositorio>();
         servicios.AddScoped<IEvidenciaRepositorio, EvidenciaRepositorio>();
+        servicios.AddScoped<IRegistroLlamadaRepositorio, RegistroLlamadaRepositorio>();
 
         return servicios;
     }

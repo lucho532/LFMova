@@ -1482,3 +1482,7 @@ Estos puntos deben resolverse en `plan.md` sin inventar requisitos de negocio qu
 `UsoConductor`: una fila por ruta finalizada. `EmpresaId` (relación), `ServicioId` (único, sin relación), `Fecha` (día de finalización en hora de Colombia), `ConductorId` (copia, sin relación), `Cedula`, `NombreConductor`, `Placa`, `PasajerosTransportados`. No se actualiza ni se borra.
 
 `CierreMensual`: una fila por empresa y mes (único). `EmpresaId`, `Anio`, `Mes`, `FechaCierre` (UTC), `ConductoresActivos`, `RutasFinalizadas`, `PasajerosTransportados`.
+
+# Registro de llamadas (2026-10-06)
+
+`RegistroLlamada` (tabla `RegistrosLlamada`): una fila por cada vez que el conductor pulsa "Llamar" sobre un pasajero. `ServicioPasajeroId` (relación, **borrado en cascada**: es la única relación del modelo que no es restrictiva, porque la llamada no significa nada sin su pasajero), `FechaHora` (UTC), `DuracionAproximadaSegundos` (nulo si no se midió), `Latitud`, `Longitud` (nulos si no hay ubicación).

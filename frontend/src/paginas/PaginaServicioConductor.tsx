@@ -201,6 +201,7 @@ export function PaginaServicioConductor() {
       <TarjetaPasajeroConductor
         key={pasajero.servicioPasajeroId}
         pasajero={pasajero}
+        referenciaServicio={referencia}
         servicioEnCurso={enCurso}
         servicioFinalizado={finalizado}
         chatAbiertoInicial={chatDeNotificacion === pasajero.servicioPasajeroId}

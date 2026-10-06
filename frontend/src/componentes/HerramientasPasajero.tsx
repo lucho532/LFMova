@@ -5,7 +5,9 @@ import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
 import { enlaceNavegacion } from '../servicios/navegacion'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
+import type { ReferenciaPasajero } from '../servicios/servicioLlamadas'
 import { BotonNavegar } from './BotonNavegar'
+import { HistorialLlamadas } from './HistorialLlamadas'
 import { ModalConfirmacion } from './ModalConfirmacion'
 import { UbicacionesCompartidas } from './UbicacionesCompartidas'
 import '../estilos/componentes/HerramientasPasajero.css'
@@ -25,6 +27,8 @@ type Seccion = 'anteriores' | 'incidencias' | 'nuevaIncidencia'
 
 interface PropiedadesHerramientasPasajero {
   pasajero: ServicioPasajero
+  /** Para mostrar las llamadas hechas al pasajero dentro de una incidencia de «No contesta». */
+  referenciaPasajero: ReferenciaPasajero
   /** Solo mientras el servicio está en curso se puede reportar una incidencia (antes no hay nada que reportar). */
   servicioEnCurso: boolean
   guardarUbicacion: (latitud: number, longitud: number) => Promise<void>
@@ -67,6 +71,7 @@ function obtenerPosicion(): Promise<GeolocationPosition> {
  */
 export function HerramientasPasajero({
   pasajero,
+  referenciaPasajero,
   servicioEnCurso,
   guardarUbicacion,
   cargarUbicacionesAnteriores,
@@ -416,6 +421,7 @@ export function HerramientasPasajero({
                     )}
                   </div>
                 ))}
+                {i.tipo === 0 && <HistorialLlamadas pasajero={referenciaPasajero} />}
               </li>
             ))}
           </ul>

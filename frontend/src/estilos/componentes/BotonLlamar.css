@@ -1,0 +1,62 @@
+.boton-llamar {
+  width: min(92vw, 420px);
+  padding: 22px 22px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.boton-llamar::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.boton-llamar h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.boton-llamar__opciones {
+  display: grid;
+  gap: 10px;
+}
+
+.boton-llamar__opcion {
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.boton-llamar__opcion--principal {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.boton-llamar__opcion:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.boton-llamar__cerrar {
+  display: block;
+  margin: 16px 0 0 auto;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
