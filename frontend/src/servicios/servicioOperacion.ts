@@ -6,6 +6,7 @@ import type {
   Servicio,
   ServicioPasajero,
 } from '../modelos/operacion'
+import type { FiltroAsistencia } from './ordenRuta'
 import { solicitarApi } from './clienteHttp'
 
 const base = (empresaId: number) => `/api/empresas/${empresaId}`
@@ -36,6 +37,28 @@ export async function descargarSoporteJornada(empresaId: number, jornadaId: numb
   }
   const nombre = /filename="?([^";]+)"?/.exec(respuesta.headers.get('Content-Disposition') ?? '')?.[1]
   return { nombre: nombre ?? `programacion-${jornadaId}.xlsx`, archivo: await respuesta.blob() }
+}
+
+/**
+ * Consume GET .../servicios/{servicioId}/informe-asistencia: el Excel con los pasajeros de la ruta que
+ * cumplen el filtro (todos, los que asistieron o los que no), para enviarlo a la empresa. Devuelve el
+ * archivo y el nombre que le puso el servidor.
+ */
+export async function descargarInformeAsistencia(
+  empresaId: number,
+  jornadaId: number,
+  servicioId: number,
+  filtro: FiltroAsistencia,
+  token: string,
+): Promise<{ nombre: string; archivo: Blob }> {
+  const respuesta = await fetch(`${urlBaseApi}${rutaServicio(empresaId, jornadaId, servicioId)}/informe-asistencia?filtro=${filtro}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!respuesta.ok) {
+    throw new Error('No se pudo descargar el informe.')
+  }
+  const nombre = /filename="?([^";]+)"?/.exec(respuesta.headers.get('Content-Disposition') ?? '')?.[1]
+  return { nombre: nombre ?? 'informe-asistencia.xlsx', archivo: await respuesta.blob() }
 }
 
 /** Consume POST /api/empresas/{empresaId}/programaciones. */

@@ -1,0 +1,82 @@
+.vista-previa-inasistencias {
+  width: min(96vw, 980px);
+  max-height: 88vh;
+  padding: 24px 26px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.vista-previa-inasistencias[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.vista-previa-inasistencias::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.vista-previa-inasistencias h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.vista-previa-inasistencias__sub {
+  margin: 0 0 14px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.vista-previa-inasistencias__fechas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.vista-previa-inasistencias__total {
+  margin: 0 0 0 auto;
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* La tabla desplaza dentro de la ventana; las acciones quedan siempre visibles abajo. */
+.vista-previa-inasistencias__contenido {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.vista-previa-inasistencias__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.vista-previa-inasistencias__cerrar,
+.vista-previa-inasistencias__descargar {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 8px;
+  padding: 9px 18px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.vista-previa-inasistencias__descargar {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.vista-previa-inasistencias__descargar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

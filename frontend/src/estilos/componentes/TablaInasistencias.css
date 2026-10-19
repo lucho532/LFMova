@@ -1,0 +1,46 @@
+.tabla-inasistencias {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.tabla-inasistencias table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabla-inasistencias th,
+.tabla-inasistencias td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabla-inasistencias thead th {
+  position: sticky;
+  top: 0;
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tabla-inasistencias tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-inasistencias__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.tabla-inasistencias__sin-conductor {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.tabla-inasistencias__hora {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,52 @@
+.detalle-pasajero-ruta {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.detalle-pasajero-ruta__fila {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.detalle-pasajero-ruta__sub {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.detalle-pasajero-ruta__estado {
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.detalle-pasajero-ruta__hora-estado {
+  color: var(--text);
+  font-weight: 400;
+}
+
+.detalle-pasajero-ruta__boton-incidencias {
+  margin-top: 8px;
+  border: none;
+  background: transparent;
+  color: var(--advertencia);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.detalle-pasajero-ruta__incidencias {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 10px;
+  border-left: 3px solid var(--advertencia-border);
+  background: var(--advertencia-bg);
+  border-radius: 0 8px 8px 0;
+  display: grid;
+  gap: 10px;
+}

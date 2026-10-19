@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNotificaciones } from '../contexto/useNotificaciones'
-import { EstadoPasajero, EstadoServicio, NOMBRES_ESTADO_PASAJERO, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
+import { usePermisoDispositivo } from '../hooks/usePermisoDispositivo'
+import { EstadoPasajero, EstadoServicio, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { Mensaje } from '../modelos/mensaje'
 import type { ServicioDelEmpleado } from '../modelos/servicioEmpleado'
 import type { DatosConfirmacion } from '../servicios/servicioEmpleadoPropio'
+import { AvisoPermiso } from './AvisoPermiso'
+import { EstadoPasajeroTexto } from './EstadoPasajeroTexto'
 import { VentanaChat } from './VentanaChat'
 import { CronometroEspera } from './CronometroEspera'
 import { HistorialLlamadas } from './HistorialLlamadas'
@@ -31,7 +34,6 @@ interface PropiedadesTarjetaServicioEmpleado {
   noAsistire: () => Promise<void>
   compartirUbicacion: (latitud: number, longitud: number) => Promise<void>
   cargarMensajes: () => Promise<Mensaje[]>
-  enviarMensaje: (contenido: string) => Promise<Mensaje>
   /** Abre el chat de entrada (por ejemplo, al llegar desde una notificación). */
   chatAbiertoInicial?: boolean
 }
@@ -41,8 +43,9 @@ interface PropiedadesTarjetaServicioEmpleado {
  * que puede hacer (confirmar asistencia, avisar que no asistirá, compartir su
  * ubicación y escribirle al conductor). Muestra quién lo va a recoger (sin su teléfono: la comunicación es solo por el chat). El backend valida cada acción.
  */
-export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAsistire, compartirUbicacion, cargarMensajes, enviarMensaje, chatAbiertoInicial = false }: PropiedadesTarjetaServicioEmpleado) {
+export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAsistire, compartirUbicacion, cargarMensajes, chatAbiertoInicial = false }: PropiedadesTarjetaServicioEmpleado) {
   const { notificaciones, marcarLeida } = useNotificaciones()
+  const { errorPermiso, pedirUbicacion } = usePermisoDispositivo()
   const [aviso, setAviso] = useState<{ tipo: 'exito' | 'error'; texto: string } | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const [chatAbierto, setChatAbierto] = useState(chatAbiertoInicial)
@@ -96,23 +99,10 @@ export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAs
     }
   }
 
-  function alCompartirUbicacion() {
-    ejecutar(
-      () =>
-        new Promise<void>((resolver, rechazar) => {
-          if (!navigator.geolocation) {
-            rechazar(new Error('Este dispositivo no permite obtener la ubicación.'))
-            return
-          }
-          navigator.geolocation.getCurrentPosition(
-            (posicion) => compartirUbicacion(posicion.coords.latitude, posicion.coords.longitude).then(resolver, rechazar),
-            () => rechazar(new Error('No se pudo obtener tu ubicación. Revisa el permiso de ubicación.')),
-            { enableHighAccuracy: true, timeout: 15000 },
-          )
-        }),
-      'Ubicación compartida con tu conductor.',
-      'No se pudo compartir la ubicación.',
-    )
+  async function alCompartirUbicacion() {
+    const posicion = await pedirUbicacion()
+    if (!posicion) return
+    ejecutar(() => compartirUbicacion(posicion.latitud, posicion.longitud), 'Ubicación compartida con tu conductor.', 'No se pudo compartir la ubicación.')
   }
 
   return (
@@ -137,7 +127,7 @@ export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAs
         )}
       </div>
       <p className="tarjeta-servicio-empleado__estado">
-        Servicio: {nombreDe(NOMBRES_ESTADO_SERVICIO, servicio.estadoServicio)} · Tú: <strong>{nombreDe(NOMBRES_ESTADO_PASAJERO, estado)}</strong>
+        Servicio: {nombreDe(NOMBRES_ESTADO_SERVICIO, servicio.estadoServicio)} · Tú: <strong><EstadoPasajeroTexto estado={estado} /></strong>
       </p>
       <CronometroEspera
         horaLlegadaConductor={servicio.horaLlegadaConductor}
@@ -150,7 +140,7 @@ export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAs
       ) : (
         procesado && (
           <p className="tarjeta-servicio-empleado__tiempos">
-            {estado === EstadoPasajero.RECOGIDO ? 'Te recogieron' : 'Quedaste como no recogido'} a las <b>{horaLocal(servicio.horaProcesado)}</b>
+            <EstadoPasajeroTexto estado={estado} texto={estado === EstadoPasajero.RECOGIDO ? 'Te recogieron' : 'Quedaste como no recogido'} /> a las <b>{horaLocal(servicio.horaProcesado)}</b>
           </p>
         )
       )}
@@ -192,8 +182,9 @@ export function TarjetaServicioEmpleado({ servicio, miUsuarioId, confirmar, noAs
 
       {servicio.conductorNombre && <HistorialLlamadas pasajero={servicio} plegable />}
 
+      <AvisoPermiso error={errorPermiso} />
       {aviso && <MensajeAlerta tipo={aviso.tipo}>{aviso.texto}</MensajeAlerta>}
-      <VentanaChat abierto={chatAbierto} miUsuarioId={miUsuarioId} cargarMensajes={cargarMensajes} enviar={enviarMensaje} soloLectura={finalizado} alCerrar={() => setChatAbierto(false)} />
+      <VentanaChat abierto={chatAbierto} miUsuarioId={miUsuarioId} cargarMensajes={cargarMensajes} soloLectura={finalizado} alCerrar={() => setChatAbierto(false)} />
     </li>
   )
 }

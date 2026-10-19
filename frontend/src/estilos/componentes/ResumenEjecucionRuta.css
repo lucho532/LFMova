@@ -1,0 +1,21 @@
+.resumen-ejecucion-ruta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.resumen-ejecucion-ruta a {
+  color: var(--accent);
+}
+
+.resumen-ejecucion-ruta__sin-ubicacion {
+  color: var(--text);
+  font-style: italic;
+}

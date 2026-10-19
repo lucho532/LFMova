@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { AvisoPermiso } from '../componentes/AvisoPermiso'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { ListaArrastrable } from '../componentes/ListaArrastrable'
 import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
 import { TarjetaPasajeroConductor } from '../componentes/TarjetaPasajeroConductor'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { useNotificaciones } from '../contexto/useNotificaciones'
+import { usePermisoDispositivo } from '../hooks/usePermisoDispositivo'
 import { EstadoPasajero, EstadoServicio, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { Servicio, ServicioPasajero } from '../modelos/operacion'
 import { ErrorApi } from '../servicios/clienteHttp'
@@ -34,21 +36,6 @@ import '../estilos/paginas/PaginaServicioConductor.css'
 /** Ya no requiere acción del conductor: fue recogido, no se pudo recoger, avisó que no asistirá o se canceló. */
 const ESTADOS_GESTIONADOS: number[] = [EstadoPasajero.RECOGIDO, EstadoPasajero.NO_RECOGIDO, EstadoPasajero.NO_ASISTIRA, EstadoPasajero.CANCELADO]
 
-/** Intenta obtener la posición actual; nunca rechaza más allá de lo necesario (la ubicación siempre es opcional). */
-function obtenerPosicionOpcional(): Promise<{ latitud: number; longitud: number } | null> {
-  return new Promise((resolver) => {
-    if (!navigator.geolocation) {
-      resolver(null)
-      return
-    }
-    navigator.geolocation.getCurrentPosition(
-      (posicion) => resolver({ latitud: posicion.coords.latitude, longitud: posicion.coords.longitude }),
-      () => resolver(null),
-      { enableHighAccuracy: true, timeout: 10000 },
-    )
-  })
-}
-
 /**
  * Pantalla operativa de un servicio para el conductor (mobile-first, botones
  * grandes): iniciar, gestionar cada pasajero (llegada, espera, resultado,
@@ -64,6 +51,7 @@ export function PaginaServicioConductor() {
   const { empresaId, jornadaId, servicioId } = useParams<{ empresaId: string; jornadaId: string; servicioId: string }>()
   const { token } = useAutenticacion()
   const { version } = useNotificaciones()
+  const { errorPermiso, pedirUbicacion } = usePermisoDispositivo()
   const navegar = useNavigate()
   // Si se llegó desde una notificación (?chat=id), se abre el chat de ese pasajero.
   const chatDeNotificacion = Number(useSearchParams()[0].get('chat')) || null
@@ -120,9 +108,11 @@ export function PaginaServicioConductor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, empresaId, jornadaId, servicioId, version])
 
-  // Pide el permiso de ubicación apenas se entra a ejecutar una ruta, para que ya esté concedido cuando haga falta al finalizarla.
+  // Pide el permiso de ubicación apenas se entra a ejecutar una ruta: iniciar y finalizar la exigen, así que si
+  // está denegado el aviso con el botón de configuración ya se ve desde el principio, no recién al fallar.
   useEffect(() => {
-    obtenerPosicionOpcional()
+    pedirUbicacion()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function ejecutar(accion: () => Promise<void>, mensajeFallo: string) {
@@ -140,8 +130,9 @@ export function PaginaServicioConductor() {
 
   async function alIniciar() {
     await ejecutar(async () => {
-      const posicion = await obtenerPosicionOpcional()
-      await iniciarServicio(referencia, token!, posicion?.latitud ?? null, posicion?.longitud ?? null)
+      const posicion = await pedirUbicacion()
+      if (!posicion) return
+      await iniciarServicio(referencia, token!, posicion.latitud, posicion.longitud)
     }, 'No se pudo iniciar el servicio.')
   }
 
@@ -150,8 +141,9 @@ export function PaginaServicioConductor() {
     setMensajeError(null)
     setOcupado(true)
     try {
-      const posicion = await obtenerPosicionOpcional()
-      await finalizarServicio(referencia, token!, posicion?.latitud ?? null, posicion?.longitud ?? null)
+      const posicion = await pedirUbicacion()
+      if (!posicion) return
+      await finalizarServicio(referencia, token!, posicion.latitud, posicion.longitud)
       // Al finalizar, se vuelve a la pantalla principal de la jornada, donde queda el servicio con su hora de inicio y fin.
       navegar('/conductor')
     } catch (error) {
@@ -251,6 +243,8 @@ export function PaginaServicioConductor() {
       </header>
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
+
+      <AvisoPermiso error={errorPermiso} alReintentar={() => pedirUbicacion()} />
 
       {puedeIniciar && (
         <button type="button" className="pagina-servicio-conductor__principal" disabled={ocupado} onClick={alIniciar}>

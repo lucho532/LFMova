@@ -24,7 +24,7 @@ const rutaLlamadas = (p: ReferenciaPasajero) =>
   `/api/empresas/${p.empresaId}/jornadas/${p.jornadaId}/servicios/${p.servicioId}/pasajeros/${p.servicioPasajeroId}/llamadas`
 
 /** Consume POST .../pasajeros/{id}/llamadas: el conductor deja constancia de que va a llamar al pasajero. */
-export function registrarLlamada(pasajero: ReferenciaPasajero, latitud: number | null, longitud: number | null, token: string): Promise<RegistroLlamada> {
+export function registrarLlamada(pasajero: ReferenciaPasajero, latitud: number, longitud: number, token: string): Promise<RegistroLlamada> {
   return solicitarApi<RegistroLlamada>(rutaLlamadas(pasajero), { metodo: 'POST', cuerpo: { latitud, longitud }, token })
 }
 

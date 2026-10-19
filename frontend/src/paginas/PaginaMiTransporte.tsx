@@ -8,7 +8,6 @@ import { ErrorApi } from '../servicios/clienteHttp'
 import {
   compartirMiUbicacion,
   confirmarAsistencia,
-  enviarMensajeAlConductor,
   marcarNoAsistire,
   obtenerMensajesConConductor,
   obtenerMisServicios,
@@ -123,7 +122,6 @@ export function PaginaMiTransporte() {
                 }}
                 compartirUbicacion={(latitud, longitud) => compartirMiUbicacion(referencia, latitud, longitud, token!)}
                 cargarMensajes={() => obtenerMensajesConConductor(referencia, token!)}
-                enviarMensaje={(contenido) => enviarMensajeAlConductor(referencia, contenido, token!)}
               />
             )
           })}

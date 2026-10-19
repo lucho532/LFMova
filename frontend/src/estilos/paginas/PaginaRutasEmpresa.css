@@ -46,14 +46,6 @@
   font-size: 13px;
 }
 
-.rutas-empresa__fila {
-  cursor: pointer;
-}
-
-.rutas-empresa__fila:hover {
-  background: var(--accent-bg);
-}
-
 .rutas-empresa__sub {
   color: var(--text);
   font-size: 12px;

@@ -1,0 +1,9 @@
+.estado-pasajero--recogido {
+  color: var(--exito);
+  font-weight: 600;
+}
+
+.estado-pasajero--no-recogido {
+  color: var(--error);
+  font-weight: 600;
+}

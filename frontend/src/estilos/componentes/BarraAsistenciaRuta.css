@@ -1,0 +1,42 @@
+.barra-asistencia-ruta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 16px;
+}
+
+.barra-asistencia-ruta__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.barra-asistencia-ruta__filtro,
+.barra-asistencia-ruta__descargar {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 13px;
+}
+
+.barra-asistencia-ruta__filtro--activo {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.barra-asistencia-ruta__descargar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.barra-asistencia-ruta .mensaje-alerta {
+  flex-basis: 100%;
+  margin: 0;
+}

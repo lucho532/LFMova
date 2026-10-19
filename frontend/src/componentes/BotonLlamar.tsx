@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAutenticacion } from '../contexto/useAutenticacion'
+import { usePermisoDispositivo } from '../hooks/usePermisoDispositivo'
 import { registrarDuracionLlamada, registrarLlamada, type ReferenciaPasajero } from '../servicios/servicioLlamadas'
+import { AvisoPermiso } from './AvisoPermiso'
 import { HistorialLlamadas } from './HistorialLlamadas'
 import '../estilos/componentes/BotonLlamar.css'
 
@@ -20,26 +22,18 @@ function conLimite<T>(promesa: Promise<T>, milisegundos: number): Promise<T | nu
   return Promise.race([promesa.catch(() => null), new Promise<null>((resolver) => setTimeout(() => resolver(null), milisegundos))])
 }
 
-/** Última ubicación conocida del conductor (sin esperar un punto GPS nuevo), o `null` si no hay. */
-function ubicacionRapida(): Promise<GeolocationPosition | null> {
-  return new Promise((resolver) => {
-    if (!navigator.geolocation) {
-      resolver(null)
-      return
-    }
-    navigator.geolocation.getCurrentPosition(resolver, () => resolver(null), { maximumAge: 120000, timeout: 1500 })
-  })
-}
-
 /**
  * Botón "Llamar" del conductor. Abre un menú con dos opciones: llamar al
- * pasajero o ver el historial de llamadas. Al llamar deja constancia en el
- * servidor (hora y ubicación) antes de abrir el marcador del teléfono y, al
+ * pasajero o ver el historial de llamadas. Toda llamada lleva la ubicación del
+ * conductor: si no se puede obtener (permiso denegado o GPS apagado) no se abre
+ * el marcador y se ofrece el botón para cambiar la configuración. Al llamar deja
+ * constancia en el servidor (hora y ubicación) antes de abrir el marcador y, al
  * volver a la aplicación, guarda cuánto tiempo estuvo fuera como duración
  * aproximada. No puede saber si el pasajero contestó.
  */
 export function BotonLlamar({ pasajero, nombre, telefono, className }: PropiedadesBotonLlamar) {
   const { token } = useAutenticacion()
+  const { errorPermiso, pedirUbicacion, limpiar } = usePermisoDispositivo()
   const dialogo = useRef<HTMLDialogElement>(null)
   const [vista, setVista] = useState<'cerrado' | 'menu' | 'historial'>('cerrado')
   const [llamando, setLlamando] = useState(false)
@@ -76,11 +70,13 @@ export function BotonLlamar({ pasajero, nombre, telefono, className }: Propiedad
   async function alLlamar() {
     if (!token || llamando) return
     setLlamando(true)
-    const posicion = await ubicacionRapida()
-    const registro = await conLimite(
-      registrarLlamada(pasajero, posicion?.coords.latitude ?? null, posicion?.coords.longitude ?? null, token),
-      ESPERA_MAXIMA_MS,
-    )
+    // Se acepta un punto de hasta 2 minutos para no hacer esperar al conductor si el GPS acaba de fijarse.
+    const posicion = await pedirUbicacion({ maximumAge: 120000, timeout: 8000 })
+    if (!posicion) {
+      setLlamando(false)
+      return
+    }
+    const registro = await conLimite(registrarLlamada(pasajero, posicion.latitud, posicion.longitud, token), ESPERA_MAXIMA_MS)
     enMarcha.current = registro ? { registroLlamadaId: registro.registroLlamadaId, salida: null } : null
     setLlamando(false)
     setVista('cerrado')
@@ -98,6 +94,7 @@ export function BotonLlamar({ pasajero, nombre, telefono, className }: Propiedad
           <HistorialLlamadas pasajero={pasajero} />
         ) : (
           <div className="boton-llamar__opciones">
+            <AvisoPermiso error={errorPermiso} alReintentar={alLlamar} />
             <button type="button" className="boton-llamar__opcion boton-llamar__opcion--principal" disabled={llamando || !telefono} onClick={alLlamar}>
               📞 {llamando ? 'Abriendo el teléfono…' : telefono ? `Llamar al ${telefono}` : 'Sin teléfono registrado'}
             </button>
@@ -106,7 +103,10 @@ export function BotonLlamar({ pasajero, nombre, telefono, className }: Propiedad
             </button>
           </div>
         )}
-        <button type="button" className="boton-llamar__cerrar" onClick={() => setVista(vista === 'historial' ? 'menu' : 'cerrado')}>
+        <button type="button" className="boton-llamar__cerrar" onClick={() => {
+          limpiar()
+          setVista(vista === 'historial' ? 'menu' : 'cerrado')
+        }}>
           {vista === 'historial' ? '← Volver' : 'Cancelar'}
         </button>
       </dialog>

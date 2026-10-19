@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAutenticacion } from '../contexto/useAutenticacion'
+import { guardarArchivo } from '../servicios/archivos'
 import { descargarSoporteJornada } from '../servicios/servicioOperacion'
 import { BotonSecundario } from './BotonSecundario'
 import { MensajeAlerta } from './MensajeAlerta'
@@ -9,18 +10,6 @@ interface PropiedadesBotonDescargarProgramacion {
   empresaId: number
   /** Jornadas que hay en pantalla: se descarga un Excel por cada una (lo normal es una sola). */
   jornadaIds: number[]
-}
-
-/** Entrega un archivo ya descargado al navegador para que lo guarde con el nombre indicado. */
-function guardarArchivo(nombre: string, archivo: Blob) {
-  const url = URL.createObjectURL(archivo)
-  const enlace = document.createElement('a')
-  enlace.href = url
-  enlace.download = nombre
-  document.body.appendChild(enlace)
-  enlace.click()
-  enlace.remove()
-  URL.revokeObjectURL(url)
 }
 
 /**

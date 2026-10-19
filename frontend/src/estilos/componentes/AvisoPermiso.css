@@ -1,0 +1,44 @@
+.aviso-permiso {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--error-border);
+  border-radius: 10px;
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.aviso-permiso__mensaje,
+.aviso-permiso__ayuda {
+  margin: 0 0 8px;
+}
+
+.aviso-permiso__ayuda {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.aviso-permiso__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.aviso-permiso__boton {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aviso-permiso__boton--principal {
+  background: var(--error);
+  border-color: var(--error);
+  color: #fff;
+}

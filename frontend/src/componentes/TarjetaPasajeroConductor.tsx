@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNotificaciones } from '../contexto/useNotificaciones'
-import { EstadoPasajero, NOMBRES_ESTADO_PASAJERO, nombreDe } from '../modelos/enumeraciones'
+import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
 import { VentanaChat } from './VentanaChat'
+import { EstadoPasajeroTexto } from './EstadoPasajeroTexto'
 import type { Mensaje } from '../modelos/mensaje'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
 import { BotonLlamar } from './BotonLlamar'
@@ -46,7 +47,7 @@ interface PropiedadesTarjetaPasajeroConductor {
   guardarUbicacion: (latitud: number, longitud: number) => Promise<void>
   cargarUbicacionesAnteriores: () => Promise<UbicacionAnterior[]>
   eliminarUbicacionGuardada: () => Promise<void>
-  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number | null, longitud: number | null) => Promise<void>
+  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number, longitud: number) => Promise<void>
   cargarIncidencias: () => Promise<IncidenciaPasajero[]>
   cargarFotoEvidencia: (incidenciaId: number, evidenciaId: number) => Promise<string>
 }
@@ -185,7 +186,7 @@ export function TarjetaPasajeroConductor({
           {/* Confirmado ya no lleva letrero propio: toda la tarjeta se pinta de verde (ver className del <li>). */}
           {estado === EstadoPasajero.NO_ASISTIRA && <p className="tarjeta-pasajero-conductor__letrero tarjeta-pasajero-conductor__letrero--rojo">✖ El pasajero avisó que no asistirá</p>}
           {estado !== EstadoPasajero.CONFIRMADO && estado !== EstadoPasajero.NO_ASISTIRA && (
-            <p className="tarjeta-pasajero-conductor__estado">● {nombreDe(NOMBRES_ESTADO_PASAJERO, estado)}</p>
+            <p className="tarjeta-pasajero-conductor__estado">● <EstadoPasajeroTexto estado={estado} /></p>
           )}
 
           <div className="tarjeta-pasajero-conductor__contacto">

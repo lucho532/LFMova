@@ -5,7 +5,7 @@ import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { ServicioDelEmpleado } from '../modelos/servicioEmpleado'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { enviarMensajeAlConductor, obtenerMensajesConConductor, obtenerMisServicios } from '../servicios/servicioEmpleadoPropio'
+import { obtenerMensajesConConductor, obtenerMisServicios } from '../servicios/servicioEmpleadoPropio'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
 import '../estilos/paginas/PaginaChat.css'
 
@@ -52,7 +52,6 @@ export function PaginaChatEmpleado() {
         <ChatPasajero
           miUsuarioId={obtenerUsuarioIdDelToken(token)}
           cargarMensajes={() => obtenerMensajesConConductor(servicio, token)}
-          enviar={(contenido) => enviarMensajeAlConductor(servicio, contenido, token)}
         />
       )}
     </main>

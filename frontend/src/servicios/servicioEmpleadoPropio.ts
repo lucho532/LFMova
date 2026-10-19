@@ -38,8 +38,3 @@ export function compartirMiUbicacion(servicio: { empresaId: number; jornadaId: n
 export function obtenerMensajesConConductor(servicio: { empresaId: number; jornadaId: number; servicioId: number; servicioPasajeroId: number }, token: string): Promise<Mensaje[]> {
   return solicitarApi<Mensaje[]>(`${rutaPasajero(servicio)}/mensajes`, { token })
 }
-
-/** Consume POST .../pasajeros/{id}/mensajes. */
-export function enviarMensajeAlConductor(servicio: { empresaId: number; jornadaId: number; servicioId: number; servicioPasajeroId: number }, contenido: string, token: string): Promise<Mensaje> {
-  return solicitarApi<Mensaje>(`${rutaPasajero(servicio)}/mensajes`, { metodo: 'POST', cuerpo: { contenido }, token })
-}

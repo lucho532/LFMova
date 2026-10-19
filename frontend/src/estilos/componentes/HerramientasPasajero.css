@@ -83,6 +83,14 @@
   color: #fff;
 }
 
+/* Rojo fijo (no el token --error, que en tema oscuro es un rosa claro): el texto blanco debe leerse en ambos temas. */
+.herramientas-pasajero__boton--peligro,
+.herramientas-pasajero__boton--peligro:hover:not(:disabled) {
+  border-color: #b42318;
+  background: #b42318;
+  color: #fff;
+}
+
 .herramientas-pasajero__nota {
   margin: 0;
   color: var(--text);

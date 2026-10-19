@@ -64,22 +64,6 @@
   text-align: center;
 }
 
-.chat-pasajero__formulario {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.chat-pasajero__formulario input {
-  flex: 1 1 160px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg);
-  color: var(--text-h);
-  font: inherit;
-}
-
 .chat-pasajero__dia {
   align-self: center;
   padding: 2px 12px;
@@ -88,4 +72,10 @@
   color: var(--text);
   font-size: 12px;
   font-weight: 600;
+}
+
+.chat-pasajero__acciones {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
