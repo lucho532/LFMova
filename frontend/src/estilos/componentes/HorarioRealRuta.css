@@ -1,0 +1,15 @@
+.horario-real-ruta {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.horario-real-ruta__fin--temprano {
+  color: var(--exito);
+  font-weight: 600;
+}
+
+.horario-real-ruta__fin--tarde {
+  color: var(--error);
+  font-weight: 600;
+}

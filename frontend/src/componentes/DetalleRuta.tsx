@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { Servicio, ServicioPasajero } from '../modelos/operacion'
 import type { FiltroAsistencia } from '../servicios/ordenRuta'
@@ -86,8 +86,16 @@ export function DetalleRuta({ abierto, empresaId, jornadaId, servicioId, encabez
   const pasajeroActivo = pasajeros.find((p) => (resaltarCedula ? p.cedulaEmpleado === resaltarCedula : p.servicioPasajeroId === pasajeroElegidoId))
   const puedeVolver = pasajeroActivo !== undefined && !resaltarCedula
 
+  /** Un clic sobre el fondo oscuro llega al propio diálogo, pero fuera de su caja; el relleno interno sí cuenta como dentro. */
+  function cerrarSiClicFuera(evento: MouseEvent<HTMLDialogElement>) {
+    if (evento.target !== evento.currentTarget) return
+    const caja = evento.currentTarget.getBoundingClientRect()
+    const dentro = evento.clientX >= caja.left && evento.clientX <= caja.right && evento.clientY >= caja.top && evento.clientY <= caja.bottom
+    if (!dentro) alCerrar()
+  }
+
   return (
-    <dialog ref={referencia} className="detalle-ruta" onCancel={alCerrar} onClose={alCerrar}>
+    <dialog ref={referencia} className="detalle-ruta" onCancel={alCerrar} onClose={alCerrar} onClick={cerrarSiClicFuera}>
       {encabezado && (
         <div className="detalle-ruta__encabezado">
           <h2>

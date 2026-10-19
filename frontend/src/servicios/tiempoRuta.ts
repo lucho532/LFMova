@@ -8,6 +8,19 @@ export function aMilisegundosUtc(iso: string): number {
   return new Date(/[zZ]|[+-]\d{2}:?\d{2}$/.test(iso) ? iso : `${iso}Z`).getTime()
 }
 
+/**
+ * Indica si la ruta llegó con la antelación esperada: a más tardar 15 minutos antes de la hora programada
+ * (programada 07:00 → hasta las 06:45 es temprano, desde las 06:46 es tarde). La fecha y la hora programadas
+ * están en hora de Colombia (UTC−5 fijo, AGENTS.md §41) y `finIso` es un instante UTC.
+ */
+export function llegoTemprano(fecha: string, horaProgramada: string, finIso: string): boolean {
+  const [anio, mes, dia] = fecha.split('-').map(Number)
+  const [hora, minuto] = horaProgramada.split(':').map(Number)
+  const limiteUtc = Date.UTC(anio, mes - 1, dia, hora + 5, minuto - 15)
+  const llegadaAlMinuto = Math.floor(aMilisegundosUtc(finIso) / 60000) * 60000
+  return llegadaAlMinuto <= limiteUtc
+}
+
 /** Hora local (HH:mm) de un instante ISO, o `null` si no hay. */
 export function horaLocal(iso: string | null): string | null {
   if (!iso) return null
