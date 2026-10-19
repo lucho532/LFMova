@@ -3,20 +3,14 @@ import { Link, useParams } from 'react-router-dom'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { FilaTarjetasResumen } from '../componentes/FilaTarjetasResumen'
-import { GraficaBarras } from '../componentes/GraficaBarras'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
+import { PanoramaOperacionInicio } from '../componentes/PanoramaOperacionInicio'
 import { TarjetaResumen } from '../componentes/TarjetaResumen'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { ResumenEmpresa } from '../modelos/estadisticas'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerResumenEmpresa } from '../servicios/servicioEstadisticas'
 import '../estilos/paginas/PaginaInicioCoordinador.css'
-
-/** Formatea una fecha ISO (AAAA-MM-DD) como día/mes sin depender de la zona horaria del navegador. */
-function diaMes(fecha: string): string {
-  const [, mes, dia] = fecha.split('-')
-  return `${dia}/${mes}`
-}
 
 /**
  * Inicio del coordinador: histórico de las rutas programadas hasta la fecha,
@@ -80,18 +74,7 @@ export function PaginaInicioCoordinador() {
         <TarjetaResumen titulo="Rutas canceladas" valor={resumen.rutasCanceladas} a={`${base}/rutas?filtro=canceladas`} />
       </FilaTarjetasResumen>
 
-      <div className="inicio-coordinador__graficas">
-        <GraficaBarras
-          titulo="Rutas de los últimos días"
-          textoVacio="Todavía no hay rutas."
-          barras={resumen.ultimosDias.map((d) => ({ etiqueta: diaMes(d.fecha), valor: d.rutas, detalle: `${d.rutas} rutas · ${d.pasajerosTransportados} pasajeros transportados` }))}
-        />
-        <GraficaBarras
-          titulo="Rutas por sede"
-          textoVacio="Todavía no hay rutas."
-          barras={resumen.porSede.map((s) => ({ etiqueta: s.sede, valor: s.rutas, detalle: `${s.rutas} rutas · ${s.pasajerosTransportados} pasajeros transportados` }))}
-        />
-      </div>
+      {token && <PanoramaOperacionInicio empresaId={Number(empresaId)} token={token} />}
     </ContenedorPagina>
   )
 }

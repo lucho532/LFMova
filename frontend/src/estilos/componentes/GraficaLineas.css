@@ -1,0 +1,96 @@
+.grafica-lineas {
+  --serie-entradas: var(--accent);
+  --serie-salidas: #f59e0b;
+}
+
+.grafica-lineas svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grafica-lineas__vacio {
+  margin: 0;
+  padding: 40px 0;
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+}
+
+.grafica-lineas__leyenda {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.grafica-lineas__serie {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+.grafica-lineas__serie::before {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: currentColor;
+  content: '';
+}
+
+.grafica-lineas__serie--entradas::before {
+  background: var(--serie-entradas);
+}
+
+.grafica-lineas__serie--salidas::before {
+  background: var(--serie-salidas);
+}
+
+.grafica-lineas__rejilla {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.grafica-lineas__guia {
+  stroke: var(--text);
+  stroke-dasharray: 3 3;
+  stroke-opacity: 0.5;
+}
+
+.grafica-lineas__texto {
+  fill: var(--text);
+  font-size: 11px;
+}
+
+.grafica-lineas__linea {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+
+.grafica-lineas__linea--entradas,
+.grafica-lineas__punto--entradas {
+  stroke: var(--serie-entradas);
+}
+
+.grafica-lineas__linea--salidas,
+.grafica-lineas__punto--salidas {
+  stroke: var(--serie-salidas);
+}
+
+.grafica-lineas__punto {
+  fill: var(--bg);
+  stroke-width: 2.5;
+}
+
+.grafica-lineas__zona {
+  fill: transparent;
+}
+
+.grafica-lineas__detalle {
+  margin: 6px 0 0;
+  color: var(--text);
+  font-size: 13px;
+}

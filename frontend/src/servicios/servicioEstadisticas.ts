@@ -1,4 +1,4 @@
-import type { EstadisticaConductor, PasajeroEmpresa, ResumenEmpresa, RutaConductor, RutaEmpresa } from '../modelos/estadisticas'
+import type { EstadisticaConductor, PanoramaOperacion, PasajeroEmpresa, ResumenEmpresa, RutaConductor, RutaEmpresa } from '../modelos/estadisticas'
 import { solicitarApi } from './clienteHttp'
 
 function rango(desde: string, hasta: string): string {
@@ -12,6 +12,11 @@ function rango(desde: string, hasta: string): string {
 /** Consume GET /api/empresas/{empresaId}/estadisticas/resumen. */
 export function obtenerResumenEmpresa(empresaId: number, token: string): Promise<ResumenEmpresa> {
   return solicitarApi<ResumenEmpresa>(`/api/empresas/${empresaId}/estadisticas/resumen`, { token })
+}
+
+/** Consume GET /api/empresas/{empresaId}/estadisticas/panorama: indicadores y pasajeros por día de un periodo (máximo un año). */
+export function obtenerPanoramaOperacion(empresaId: number, desde: string, hasta: string, token: string): Promise<PanoramaOperacion> {
+  return solicitarApi<PanoramaOperacion>(`/api/empresas/${empresaId}/estadisticas/panorama${rango(desde, hasta)}`, { token })
 }
 
 /** Consume GET /api/empresas/{empresaId}/estadisticas/conductores (rango de fechas opcional). */

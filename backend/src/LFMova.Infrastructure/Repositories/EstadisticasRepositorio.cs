@@ -14,8 +14,6 @@ namespace LFMova.Infrastructure.Repositories;
 /// </summary>
 public class EstadisticasRepositorio : IEstadisticasRepositorio
 {
-    private const int DiasEnGrafica = 14;
-
     private readonly LFMovaDbContext _contexto;
 
     /// <summary>Crea el repositorio utilizando el contexto de base de datos.</summary>
@@ -35,7 +33,6 @@ public class EstadisticasRepositorio : IEstadisticasRepositorio
             {
                 s.Fecha,
                 s.Estado,
-                Sede = s.Sede!.Nombre,
                 Pasajeros = s.ServiciosPasajero.Count,
                 Transportados = s.ServiciosPasajero.Count(p => p.Estado == EstadoServicioPasajero.RECOGIDO)
             })
@@ -55,19 +52,7 @@ public class EstadisticasRepositorio : IEstadisticasRepositorio
             PasajerosTransportados = vigentes.Sum(s => s.Transportados),
             Conductores = await _contexto.VinculacionesConductorEmpresa.CountAsync(v => v.EmpresaId == empresaId && v.Activa),
             Empleados = await _contexto.Empleados.CountAsync(e => e.EmpresaId == empresaId && e.Activo),
-            Sedes = await _contexto.Sedes.CountAsync(s => s.EmpresaId == empresaId && s.Activa),
-            UltimosDias = programadas
-                .GroupBy(s => s.Fecha)
-                .OrderByDescending(g => g.Key)
-                .Take(DiasEnGrafica)
-                .OrderBy(g => g.Key)
-                .Select(g => new RutasDiaDto { Fecha = g.Key, Rutas = g.Count(), PasajerosTransportados = g.Sum(s => s.Transportados) })
-                .ToList(),
-            PorSede = programadas
-                .GroupBy(s => s.Sede)
-                .OrderByDescending(g => g.Count())
-                .Select(g => new RutasSedeDto { Sede = g.Key, Rutas = g.Count(), PasajerosTransportados = g.Sum(s => s.Transportados) })
-                .ToList()
+            Sedes = await _contexto.Sedes.CountAsync(s => s.EmpresaId == empresaId && s.Activa)
         };
     }
 

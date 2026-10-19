@@ -1,15 +1,22 @@
-/** Refleja RutasDiaDto (LFMova.Application). */
-export interface RutasDia {
+/** Refleja PasajerosDiaDto (LFMova.Application). */
+export interface PasajerosDia {
   fecha: string
-  rutas: number
-  pasajerosTransportados: number
+  entradas: number
+  salidas: number
 }
 
-/** Refleja RutasSedeDto (LFMova.Application). */
-export interface RutasSede {
-  sede: string
-  rutas: number
-  pasajerosTransportados: number
+/** Refleja PanoramaOperacionDto (LFMova.Application). */
+export interface PanoramaOperacion {
+  desde: string
+  hasta: string
+  serie: PasajerosDia[]
+  empleadosTransportados: number
+  variacionEmpleadosTransportados: number | null
+  serviciosRealizados: number
+  serviciosEntrada: number
+  serviciosSalida: number
+  conductoresEnOperacion: number
+  promedioAsistencia: number
 }
 
 /** Refleja ResumenEmpresaDto (LFMova.Application). */
@@ -23,8 +30,6 @@ export interface ResumenEmpresa {
   conductores: number
   empleados: number
   sedes: number
-  ultimosDias: RutasDia[]
-  porSede: RutasSede[]
 }
 
 /** Refleja VehiculoResumenDto (LFMova.Application). */

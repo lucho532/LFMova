@@ -17,12 +17,33 @@ namespace LFMova.Api.Controllers;
 [Authorize]
 public class EstadisticasController : ControllerBase
 {
-    private readonly IEstadisticasRepositorio _estadisticas;
+    private const int MaximoDiasPanorama = 366;
 
-    /// <summary>Crea el controlador con su fuente de datos.</summary>
-    public EstadisticasController(IEstadisticasRepositorio estadisticas)
+    private readonly IEstadisticasRepositorio _estadisticas;
+    private readonly IPanoramaOperacionRepositorio _panorama;
+
+    /// <summary>Crea el controlador con sus fuentes de datos.</summary>
+    public EstadisticasController(IEstadisticasRepositorio estadisticas, IPanoramaOperacionRepositorio panorama)
     {
         _estadisticas = estadisticas;
+        _panorama = panorama;
+    }
+
+    /// <summary>Indicadores y pasajeros transportados por día (entradas y salidas) en un periodo de máximo un año.</summary>
+    [HttpGet("panorama")]
+    public async Task<ActionResult<PanoramaOperacionDto>> ObtenerPanoramaAsync(int empresaId, [FromQuery] DateOnly desde, [FromQuery] DateOnly hasta)
+    {
+        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
+        {
+            return Forbid();
+        }
+
+        if (hasta < desde || hasta.DayNumber - desde.DayNumber >= MaximoDiasPanorama)
+        {
+            return BadRequest(new { mensaje = $"El periodo debe ir de una fecha inicial a una final igual o posterior, de máximo {MaximoDiasPanorama} días." });
+        }
+
+        return Ok(await _panorama.ObtenerAsync(empresaId, desde, hasta));
     }
 
     /// <summary>Resumen histórico de la empresa (rutas, pasajeros, actividad reciente).</summary>
