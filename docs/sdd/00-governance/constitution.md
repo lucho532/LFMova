@@ -116,10 +116,10 @@ Estructura principal:
 
 ```text
 src/
-├── TransportApp.Api/
+├── LFMova.Api/
 │   └── Controllers/
 │
-├── TransportApp.Application/
+├── LFMova.Application/
 │   ├── DTOs/
 │   ├── Interfaces/
 │   ├── Services/
@@ -128,12 +128,12 @@ src/
 │   ├── Validators/
 │   └── Utils/
 │
-├── TransportApp.Domain/
+├── LFMova.Domain/
 │   ├── Entities/
 │   ├── Enums/
 │   └── Rules/
 │
-└── TransportApp.Infrastructure/
+└── LFMova.Infrastructure/
     ├── Data/
     └── Repositories/
 

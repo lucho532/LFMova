@@ -1,11 +1,20 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { usePermisoDispositivo } from '../hooks/usePermisoDispositivo'
 import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
+import { enlaceNavegacion } from '../servicios/navegacion'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
+import type { ReferenciaPasajero } from '../servicios/servicioLlamadas'
+import { crearErrorPermiso } from '../servicios/ubicacion'
+import { AvisoPermiso } from './AvisoPermiso'
+import { BotonNavegar } from './BotonNavegar'
+import { EstadoPasajeroTexto } from './EstadoPasajeroTexto'
+import { HistorialLlamadas } from './HistorialLlamadas'
 import { ModalConfirmacion } from './ModalConfirmacion'
-import './HerramientasPasajero.css'
+import { UbicacionesCompartidas } from './UbicacionesCompartidas'
+import '../estilos/componentes/HerramientasPasajero.css'
 
 /** Tipos de incidencia que el conductor puede reportar (mismo orden que el enum TipoIncidencia del backend). */
 const TIPOS_INCIDENCIA = [
@@ -22,12 +31,14 @@ type Seccion = 'anteriores' | 'incidencias' | 'nuevaIncidencia'
 
 interface PropiedadesHerramientasPasajero {
   pasajero: ServicioPasajero
+  /** Para mostrar las llamadas hechas al pasajero dentro de una incidencia de «No contesta». */
+  referenciaPasajero: ReferenciaPasajero
   /** Solo mientras el servicio está en curso se puede reportar una incidencia (antes no hay nada que reportar). */
   servicioEnCurso: boolean
   guardarUbicacion: (latitud: number, longitud: number) => Promise<void>
   cargarUbicacionesAnteriores: () => Promise<UbicacionAnterior[]>
   eliminarUbicacionGuardada: () => Promise<void>
-  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number | null, longitud: number | null) => Promise<void>
+  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number, longitud: number) => Promise<void>
   /** Incidencias ya reportadas para este pasajero (para poder revisarlas después), con sus evidencias. */
   cargarIncidencias: () => Promise<IncidenciaPasajero[]>
   /** Trae la foto de una evidencia como una URL local lista para mostrarla en un <img>. */
@@ -36,24 +47,6 @@ interface PropiedadesHerramientasPasajero {
 
 function etiquetaTipoIncidencia(tipo: number): string {
   return TIPOS_INCIDENCIA.find((t) => t.valor === tipo)?.texto ?? 'Incidencia'
-}
-
-/** Enlace de Google Maps para navegar a un punto por sus coordenadas. */
-function enlaceNavegacion(destino: { latitud: number; longitud: number }): string {
-  return `https://www.google.com/maps/dir/?api=1&destination=${destino.latitud},${destino.longitud}&travelmode=driving`
-}
-
-function obtenerPosicion(): Promise<GeolocationPosition> {
-  return new Promise((resolver, rechazar) => {
-    if (!navigator.geolocation) {
-      rechazar(new Error('Este dispositivo no permite obtener la ubicación.'))
-      return
-    }
-    navigator.geolocation.getCurrentPosition(resolver, () => rechazar(new Error('No se pudo obtener tu ubicación. Revisa el permiso de ubicación.')), {
-      enableHighAccuracy: true,
-      timeout: 15000,
-    })
-  })
 }
 
 /**
@@ -69,6 +62,7 @@ function obtenerPosicion(): Promise<GeolocationPosition> {
  */
 export function HerramientasPasajero({
   pasajero,
+  referenciaPasajero,
   servicioEnCurso,
   guardarUbicacion,
   cargarUbicacionesAnteriores,
@@ -77,6 +71,7 @@ export function HerramientasPasajero({
   cargarIncidencias,
   cargarFotoEvidencia,
 }: PropiedadesHerramientasPasajero) {
+  const { errorPermiso, pedirUbicacion, registrarFallo } = usePermisoDispositivo()
   const [aviso, setAviso] = useState<{ tipo: 'exito' | 'error'; texto: string } | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const [seccionAbierta, setSeccionAbierta] = useState<Seccion | null>(null)
@@ -143,9 +138,10 @@ export function HerramientasPasajero({
   async function alGuardarUbicacion() {
     await ejecutar(
       async () => {
-        const posicion = await obtenerPosicion()
-        await guardarUbicacion(posicion.coords.latitude, posicion.coords.longitude)
-        setUbicacionGuardada({ direccion: pasajero.direccionRecogida, barrio: pasajero.barrioEmpleado, latitud: posicion.coords.latitude, longitud: posicion.coords.longitude, fechaRegistro: new Date().toISOString() })
+        const posicion = await pedirUbicacion()
+        if (!posicion) return
+        await guardarUbicacion(posicion.latitud, posicion.longitud)
+        setUbicacionGuardada({ direccion: pasajero.direccionRecogida, barrio: pasajero.barrioEmpleado, latitud: posicion.latitud, longitud: posicion.longitud, fechaRegistro: new Date().toISOString() })
       },
       'Ubicación de recogida guardada.',
       'No se pudo guardar la ubicación.',
@@ -223,7 +219,9 @@ export function HerramientasPasajero({
       setFoto(new File([datos], `incidencia-${Date.now()}.jpg`, { type: datos.type || 'image/jpeg' }))
     } catch (error) {
       // Cancelar la cámara no es un error que deba mostrarse.
-      if (!(error instanceof Error) || !/cancel/i.test(error.message)) {
+      if (error instanceof Error && /denied|permission|permiso/i.test(error.message)) {
+        registrarFallo(crearErrorPermiso('camaraDenegada'))
+      } else if (!(error instanceof Error) || !/cancel/i.test(error.message)) {
         mostrarAviso({ tipo: 'error', texto: 'No se pudo abrir la cámara. Revisa el permiso de cámara.' })
       }
     } finally {
@@ -234,13 +232,10 @@ export function HerramientasPasajero({
   async function alReportar() {
     await ejecutar(
       async () => {
-        let posicion: GeolocationPosition | null = null
-        try {
-          posicion = await obtenerPosicion()
-        } catch {
-          // La ubicación es opcional en una incidencia.
-        }
-        await reportarIncidencia(tipo, descripcion.trim() || (TIPOS_INCIDENCIA.find((t) => t.valor === tipo)?.texto ?? ''), foto, posicion?.coords.latitude ?? null, posicion?.coords.longitude ?? null)
+        // Toda incidencia (y su foto) se registra con la ubicación del conductor: sin ella no se envía.
+        const posicion = await pedirUbicacion()
+        if (!posicion) return
+        await reportarIncidencia(tipo, descripcion.trim() || (TIPOS_INCIDENCIA.find((t) => t.valor === tipo)?.texto ?? ''), foto, posicion.latitud, posicion.longitud)
         setDescripcion('')
         setFoto(null)
         setSeccionAbierta(null)
@@ -264,9 +259,9 @@ export function HerramientasPasajero({
     <div className="herramientas-pasajero">
       <div className="herramientas-pasajero__fila">
         {destino ? (
-          <a className="herramientas-pasajero__fila-boton" href={enlaceNavegacion(destino)} target="_blank" rel="noreferrer">
+          <BotonNavegar destino={destino} className="herramientas-pasajero__fila-boton">
             <span>🧭 Navegar</span>
-          </a>
+          </BotonNavegar>
         ) : (
           <button
             type="button"
@@ -277,6 +272,10 @@ export function HerramientasPasajero({
           </button>
         )}
       </div>
+
+      <UbicacionesCompartidas pasajero={pasajero} />
+
+      <AvisoPermiso error={errorPermiso} />
 
       {aviso &&
         createPortal(
@@ -315,9 +314,9 @@ export function HerramientasPasajero({
                   {u.barrio ? ` · ${u.barrio}` : ''} <small>({u.fechaRegistro.slice(0, 10)})</small>
                 </span>
                 {u.latitud !== null && u.longitud !== null && (
-                  <a href={enlaceNavegacion({ latitud: u.latitud, longitud: u.longitud })} target="_blank" rel="noreferrer">
+                  <BotonNavegar destino={{ latitud: u.latitud, longitud: u.longitud }} className="herramientas-pasajero__enlace-navegar">
                     Navegar
-                  </a>
+                  </BotonNavegar>
                 )}
               </li>
             ))}
@@ -356,7 +355,7 @@ export function HerramientasPasajero({
                   ))}
                 </select>
               </label>
-              {impideRecogida && <p className="herramientas-pasajero__nota">Al registrarla, el pasajero queda como «no recogido» y ya no bloquea finalizar el servicio.</p>}
+              {impideRecogida && <p className="herramientas-pasajero__nota">Al registrarla, el pasajero queda como «<EstadoPasajeroTexto estado={EstadoPasajero.NO_RECOGIDO} texto="no recogido" />» y ya no bloquea finalizar el servicio.</p>}
               <label>
                 Descripción
                 <textarea value={descripcion} onChange={(evento) => setDescripcion(evento.target.value)} rows={2} placeholder="Qué pasó (opcional)" />
@@ -366,7 +365,7 @@ export function HerramientasPasajero({
               </button>
               <button
                 type="button"
-                className="herramientas-pasajero__boton herramientas-pasajero__boton--principal"
+                className="herramientas-pasajero__boton herramientas-pasajero__boton--peligro"
                 disabled={ocupado || (!impideRecogida && !descripcion.trim() && !foto)}
                 onClick={() => setConfirmandoIncidencia(true)}
               >
@@ -416,6 +415,7 @@ export function HerramientasPasajero({
                     )}
                   </div>
                 ))}
+                {i.tipo === 0 && <HistorialLlamadas pasajero={referenciaPasajero} />}
               </li>
             ))}
           </ul>

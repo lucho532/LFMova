@@ -1,0 +1,31 @@
+.boton-navegar__dialogo {
+  width: min(92vw, 380px);
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--text-h);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.boton-navegar__dialogo::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.boton-navegar__dialogo h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.boton-navegar__dialogo p {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.boton-navegar__opciones {
+  display: grid;
+  gap: 10px;
+}

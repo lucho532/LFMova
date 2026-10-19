@@ -1,4 +1,4 @@
-import './EtiquetaEstado.css'
+import '../estilos/componentes/EtiquetaEstado.css'
 
 interface PropiedadesEtiquetaEstado {
   activo: boolean

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import './TarjetaResumen.css'
+import '../estilos/componentes/TarjetaResumen.css'
 
 interface PropiedadesTarjetaResumen {
   titulo: string

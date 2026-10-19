@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import './MensajeAlerta.css'
+import '../estilos/componentes/MensajeAlerta.css'
 
 interface PropiedadesMensajeAlerta {
   tipo: 'error' | 'exito'

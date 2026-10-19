@@ -6,7 +6,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { iniciarSesion } from '../servicios/servicioAutenticacion'
 import { obtenerRolesDelToken, rutaInicialSegunRoles } from '../servicios/tokenJwt'
-import './PaginaIniciarSesion.css'
+import '../estilos/paginas/PaginaIniciarSesion.css'
 
 /**
  * Inicio de sesión con cédula o correo y contraseña: un único cuadro sobre la

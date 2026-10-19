@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 640" width="1600" height="640">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E1B4B"/>
+      <stop offset="1" stop-color="#0E7490"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="1600" height="640" rx="72"/></clipPath>
+  </defs>
+  <rect width="1600" height="640" rx="72" fill="url(#bg)"/>
+  <g clip-path="url(#clip)" fill="#FFFFFF">
+    <path d="M1180 0h150L1217 640h-150z" opacity="0.05"/>
+    <path d="M1380 0h90L1357 640h-90z" opacity="0.07"/>
+    <path d="M1520 0h50L1457 640h-50z" opacity="0.09"/>
+  </g>
+  <g transform="translate(130 144) scale(0.6875)">
+    <rect width="512" height="512" rx="112" fill="url(#tile)" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="6"/>
+    <g fill="#FFFFFF" transform="translate(33 0) skewX(-10)">
+      <path d="M136 136h56v184h56v56H136z"/>
+      <path d="M280 136h120v56h-64v36h40v56h-40v92h-56z"/>
+    </g>
+  </g>
+  <text x="550" y="392" fill="#FFFFFF" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="210" font-weight="800" font-style="italic" letter-spacing="-5">LFMova</text>
+</svg>

@@ -1,4 +1,4 @@
-/** Refleja ServicioDelEmpleadoDto (TransportApp.Application). */
+/** Refleja ServicioDelEmpleadoDto (LFMova.Application). */
 export interface ServicioDelEmpleado {
   servicioPasajeroId: number
   empresaId: number

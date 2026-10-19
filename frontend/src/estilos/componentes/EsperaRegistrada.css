@@ -1,0 +1,24 @@
+.espera-registrada {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.espera-registrada--a-tiempo {
+  color: var(--exito);
+}
+
+.espera-registrada--excedida {
+  color: var(--error);
+}
+
+.espera-registrada__con-etiqueta {
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.espera-registrada__etiqueta {
+  color: var(--text);
+  font-size: 13px;
+}

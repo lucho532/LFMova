@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
+import { armarPulsacionLarga } from '../hooks/pulsacionLarga'
 import { formatearBarrioConCiudad, useBarriosVillamaria } from '../hooks/useBarriosVillamaria'
 import { EstadoServicio } from '../modelos/enumeraciones'
 import type { PasajeroPrevia, VistaPreviaImportacion } from '../modelos/importacion'
@@ -13,7 +14,7 @@ import { MensajeAlerta } from './MensajeAlerta'
 import { ModalConfirmacion } from './ModalConfirmacion'
 import { SelectorFormulario } from './SelectorFormulario'
 import { TablaDatos } from './TablaDatos'
-import './PanelVistaPreviaImportacion.css'
+import '../estilos/componentes/PanelVistaPreviaImportacion.css'
 
 interface PropiedadesPanelVistaPreviaImportacion {
   empresaId: number
@@ -204,7 +205,11 @@ export function PanelVistaPreviaImportacion({
   /** Posiciona la etiqueta que sigue al cursor directamente en el DOM (sin pasar por React) para que siga al mouse sin tirones. */
   function ubicarEtiqueta(x: number, y: number) {
     const etiqueta = etiquetaArrastreRef.current
-    if (etiqueta) etiqueta.style.transform = `translate(${x + 14}px, ${y + 14}px)`
+    if (!etiqueta) return
+    // Se mantiene dentro de la ventana: en pantallas angostas quedaría cortada a la derecha del dedo.
+    const maximoX = Math.max(8, window.innerWidth - etiqueta.offsetWidth - 8)
+    const maximoY = Math.max(8, window.innerHeight - etiqueta.offsetHeight - 8)
+    etiqueta.style.transform = `translate(${Math.min(x + 14, maximoX)}px, ${Math.min(y + 14, maximoY)}px)`
   }
 
   function iniciarArrastre(pasajero: PasajeroArrastrado, x: number, y: number) {
@@ -235,7 +240,8 @@ export function PanelVistaPreviaImportacion({
       const origen = arrastradoRef.current
       arrastradoRef.current = null
       setArrastrado(null)
-      if (!origen) return
+      // "pointercancel": el sistema interrumpió el toque; el arrastre se abandona sin mover a nadie.
+      if (!origen || evento.type === 'pointercancel') return
 
       const elemento = document.elementFromPoint(evento.clientX, evento.clientY)
       const tarjeta = elemento?.closest<HTMLElement>('[data-servicio-id]')
@@ -264,11 +270,13 @@ export function PanelVistaPreviaImportacion({
 
     document.addEventListener('pointermove', alMoverElPuntero)
     document.addEventListener('pointerup', alSoltarElPuntero)
+    document.addEventListener('pointercancel', alSoltarElPuntero)
     idCuadro = requestAnimationFrame(ciclo)
 
     return () => {
       document.removeEventListener('pointermove', alMoverElPuntero)
       document.removeEventListener('pointerup', alSoltarElPuntero)
+      document.removeEventListener('pointercancel', alSoltarElPuntero)
       cancelAnimationFrame(idCuadro)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -510,12 +518,14 @@ export function PanelVistaPreviaImportacion({
                       if (!sePuedeArrastrar || !real || !pasajero.servicioPasajeroId || evento.button !== 0) return
                       // Si la presión empezó sobre la flechita de mover (otra acción en la misma fila), no se inicia un arrastre.
                       if (evento.target instanceof Element && evento.target.closest('.vista-previa-importacion__celda-mover')) return
+                      const arrastrable = { servicioPasajeroId: pasajero.servicioPasajeroId, servicioOrigen: real, pasajero }
+                      if (evento.pointerType !== 'mouse') {
+                        // En pantallas táctiles deslizar el dedo desplaza la página: el arrastre solo empieza al dejar el dedo presionado.
+                        armarPulsacionLarga(evento, (x, y) => iniciarArrastre(arrastrable, x, y), () => arrastradoRef.current !== null)
+                        return
+                      }
                       evento.preventDefault() // evita que el navegador intente seleccionar el texto de la fila mientras se arrastra
-                      iniciarArrastre(
-                        { servicioPasajeroId: pasajero.servicioPasajeroId, servicioOrigen: real, pasajero },
-                        evento.clientX,
-                        evento.clientY,
-                      )
+                      iniciarArrastre(arrastrable, evento.clientX, evento.clientY)
                     }}
                   >
                     <td>{indice + 1}</td>

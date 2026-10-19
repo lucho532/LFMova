@@ -5,7 +5,7 @@ import { CampoFormulario } from '../componentes/CampoFormulario'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { crearSede } from '../servicios/servicioSedes'
-import './PaginaNuevaSede.css'
+import '../estilos/paginas/PaginaNuevaSede.css'
 
 /**
  * Formulario de alta de una sede para la empresa. Requiere rol COORDINADOR de

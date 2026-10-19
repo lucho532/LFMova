@@ -7,7 +7,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { DetalleInvitacion } from '../modelos/invitacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { aceptarInvitacion, obtenerDetalleInvitacion } from '../servicios/servicioInvitaciones'
-import './PaginaInvitacion.css'
+import '../estilos/paginas/PaginaInvitacion.css'
 
 /**
  * Destino del enlace de invitación a una empresa (`?token=`). Muestra quién
@@ -63,7 +63,7 @@ export function PaginaInvitacion() {
       {detalle && (
         <div className="pagina-invitacion">
           <p className="pagina-invitacion__texto">
-            <strong>{detalle.nombreInvitador}</strong> te invita a formar parte de <strong>{detalle.nombreEmpresa}</strong> en TransportApp.
+            <strong>{detalle.nombreInvitador}</strong> te invita a formar parte de <strong>{detalle.nombreEmpresa}</strong> en LFMova.
           </p>
 
           {aceptada ? (

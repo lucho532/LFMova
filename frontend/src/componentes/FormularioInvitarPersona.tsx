@@ -5,7 +5,7 @@ import { invitarPersona } from '../servicios/servicioInvitaciones'
 import { BotonPrimario } from './BotonPrimario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './FormularioInvitarPersona.css'
+import '../estilos/componentes/FormularioInvitarPersona.css'
 
 interface PropiedadesFormularioInvitarPersona {
   empresaId: number

@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TransportApp.Application\TransportApp.Application.csproj" />
-    <ProjectReference Include="..\..\src\TransportApp.Infrastructure\TransportApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\LFMova.Application\LFMova.Application.csproj" />
+    <ProjectReference Include="..\..\src\LFMova.Infrastructure\LFMova.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.*" />

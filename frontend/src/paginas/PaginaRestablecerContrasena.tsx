@@ -6,7 +6,7 @@ import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { TarjetaAutenticacion } from '../componentes/TarjetaAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { restablecerContrasena } from '../servicios/servicioAutenticacion'
-import './PaginaRestablecerContrasena.css'
+import '../estilos/paginas/PaginaRestablecerContrasena.css'
 
 /**
  * Destino del enlace enviado por correo para establecer la contraseña: sirve
@@ -64,7 +64,7 @@ export function PaginaRestablecerContrasena() {
   }
 
   return (
-    <TarjetaAutenticacion titulo="Establecer contraseña" subtitulo="Elige la contraseña con la que vas a ingresar a TransportApp.">
+    <TarjetaAutenticacion titulo="Establecer contraseña" subtitulo="Elige la contraseña con la que vas a ingresar a LFMova.">
       <form className="pagina-restablecer-contrasena__formulario" onSubmit={alEnviar}>
         <CampoFormulario
           id="nuevaContrasena"

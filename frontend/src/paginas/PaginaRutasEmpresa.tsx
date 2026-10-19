@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { BotonInformeInasistencias } from '../componentes/BotonInformeInasistencias'
 import { BotonSecundario } from '../componentes/BotonSecundario'
 import { BuscadorEmpleadoRuta } from '../componentes/BuscadorEmpleadoRuta'
 import { CampoFormulario } from '../componentes/CampoFormulario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { DetalleRuta, type EncabezadoDetalleRuta } from '../componentes/DetalleRuta'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
+import { FilaTablaSeleccionable } from '../componentes/FilaTablaSeleccionable'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
 import { EstadoServicio, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
@@ -14,7 +16,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerPasajerosEmpresa, obtenerRutasEmpresa } from '../servicios/servicioEstadisticas'
 import { eliminarServicio } from '../servicios/servicioOperacion'
-import './PaginaRutasEmpresa.css'
+import '../estilos/paginas/PaginaRutasEmpresa.css'
 
 /** Una ruta ya finalizada (ejecutada de verdad) no se puede eliminar: es operación real, no se puede deshacer. */
 const ESTADOS_QUE_NO_SE_PUEDEN_ELIMINAR = new Set<number>([EstadoServicio.EN_CURSO, EstadoServicio.FINALIZADO])
@@ -135,6 +137,7 @@ export function PaginaRutasEmpresa() {
             Quitar fechas
           </BotonSecundario>
         )}
+        <BotonInformeInasistencias empresaId={Number(empresaId)} token={token ?? ''} />
         <p className="rutas-empresa__total">
           {rutas.length} rutas · {totalPasajeros} pasajeros
         </p>
@@ -164,7 +167,7 @@ export function PaginaRutasEmpresa() {
             </thead>
             <tbody>
               {rutas.map((ruta) => (
-                <tr key={ruta.servicioId} className="rutas-empresa__fila" onClick={() => abrirDetalleDeRuta(ruta)}>
+                <FilaTablaSeleccionable key={ruta.servicioId} alSeleccionar={() => abrirDetalleDeRuta(ruta)}>
                   <td>{ruta.fecha}</td>
                   <td>{formatearHora(ruta.hora)}</td>
                   <td>{nombreDe(NOMBRES_TIPO_SERVICIO, ruta.tipo)}</td>
@@ -198,7 +201,7 @@ export function PaginaRutasEmpresa() {
                       </button>
                     )}
                   </td>
-                </tr>
+                </FilaTablaSeleccionable>
               ))}
             </tbody>
           </table>

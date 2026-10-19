@@ -49,7 +49,7 @@ interface OpcionesSolicitud {
 }
 
 /**
- * Cliente HTTP centralizado para consumir la API REST de TransportApp.Api.
+ * Cliente HTTP centralizado para consumir la API REST de LFMova.Api.
  * Adjunta el token JWT como cabecera Authorization cuando se proporciona.
  * No decide reglas de negocio ni de autorización: solo transporta la
  * solicitud y traduce errores HTTP a ErrorApi.

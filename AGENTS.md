@@ -784,22 +784,16 @@ y fiel a las decisiones tomadas en la especificación.
 
 # 41. Zona horaria
 
-**Decisión cerrada (2026-09-18):** toda la plataforma opera en UTC.
+**Decisión vigente (2026-09-30): la aplicación es para Colombia y todo se expresa en hora de Colombia (UTC−5 fijo, sin horario de verano).** Esta decisión sustituye a la del 2026-09-18 ("toda la plataforma opera en UTC"), que ya no aplica a las fechas y horas programadas.
 
-`Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora (incluidos `FechaHora` de `Notificacion`, `Mensaje`, `Incidencia` y `Evidencia`) se interpretan, se almacenan y se comparan en UTC en el backend (`DateTime.UtcNow`), sin conversión a hora local en ninguna capa del servidor.
-
-La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
-
-No introducir `TimeZoneInfo` ni lógica de conversión de zona horaria en el backend salvo que una decisión posterior lo requiera explícitamente.
-
-Ver `spec.md` §47, `plan.md` §48 y `data-model.md` §34.
-
-**Decisión vigente (2026-09-30, precisa la anterior): la aplicación es para Colombia y todo se expresa en hora de Colombia (UTC−5 fijo, sin horario de verano).** Hay que distinguir dos clases de datos:
+Hay que distinguir dos clases de datos:
 
 * **Fechas y horas programadas** (`Servicio.Fecha`, `Servicio.HoraProgramada`, `Jornada.FechaOperativa`, `ProgramacionTransporte.Fecha`/`Hora`): se guardan tal como las escribe el coordinador o como vienen en el Excel, **en hora de Colombia**, sin convertir. Toda comparación de estas con "ahora" (por ejemplo, la alerta de ruta no iniciada) usa la hora actual de Colombia: `ReglasHoraColombia.AhoraColombia(DateTime.UtcNow)`, nunca `DateTime.UtcNow` directamente. En el frontend, "hoy" es `hoyColombia()`, no la fecha UTC.
-* **Instantes reales** (`HoraInicioReal`, `HoraFinReal`, `HoraProcesado`, `FechaHora` de `Notificacion`/`Mensaje`/`Incidencia`/`Evidencia`, vencimientos de tokens e invitaciones): se siguen guardando en UTC (`DateTime.UtcNow`) y el frontend los muestra en hora local de Colombia.
+* **Instantes reales** (`HoraInicioReal`, `HoraFinReal`, `HoraProcesado`, `FechaHora` de `Notificacion`/`Mensaje`/`Incidencia`/`Evidencia`, vencimientos de tokens e invitaciones): se guardan en UTC (`DateTime.UtcNow`) y el frontend los muestra en hora local de Colombia.
 
-El desfase de Colombia es fijo (−5 h), por lo que no se usa `TimeZoneInfo`.
+El desfase de Colombia es fijo (−5 h), por lo que no se usa `TimeZoneInfo` ni ninguna otra lógica de zonas horarias en el backend: la única conversión permitida es `ReglasHoraColombia`.
+
+Si `spec.md` §47, `plan.md` §48 o `data-model.md` §34 todavía dicen que las fechas y horas programadas están en UTC, prevalece esta sección.
 
 ---
 
@@ -824,7 +818,9 @@ Mismo espíritu que §34 (no sobreingenierizar), aplicado al frontend:
 
 ## 42.3 CSS separado por componente/página
 
-Cada componente de `componentes/` y cada pantalla de `paginas/` tiene su propio archivo CSS (`NombreComponente.css`, junto al `.tsx` correspondiente e importado solo desde ahí), como ya se hizo con `BotonTema.tsx` / `BotonTema.css`.
+Cada componente de `componentes/` y cada pantalla de `paginas/` tiene su propio archivo CSS (`NombreComponente.css`), importado solo desde su `.tsx`.
+
+**Decisión vigente (2026-10-01):** los archivos CSS no van junto al `.tsx`, sino en una carpeta aparte que replica la estructura: `src/estilos/componentes/` para los de `componentes/` y `src/estilos/paginas/` para los de `paginas/` (por ejemplo `componentes/BotonTema.tsx` importa `../estilos/componentes/BotonTema.css`). `App.css` vive en `src/estilos/`.
 
 `index.css` se reserva exclusivamente para: reinicio de estilos globales, variables de tema (tokens de color en `:root`) y estilos de elementos raíz (`body`, `#root`). No se agregan ahí estilos específicos de un componente o pantalla concreta.
 
@@ -833,3 +829,37 @@ No se comparte una hoja de estilos monolítica entre múltiples componentes no r
 ## 42.4 Solo lo necesario
 
 No se agregan librerías de UI, gestión de estado, CSS-in-JS ni utilidades adicionales sin una necesidad concreta ya existente en la pantalla que se está implementando (coherente con `plan.md` §57.2 y `AGENTS.md` §34). Si el estado local de React (`useState`, `useContext`) alcanza, no se introduce una librería externa para resolverlo.
+
+---
+
+# 43. Tamaño de los archivos
+
+**Decisión vigente (2026-10-01):** ningún archivo de código (clase de backend, componente o página de frontend, hoja de estilos, archivo de pruebas) debe superar las **250 líneas**.
+
+Cuando un archivo se acerca a ese límite se divide por responsabilidad, no de forma arbitraria: en backend, extrayendo colaboradores a `Rules`, `Validators`, `Utils` o servicios más pequeños; en frontend, extrayendo lógica a hooks (`use*`) y bloques de pantalla a subcomponentes (ver §42.2). Dividir un archivo no debe cambiar su comportamiento ni sus contratos públicos.
+
+Quedan fuera del límite las migraciones de Entity Framework Core y el código generado.
+
+---
+
+# 44. Ubicación GPS obligatoria del conductor
+
+**Decisión vigente (2026-10-17):** inicio y fin de ruta, cada incidencia (y por tanto su foto de evidencia) y cada llamada del conductor a un pasajero se registran siempre con la ubicación GPS del dispositivo. El backend rechaza con `400` la solicitud sin coordenadas válidas (`UbicacionValidador`) y el frontend no la envía: si falta el permiso o el GPS está apagado, muestra `AvisoPermiso` con el botón que abre la configuración del teléfono (plugin `capacitor-native-settings`). Esto incluye bloquear la llamada: sin ubicación no se abre el marcador.
+
+Las columnas siguen siendo nulables solo porque existen registros históricos sin ubicación (§17); no se migran ni se rellenan. En el detalle de una ruta finalizada, el coordinador ve además el tiempo de espera registrado con cada pasajero (de «He llegado» al resultado, haya sido recogido o no) y, junto a la foto de cada incidencia, un mapa del lugar donde se reportó.
+
+Si `spec.md`, `data-model.md` o `tasks.md` todavía dicen que estas coordenadas son opcionales, prevalece esta sección.
+
+---
+
+# 45. Chat de un solo sentido
+
+**Decisión vigente (2026-10-17, a pedido del cliente), modifica §30:** para evitar que el conductor se distraiga conversando con el pasajero, el chat por `ServicioPasajero` es de un solo sentido. El conductor solo envía los mensajes predeterminados (`ReglasChat.MensajesPredeterminadosConductor`, igual a `MENSAJES_RAPIDOS_CONDUCTOR` del frontend) y el pasajero únicamente los lee y recibe la notificación. Se aplica en backend (`ChatServicio.EnviarMensajeAsync` rechaza con `409` al pasajero y cualquier texto libre) y el frontend ya no muestra campo de escritura. Los mensajes anteriores se conservan y siguen visibles. Si cambia la lista, hay que actualizarla en los dos lugares.
+
+---
+
+# 46. Informe de asistencia de una ruta
+
+**Decisión vigente (2026-10-17):** el coordinador puede filtrar los pasajeros de una ruta finalizada y descargar en Excel el informe que la empresa pide enviar a diario. **Asistió** quien quedó `RECOGIDO`; **no asistió** quien quedó `NO_RECOGIDO` o avisó que no asistiría (`NO_ASISTIRA`). `PROGRAMADO`, `CONFIRMADO`, `CONDUCTOR_LLEGO` y `CANCELADO` solo salen en «Todos». La regla vive en `ReglasAsistenciaRuta` (backend) y se replica en `ordenRuta.ts` (frontend); si cambia, hay que actualizarla en los dos. La lista va en orden cronológico de registro y el número de recogida (`#`) es la posición en la ruta completa: no cambia al filtrar y queda vacío para quien no llegó a procesarse. La espera es de «He llegado» al resultado y se considera a tiempo hasta 2 minutos. Endpoint: `GET .../servicios/{id}/informe-asistencia?filtro=TODOS|ASISTIERON|NO_ASISTIERON` (solo coordinador de la empresa).
+
+**Ampliación (2026-10-18): informe de toda la jornada.** Además del informe por ruta, el coordinador descarga un único Excel con todos los que no asistieron en las rutas de una jornada (un día) o de un rango de días, con su ruta, conductor, placa, datos del pasajero, estado, hora de registro y espera. Se abre desde el botón «Informe de inasistencias» de la pantalla de Rutas, que muestra una vista previa (por defecto la fecha de hoy en Colombia, con selector Desde/Hasta) y desde ella se descarga el Excel con exactamente esos datos. Endpoints (solo coordinador de la empresa): `GET /api/empresas/{empresaId}/informe-asistencia/vista-previa?desde=&hasta=&filtro=` (JSON) y `GET /api/empresas/{empresaId}/informe-asistencia?desde=&hasta=&filtro=` (Excel) (`400` si `hasta` es anterior a `desde`; excluye rutas canceladas). Usa la misma regla de asistencia (`ReglasAsistenciaRuta`).

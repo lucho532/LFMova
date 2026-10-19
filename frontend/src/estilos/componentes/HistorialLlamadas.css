@@ -1,0 +1,57 @@
+.historial-llamadas {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.historial-llamadas__alternar {
+  justify-self: start;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.historial-llamadas__lista {
+  display: grid;
+  gap: 6px;
+}
+
+.historial-llamadas__llamada {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.historial-llamadas__llamada a {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.historial-llamadas p.historial-llamadas__vacio,
+.historial-llamadas p.historial-llamadas__nota {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.historial-llamadas p.historial-llamadas__nota {
+  font-size: 12px;
+  opacity: 0.85;
+}

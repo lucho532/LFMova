@@ -2,14 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { CampoFormulario } from '../componentes/CampoFormulario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
+import { EstadoPasajeroTexto } from '../componentes/EstadoPasajeroTexto'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { useAutenticacion } from '../contexto/useAutenticacion'
-import { NOMBRES_ESTADO_PASAJERO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
+import { NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { PasajeroEmpresa } from '../modelos/estadisticas'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { obtenerPasajerosEmpresa } from '../servicios/servicioEstadisticas'
-import './PaginaRutasEmpresa.css'
+import '../estilos/paginas/PaginaRutasEmpresa.css'
 
 /**
  * Pasajeros de las rutas de la empresa: todos los asignados o solo los ya
@@ -97,7 +98,7 @@ export function PaginaPasajerosEmpresa() {
                     {nombreDe(NOMBRES_TIPO_SERVICIO, p.tipo)} {p.sede}
                   </td>
                   <td>{p.conductor ?? <span className="rutas-empresa__sin-unidad">Sin unidad</span>}</td>
-                  <td>{nombreDe(NOMBRES_ESTADO_PASAJERO, p.estado)}</td>
+                  <td><EstadoPasajeroTexto estado={p.estado} /></td>
                 </tr>
               ))}
             </tbody>

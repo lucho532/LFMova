@@ -1,0 +1,48 @@
+.pagina-descargar {
+  display: grid;
+  gap: 24px;
+  text-align: left;
+}
+
+.pagina-descargar h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.pagina-descargar p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pagina-descargar__boton {
+  display: block;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.pagina-descargar__boton--secundario {
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.pagina-descargar__pasos {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 12px;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pagina-descargar p.pagina-descargar__nota {
+  font-size: 13px;
+  opacity: 0.8;
+}

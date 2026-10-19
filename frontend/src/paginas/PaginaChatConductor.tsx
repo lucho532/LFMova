@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ChatPasajero } from '../componentes/ChatPasajero'
+import { EstadoPasajeroTexto } from '../componentes/EstadoPasajeroTexto'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { useNotificaciones } from '../contexto/useNotificaciones'
-import { EstadoPasajero, NOMBRES_ESTADO_PASAJERO, nombreDe } from '../modelos/enumeraciones'
+import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { enviarMensaje, obtenerMensajes } from '../servicios/servicioConductorPropio'
 import { obtenerPasajeros } from '../servicios/servicioOperacion'
 import { obtenerUsuarioIdDelToken } from '../servicios/tokenJwt'
-import './PaginaChat.css'
+import '../estilos/paginas/PaginaChat.css'
 
 /**
  * Chat del conductor con un pasajero (a donde lleva una notificación): datos
@@ -50,7 +51,7 @@ export function PaginaChatConductor() {
         {pasajero && (
           <p>
             {pasajero.direccionRecogida}
-            {pasajero.barrioEmpleado ? ` · ${pasajero.barrioEmpleado}` : ''} · {nombreDe(NOMBRES_ESTADO_PASAJERO, pasajero.estado)}
+            {pasajero.barrioEmpleado ? ` · ${pasajero.barrioEmpleado}` : ''} · <EstadoPasajeroTexto estado={pasajero.estado} />
           </p>
         )}
       </header>

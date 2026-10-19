@@ -10,7 +10,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { FormularioVehiculo } from './FormularioVehiculo'
 import { MensajeAlerta } from './MensajeAlerta'
 import { SelectorFormulario } from './SelectorFormulario'
-import './PanelAccionesPersonaAdministrador.css'
+import '../estilos/componentes/PanelAccionesPersonaAdministrador.css'
 
 interface PropiedadesPanelAccionesPersonaAdministrador {
   persona: Persona

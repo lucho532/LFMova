@@ -1,0 +1,28 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "LFMovaDb": "Host=localhost;Port=5432;Database=lfmova_dev;Username=CAMBIAR;Password=CAMBIAR"
+  },
+  "Jwt": {
+    "ClaveSecreta": "CAMBIAR-CLAVE-SECRETA-DE-DESARROLLO-0123456789",
+    "Emisor": "LFMova",
+    "Audiencia": "LFMova",
+    "ExpiracionMinutos": 60
+  },
+  "Cors": {
+    "OrigenesPermitidos": [ "http://localhost:5173" ]
+  },
+  "Brevo": {
+    "ApiKey": "CAMBIAR",
+    "RemitenteEmail": "CAMBIAR",
+    "RemitenteNombre": "LFMova"
+  },
+  "Frontend": {
+    "UrlBase": "http://localhost:5173"
+  }
+}

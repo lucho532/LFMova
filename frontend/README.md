@@ -1,6 +1,6 @@
-# TransportApp — Frontend
+# LFMova — Frontend
 
-Frontend de la Plataforma de Transporte Empresarial. React + Vite + TypeScript, independiente de `TransportApp.sln` (ver `docs/sdd/03-architecture/plan.md` §57).
+Frontend de la Plataforma de Transporte Empresarial. React + Vite + TypeScript, independiente de `LFMova.sln` (ver `docs/sdd/03-architecture/plan.md` §57).
 
 ## Estructura
 
@@ -17,11 +17,11 @@ src/
 ## Requisitos previos
 
 * Node.js 20+
-* La API backend (`TransportApp.Api`) ejecutándose localmente.
+* La API backend (`LFMova.Api`) ejecutándose localmente.
 
 ## Configuración
 
-Copiar `.env.example` a `.env.development` (o `.env.local`) y ajustar `VITE_API_URL` a la URL donde corre la API. Por defecto, con el perfil `http` de la API (`dotnet run` desde `src/TransportApp.Api`), la URL es `http://localhost:5109`.
+Copiar `.env.example` a `.env.development` (o `.env.local`) y ajustar `VITE_API_URL` a la URL donde corre la API. Por defecto, con el perfil `http` de la API (`dotnet run` desde `src/LFMova.Api`), la URL es `http://localhost:5109`.
 
 La API debe tener configurado el origen del frontend en `Cors:OrigenesPermitidos` (ver `appsettings.Development.json` del backend); por defecto ya incluye `http://localhost:5173`, el puerto por defecto de Vite.
 
@@ -30,7 +30,7 @@ La API debe tener configurado el origen del frontend en `Cors:OrigenesPermitidos
 En una terminal, iniciar el backend:
 
 ```bash
-dotnet run --project ../src/TransportApp.Api
+dotnet run --project ../src/LFMova.Api
 ```
 
 En otra terminal, iniciar el frontend:

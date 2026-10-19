@@ -1,4 +1,4 @@
-/** Refleja NotificacionDto (TransportApp.Application). */
+/** Refleja NotificacionDto (LFMova.Application). */
 export interface Notificacion {
   notificacionId: number
   tipo: string

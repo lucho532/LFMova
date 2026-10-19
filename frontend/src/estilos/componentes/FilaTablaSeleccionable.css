@@ -1,0 +1,35 @@
+.fila-tabla-seleccionable {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+/*
+ * Resalte al pasar el cursor o enfocar: se adelanta, crece un poco y se tiñe de un azul más marcado que el
+ * fondo suave del tema, con una barra azul a la izquierda. El selector es más específico que el de
+ * TablaDatos.css para que prevalezca también sobre el fondo de las filas pares.
+ */
+table tbody tr.fila-tabla-seleccionable:hover,
+table tbody tr.fila-tabla-seleccionable:focus-visible {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+  transform: scale(1.012);
+  z-index: 1;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 40%, transparent);
+  outline: none;
+}
+
+.fila-tabla-seleccionable:hover td:first-child,
+.fila-tabla-seleccionable:focus-visible td:first-child {
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fila-tabla-seleccionable {
+    transition: none;
+  }
+
+  table tbody tr.fila-tabla-seleccionable:hover,
+  table tbody tr.fila-tabla-seleccionable:focus-visible {
+    transform: none;
+  }
+}

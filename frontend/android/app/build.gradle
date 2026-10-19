@@ -1,23 +1,41 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.transportapp.app"
-    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.lfmova.app"
+    compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.transportapp.app"
+        applicationId "com.lfmova.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    // La firma de distribución se lee de android/keystore.properties, que no se sube al repositorio.
+    // Sin ese archivo el proyecto sigue compilando en debug; solo falla la versión de distribución.
+    def archivoFirma = rootProject.file('keystore.properties')
+    def datosFirma = new Properties()
+    if (archivoFirma.exists()) {
+        archivoFirma.withInputStream { datosFirma.load(it) }
+    }
+    signingConfigs {
+        release {
+            if (archivoFirma.exists()) {
+                storeFile file(datosFirma['storeFile'])
+                storePassword datosFirma['storePassword']
+                keyAlias datosFirma['keyAlias']
+                keyPassword datosFirma['keyPassword']
+            }
         }
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

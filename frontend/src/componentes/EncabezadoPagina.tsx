@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import './EncabezadoPagina.css'
+import '../estilos/componentes/EncabezadoPagina.css'
 
 interface PropiedadesEncabezadoPagina {
   titulo: ReactNode

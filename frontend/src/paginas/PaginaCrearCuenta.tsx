@@ -8,7 +8,7 @@ import type { DetalleInvitacion } from '../modelos/invitacion'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { registrarse } from '../servicios/servicioAutenticacion'
 import { obtenerDetalleInvitacion } from '../servicios/servicioInvitaciones'
-import './PaginaCrearCuenta.css'
+import '../estilos/paginas/PaginaCrearCuenta.css'
 
 /**
  * Permite que cualquier persona cree su cuenta (correo, nombre, cédula,
@@ -114,6 +114,9 @@ export function PaginaCrearCuenta() {
 
         {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
 
+        <p className="pagina-crear-cuenta__privacidad">
+          Al crear tu cuenta autorizas el tratamiento de tus datos según la <Link to="/privacidad">Política de privacidad</Link>.
+        </p>
         <BotonPrimario disabled={enviando}>{enviando ? 'Creando cuenta…' : 'Crear cuenta'}</BotonPrimario>
       </form>
     </TarjetaAutenticacion>

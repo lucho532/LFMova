@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type MouseEvent } from 'react'
-import './CampoFormulario.css'
+import '../estilos/componentes/CampoFormulario.css'
 
 interface PropiedadesCampoFormulario {
   id: string

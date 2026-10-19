@@ -1,13 +1,14 @@
 import { useEffect, useRef } from 'react'
 import type { Mensaje } from '../modelos/mensaje'
 import { ChatPasajero } from './ChatPasajero'
-import './VentanaChat.css'
+import '../estilos/componentes/VentanaChat.css'
 
 interface PropiedadesVentanaChat {
   abierto: boolean
   miUsuarioId: number | null
   cargarMensajes: () => Promise<Mensaje[]>
-  enviar: (contenido: string) => Promise<Mensaje>
+  /** Solo para el conductor (mensajes predeterminados); el pasajero únicamente lee. */
+  enviar?: (contenido: string) => Promise<Mensaje>
   /** El conductor ve, dentro del chat, el desplegable con mensajes predeterminados de un toque. */
   conRespuestasRapidas?: boolean
   /** La ruta ya finalizó: se puede seguir viendo la conversación, pero no enviar más mensajes. */

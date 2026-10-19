@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNotificaciones } from '../contexto/useNotificaciones'
-import { EstadoPasajero, NOMBRES_ESTADO_PASAJERO, nombreDe } from '../modelos/enumeraciones'
+import { EstadoPasajero } from '../modelos/enumeraciones'
 import type { ServicioPasajero } from '../modelos/operacion'
 import { VentanaChat } from './VentanaChat'
+import { EstadoPasajeroTexto } from './EstadoPasajeroTexto'
 import type { Mensaje } from '../modelos/mensaje'
 import type { IncidenciaPasajero, UbicacionAnterior } from '../servicios/servicioConductorPropio'
+import { BotonLlamar } from './BotonLlamar'
 import { CronometroEspera } from './CronometroEspera'
 import { HerramientasPasajero } from './HerramientasPasajero'
 import { ModalConfirmacion } from './ModalConfirmacion'
-import './TarjetaPasajeroConductor.css'
+import '../estilos/componentes/TarjetaPasajeroConductor.css'
 
 /** El enlace de una notificación de chat termina en el servicioPasajeroId de esa conversación. */
 function esMensajeDelPasajero(enlace: string | null, servicioPasajeroId: number): boolean {
@@ -27,6 +29,8 @@ interface AccionPasajero {
 
 interface PropiedadesTarjetaPasajeroConductor {
   pasajero: ServicioPasajero
+  /** Empresa y jornada del servicio (el pasajero solo trae el identificador del servicio). */
+  referenciaServicio: { empresaId: number; jornadaId: number }
   /** Solo se ofrecen acciones mientras el servicio está en curso. */
   servicioEnCurso: boolean
   /** La ruta ya finalizó: el chat queda solo de lectura, sin poder enviar más mensajes. */
@@ -38,12 +42,12 @@ interface PropiedadesTarjetaPasajeroConductor {
   enviarMensaje: (contenido: string) => Promise<Mensaje>
   /** Abre el chat de entrada (por ejemplo, al llegar desde una notificación). */
   chatAbiertoInicial?: boolean
-  /** Sube o baja al pasajero en el orden de recogida (-1 sube, 1 baja); no se ofrece si es <code>undefined</code>. */
-  moverOrden?: (delta: number) => Promise<void>
+  /** Indica que la tarjeta se puede arrastrar para cambiar el orden de recogida (lo gestiona la lista). */
+  arrastrable?: boolean
   guardarUbicacion: (latitud: number, longitud: number) => Promise<void>
   cargarUbicacionesAnteriores: () => Promise<UbicacionAnterior[]>
   eliminarUbicacionGuardada: () => Promise<void>
-  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number | null, longitud: number | null) => Promise<void>
+  reportarIncidencia: (tipo: number, descripcion: string, foto: File | null, latitud: number, longitud: number) => Promise<void>
   cargarIncidencias: () => Promise<IncidenciaPasajero[]>
   cargarFotoEvidencia: (incidenciaId: number, evidenciaId: number) => Promise<string>
 }
@@ -58,6 +62,7 @@ interface PropiedadesTarjetaPasajeroConductor {
  */
 export function TarjetaPasajeroConductor({
   pasajero,
+  referenciaServicio,
   servicioEnCurso,
   servicioFinalizado = false,
   miUsuarioId,
@@ -66,7 +71,7 @@ export function TarjetaPasajeroConductor({
   cargarMensajes,
   enviarMensaje,
   chatAbiertoInicial = false,
-  moverOrden,
+  arrastrable = false,
   guardarUbicacion,
   cargarUbicacionesAnteriores,
   eliminarUbicacionGuardada,
@@ -91,6 +96,7 @@ export function TarjetaPasajeroConductor({
   const [ocupado, setOcupado] = useState(false)
 
   const estado = pasajero.estado
+  const referenciaPasajero = { ...referenciaServicio, servicioId: pasajero.servicioId, servicioPasajeroId: pasajero.servicioPasajeroId }
   const acciones: AccionPasajero[] = []
   const mensajesSinLeer = notificaciones.filter(
     (n) => !n.leida && n.tipo === 'MENSAJE_NUEVO' && esMensajeDelPasajero(n.enlace, pasajero.servicioPasajeroId),
@@ -148,15 +154,10 @@ export function TarjetaPasajeroConductor({
           </span>
         </button>
         <span className="tarjeta-pasajero-conductor__orden">
-          {moverOrden && (
-            <>
-              <button type="button" className="tarjeta-pasajero-conductor__mover" disabled={ocupado} onClick={() => ejecutar(() => moverOrden(-1))} aria-label="Subir en el orden">
-                ▲
-              </button>
-              <button type="button" className="tarjeta-pasajero-conductor__mover" disabled={ocupado} onClick={() => ejecutar(() => moverOrden(1))} aria-label="Bajar en el orden">
-                ▼
-              </button>
-            </>
+          {arrastrable && (
+            <span className="tarjeta-pasajero-conductor__agarre" aria-hidden="true" title="Mantén presionada la tarjeta para moverla">
+              ⠿
+            </span>
           )}
           #{pasajero.orden}
         </span>
@@ -171,7 +172,7 @@ export function TarjetaPasajeroConductor({
             </div>
             <div>
               <dt>Teléfono</dt>
-              <dd>{pasajero.telefonoEmpleado ? <a href={`tel:${pasajero.telefonoEmpleado}`}>{pasajero.telefonoEmpleado}</a> : '—'}</dd>
+              <dd>{pasajero.telefonoEmpleado || '—'}</dd>
             </div>
             <div>
               <dt>Dirección</dt>
@@ -185,23 +186,21 @@ export function TarjetaPasajeroConductor({
           {/* Confirmado ya no lleva letrero propio: toda la tarjeta se pinta de verde (ver className del <li>). */}
           {estado === EstadoPasajero.NO_ASISTIRA && <p className="tarjeta-pasajero-conductor__letrero tarjeta-pasajero-conductor__letrero--rojo">✖ El pasajero avisó que no asistirá</p>}
           {estado !== EstadoPasajero.CONFIRMADO && estado !== EstadoPasajero.NO_ASISTIRA && (
-            <p className="tarjeta-pasajero-conductor__estado">● {nombreDe(NOMBRES_ESTADO_PASAJERO, estado)}</p>
+            <p className="tarjeta-pasajero-conductor__estado">● <EstadoPasajeroTexto estado={estado} /></p>
           )}
 
           <div className="tarjeta-pasajero-conductor__contacto">
-            <a href={`tel:${pasajero.telefonoEmpleado}`} className="tarjeta-pasajero-conductor__boton">
-              Llamar
-            </a>
+            <BotonLlamar pasajero={referenciaPasajero} nombre={pasajero.nombreCompletoEmpleado} telefono={pasajero.telefonoEmpleado} className="tarjeta-pasajero-conductor__boton" />
             <button type="button" className="tarjeta-pasajero-conductor__boton tarjeta-pasajero-conductor__boton-chat" onClick={alAbrirChat}>
               Chat
               {mensajesSinLeer.length > 0 && <span className="tarjeta-pasajero-conductor__insignia">{mensajesSinLeer.length > 9 ? '9+' : mensajesSinLeer.length}</span>}
             </button>
           </div>
-
           <CronometroEspera horaLlegadaConductor={pasajero.horaLlegadaConductor} activo={servicioEnCurso && estado === EstadoPasajero.CONDUCTOR_LLEGO} />
 
           <HerramientasPasajero
             pasajero={pasajero}
+            referenciaPasajero={referenciaPasajero}
             servicioEnCurso={servicioEnCurso}
             guardarUbicacion={guardarUbicacion}
             cargarUbicacionesAnteriores={cargarUbicacionesAnteriores}

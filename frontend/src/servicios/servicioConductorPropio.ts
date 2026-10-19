@@ -15,14 +15,14 @@ export function obtenerMisServiciosConductor(token: string): Promise<Servicio[]>
 
 /**
  * Consume POST .../servicios/{id}/iniciar. Solo el conductor asignado puede hacerlo.
- * `latitud`/`longitud` son la ubicación real del conductor en ese momento (opcional: si el dispositivo
- * no la entrega, el servicio se inicia igual).
+ * `latitud`/`longitud` son la ubicación real del conductor en ese momento; son obligatorias: el backend
+ * rechaza el inicio sin ellas.
  */
 export function iniciarServicio(
   servicio: { empresaId: number; jornadaId: number; servicioId: number },
   token: string,
-  latitud: number | null = null,
-  longitud: number | null = null,
+  latitud: number,
+  longitud: number,
 ): Promise<void> {
   return solicitarApi<void>(`${rutaServicio(servicio)}/iniciar`, { metodo: 'POST', cuerpo: { latitud, longitud }, token })
 }
@@ -30,14 +30,14 @@ export function iniciarServicio(
 /**
  * Consume POST .../servicios/{id}/finalizar. El backend rechaza la
  * finalización si hay pasajeros pendientes. `latitud`/`longitud` son la
- * ubicación real del conductor en ese momento (opcional: si el dispositivo no
- * la entrega, el servicio se finaliza igual).
+ * ubicación real del conductor en ese momento; son obligatorias: el backend
+ * rechaza la finalización sin ellas.
  */
 export function finalizarServicio(
   servicio: { empresaId: number; jornadaId: number; servicioId: number },
   token: string,
-  latitud: number | null = null,
-  longitud: number | null = null,
+  latitud: number,
+  longitud: number,
 ): Promise<void> {
   return solicitarApi<void>(`${rutaServicio(servicio)}/finalizar`, { metodo: 'POST', cuerpo: { latitud, longitud }, token })
 }
@@ -108,7 +108,7 @@ export function eliminarUbicacionGuardada(servicio: ReferenciaServicio, servicio
 export function crearIncidencia(
   servicio: ReferenciaServicio,
   servicioPasajeroId: number,
-  datos: { tipo: number; descripcion: string; latitud: number | null; longitud: number | null },
+  datos: { tipo: number; descripcion: string; latitud: number; longitud: number },
   token: string,
 ): Promise<IncidenciaPasajero> {
   return solicitarApi<IncidenciaPasajero>(`${rutaServicio(servicio)}/pasajeros/${servicioPasajeroId}/incidencias`, { metodo: 'POST', cuerpo: datos, token })

@@ -1,4 +1,4 @@
-import './VigenciaDocumento.css'
+import '../estilos/componentes/VigenciaDocumento.css'
 
 const DIAS_AVISO = 30
 

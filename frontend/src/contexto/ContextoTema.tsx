@@ -9,7 +9,7 @@ export interface ValorContextoTema {
 
 export const ContextoTema = createContext<ValorContextoTema | undefined>(undefined)
 
-const CLAVE_ALMACENAMIENTO = 'transportapp.tema'
+const CLAVE_ALMACENAMIENTO = 'lfmova.tema'
 
 function obtenerTemaInicial(): Tema {
   try {

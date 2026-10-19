@@ -9,17 +9,17 @@ Documento breve para orientar a quien se incorpore al proyecto. No sustituye a
 Monolito modular por capas, con dependencias en una sola dirección:
 
 ```text
-TransportApp.Api
+LFMova.Api
         ↓
-TransportApp.Application
+LFMova.Application
         ↓
-TransportApp.Domain
+LFMova.Domain
 
-TransportApp.Infrastructure
+LFMova.Infrastructure
         ↓
-TransportApp.Application
+LFMova.Application
         ↓
-TransportApp.Domain
+LFMova.Domain
 ```
 
 `Domain` no depende de ninguna otra capa. `Application` depende solo de
@@ -30,21 +30,21 @@ implementaciones concretas viven en `Infrastructure`).
 
 ## 2. Responsabilidades
 
-* **`TransportApp.Domain`** — Entidades (`Servicio`, `Jornada`, `Conductor`,
+* **`LFMova.Domain`** — Entidades (`Servicio`, `Jornada`, `Conductor`,
   etc.), enums y reglas de negocio puras (`Reglas*.cs`, p. ej.
   `ReglasUnidadOperativa.HayConflictoTemporal`). Sin dependencias externas, sin
   Entity Framework, sin conocimiento de HTTP.
-* **`TransportApp.Application`** — Casos de uso (`*Servicio.cs`,
+* **`LFMova.Application`** — Casos de uso (`*Servicio.cs`,
   ej. `ConductorServicio`, `ServicioAutenticacion`), DTOs de entrada/salida,
   `Mappers` (entidad ↔ DTO), `Validators` (validación de formato, no de
   negocio) e interfaces de repositorio (`I*Repositorio`) que `Infrastructure`
   implementa. Coordina el dominio; no decide autorización (eso es de `Api`) ni
   accede directamente a EF Core.
-* **`TransportApp.Infrastructure`** — `TransportAppDbContext` (EF Core +
+* **`LFMova.Infrastructure`** — `LFMovaDbContext` (EF Core +
   Npgsql), configuraciones de mapeo, migraciones, implementaciones de
   `I*Repositorio`, hasheo de contraseñas y generación de JWT
   (`GeneradorTokenJwt`).
-* **`TransportApp.Api`** — Controllers delgados (sin lógica de negocio),
+* **`LFMova.Api`** — Controllers delgados (sin lógica de negocio),
   autenticación/autorización (JWT, políticas), Swagger y configuración de
   arranque (`Program.cs`). Cada Controller delega en un `*Servicio` de
   `Application` y solo decide si la petición está autorizada para la empresa
@@ -63,7 +63,7 @@ Reglas de Domain           — invariantes de negocio puras
    ↓
 I*Repositorio (Application, implementado en Infrastructure)
    ↓
-TransportAppDbContext (Infrastructure) → PostgreSQL
+LFMovaDbContext (Infrastructure) → PostgreSQL
    ↓ (entidad)
 Mapper (Application)       — entidad → DTO de salida
    ↓

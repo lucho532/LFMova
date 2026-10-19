@@ -15,3 +15,8 @@ export function actualizarCuenta(datos: { nombreCompleto: string; telefono: stri
 export function cambiarContrasena(datos: CambiarContrasenaDatos, token: string): Promise<void> {
   return solicitarApi<void>('/api/cuenta/cambiar-contrasena', { metodo: 'POST', cuerpo: datos, token })
 }
+
+/** Consume POST /api/cuenta/eliminar: la persona elimina su propia cuenta, confirmando con su contraseña. */
+export function eliminarCuenta(contrasena: string, token: string): Promise<void> {
+  return solicitarApi<void>('/api/cuenta/eliminar', { metodo: 'POST', cuerpo: { contrasena }, token })
+}

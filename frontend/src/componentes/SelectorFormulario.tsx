@@ -1,4 +1,4 @@
-import './SelectorFormulario.css'
+import '../estilos/componentes/SelectorFormulario.css'
 
 export interface OpcionSelector {
   valor: string

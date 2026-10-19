@@ -1,4 +1,4 @@
-import './GraficaBarras.css'
+import '../estilos/componentes/GraficaBarras.css'
 
 export interface BarraGrafica {
   etiqueta: string

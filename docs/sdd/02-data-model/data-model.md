@@ -763,6 +763,11 @@ Campos:
 * `DireccionRecogida`
 * `Latitud`
 * `Longitud`
+* `LatitudCompartida` (opcional)
+* `LongitudCompartida` (opcional)
+* `FechaHoraUbicacionCompartida` (opcional, UTC)
+
+**Decisión del usuario (2026-10-01):** `LatitudCompartida`/`LongitudCompartida`/`FechaHoraUbicacionCompartida` guardan el punto que el propio empleado compartió para ese servicio y cuándo lo hizo. `Latitud`/`Longitud` siguen siendo el punto de recogida utilizado (también los escribe el conductor al guardar la ubicación), por lo que no sirven para saber quién lo puso. Solo se conserva la última ubicación compartida, sin historial (ver `AGENTS.md` §18).
 
 Restricción:
 
@@ -1378,7 +1383,7 @@ El tiempo máximo operativo definido inicialmente es de aproximadamente 2 minuto
 
 ### Incidencias
 
-El conductor puede registrar incidencias y evidencias.
+El conductor puede registrar incidencias y evidencias. Una incidencia de cualquier tipo deja al pasajero como `NO_RECOGIDO` (decisión del 2026-10-02: ya no hay incidencias solo informativas).
 
 ### Finalización
 
@@ -1390,7 +1395,7 @@ Para servicios de entrada:
 
 Para servicios de salida:
 
-* pueden finalizar cuando se complete el transporte de los pasajeros;
+* pueden finalizar cuando se complete el transporte de los pasajeros: igual que en las entradas, no se permite finalizar mientras existan pasajeros pendientes de procesar (decisión del 2026-10-02);
 * no necesitan terminar en una ubicación concreta.
 
 El registro de ubicación exacta y radio de geocerca queda pendiente de definición técnica.
@@ -1463,9 +1468,21 @@ Los siguientes puntos permanecen deliberadamente abiertos:
 
 La validación de identidad para activación ya no es una decisión pendiente: se resuelve mediante el código de activación generado por el conductor (ver §28).
 
-La configuración de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC (ver `AGENTS.md` §41 y `plan.md` §48).
+La configuración de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30, sustituye a la del 2026-09-18 que ponía todo en UTC): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia (ver `AGENTS.md` §41 y `plan.md` §48).
 19. Estrategia de autorización para múltiples roles.
 20. Estrategia para selección de rol activo cuando un usuario posee múltiples roles.
 21. Auditoría de asignación y eliminación de roles.
 
 Estos puntos deben resolverse en `plan.md` sin inventar requisitos de negocio que todavía no hayan sido aprobados.
+
+---
+
+# Facturación (2026-10-05)
+
+`UsoConductor`: una fila por ruta finalizada. `EmpresaId` (relación), `ServicioId` (único, sin relación), `Fecha` (día de finalización en hora de Colombia), `ConductorId` (copia, sin relación), `Cedula`, `NombreConductor`, `Placa`, `PasajerosTransportados`. No se actualiza ni se borra.
+
+`CierreMensual`: una fila por empresa y mes (único). `EmpresaId`, `Anio`, `Mes`, `FechaCierre` (UTC), `ConductoresActivos`, `RutasFinalizadas`, `PasajerosTransportados`.
+
+# Registro de llamadas (2026-10-06)
+
+`RegistroLlamada` (tabla `RegistrosLlamada`): una fila por cada vez que el conductor pulsa "Llamar" sobre un pasajero. `ServicioPasajeroId` (relación, **borrado en cascada**: es la única relación del modelo que no es restrictiva, porque la llamada no significa nada sin su pasajero), `FechaHora` (UTC), `DuracionAproximadaSegundos` (nulo si no se midió), `Latitud`, `Longitud` (nulos si no hay ubicación).

@@ -362,6 +362,8 @@ El formato exacto de Excel queda pendiente hasta disponer del archivo real.
 
 La plataforma no debe inventar columnas o reglas que no hayan sido definidas a partir del archivo real.
 
+**Decisión del usuario (2026-10-02): importación sobre rutas ya publicadas o en curso.** Una importación nunca agrega pasajeros a una ruta que ya está en curso, finalizada o cancelada: esos pasajeros van a otra ruta. Si completa una ruta que ya estaba publicada, la ruta vuelve a `ASIGNADO` (el conductor deja de verla) y el resultado de la importación lo advierte; al volver a publicarla, el conductor recibe el aviso y el correo con el Excel actualizado.
+
 ---
 
 # 16. Historial de ubicación
@@ -479,6 +481,15 @@ Después de publicar, el coordinador puede realizar modificaciones.
 
 Si una modificación afecta directamente a determinados usuarios, solo ellos deben recibir la notificación correspondiente.
 
+**Decisión del usuario (2026-10-02): soporte de rutas por correo.** Al publicar, cada conductor al que se le publicó alguna ruta recibe además, en el correo de su cuenta, un archivo Excel de soporte para consultar sus rutas si la aplicación no está disponible:
+
+* contiene únicamente **sus propias rutas** de esa jornada que ya son visibles para él (nunca las de otros conductores ni sus pasajeros);
+* es una sola hoja con un bloque por ruta (sentido, sede, fecha y hora) y, debajo, sus pasajeros en orden de recogida con cédula, nombre, teléfono, dirección y barrio;
+* cada nueva publicación reenvía el soporte actualizado; el correo más reciente es el vigente;
+* si el conductor no tiene correo o el envío falla, la publicación no se deshace.
+
+**Decisión del usuario (2026-10-02): Excel de la jornada para el coordinador.** Desde la pantalla de Programación, el coordinador puede descargar un Excel con el mismo formato que reúne **todas** las rutas no canceladas de la jornada (publicadas o no, de todos los conductores y las que aún no tienen conductor), indicando en cada bloque el conductor de la ruta. Es solo una descarga: no publica ni envía nada.
+
 ---
 
 # 21. Servicio pasajero
@@ -515,7 +526,7 @@ Los estados disponibles son:
 
 **Decisión del usuario (2026-09-19):** el conductor solo registra dos pasos por pasajero: la llegada al punto de recogida (`CONDUCTOR_LLEGO`) y el resultado final (`RECOGIDO` o el tipo de incidencia). Se eliminaron `ESPERANDO`, `EN_VEHICULO` y `DEJADO_EN_DESTINO`: un pasajero `RECOGIDO` se considera transportado cuando el servicio se finaliza, sin acción adicional del conductor.
 
-**Decisión del usuario (2026-09-19, ajuste):** los motivos por los que no se recoge a un pasajero (`NO_CONTESTA`, `NO_SE_ENCUENTRA`, `DIRECCION_INCORRECTA`, `NO_SE_PUDO_RECOGER`) ya no son estados: se registran como **incidencias** (con foto y ubicación). Una incidencia de esos cuatro tipos deja al pasajero automáticamente como `NO_RECOGIDO`. `UBICACION_MODIFICADA` y `OTRA` son informativas y no cambian el estado.
+**Decisión del usuario (2026-09-19, ajuste):** los motivos por los que no se recoge a un pasajero (`NO_CONTESTA`, `NO_SE_ENCUENTRA`, `DIRECCION_INCORRECTA`, `NO_SE_PUDO_RECOGER`) ya no son estados: se registran como **incidencias** (con foto y ubicación). Una incidencia de esos cuatro tipos deja al pasajero automáticamente como `NO_RECOGIDO`. `UBICACION_MODIFICADA` y `OTRA` son informativas y no cambian el estado. **Ajuste del 2026-10-02:** ya no hay incidencias solo informativas; una incidencia de cualquier tipo (también `UBICACION_MODIFICADA` y `OTRA`) deja al pasajero como `NO_RECOGIDO`. Además, tampoco una ruta de `SALIDA` puede finalizarse con pasajeros pendientes de procesar.
 
 No se implementará inicialmente un historial automático de todos los cambios de estado.
 
@@ -894,6 +905,16 @@ Los registros históricos mantienen el contexto empresarial original.
 
 Una empresa nueva no obtiene automáticamente acceso a la información histórica de la persona en otra empresa.
 
+**Decisión del usuario (2026-10-02): eliminar a una persona desde la gestión de empleados.** Un `COORDINADOR` puede eliminar a un empleado de su empresa para corregir registros erróneos y permitir que la persona vuelva a registrarse. Si la persona solo pertenece a esa empresa, se borra todo rastro de su cédula: cuenta, roles, ficha de conductor con sus vehículos y unidades, invitaciones y también su historial (rutas en las que fue pasajera, mensajes, incidencias y evidencias); es una excepción expresa a la regla de no modificar el histórico. Las rutas que conducía se conservan, pero quedan sin unidad (las asignadas o publicadas vuelven a `PENDIENTE_ASIGNACION`). Si la persona también pertenece a otra empresa (rol, vinculación como conductora o invitación aceptada), solo se la quita de la empresa del coordinador y su cuenta se conserva. No se puede eliminar a un coordinador o administrador (hay que quitarle antes el rol), a quien tiene una ruta en curso, ni a uno mismo. El coordinador también puede quitar cualquier invitación de la lista de invitaciones enviadas; quitar una pendiente anula su enlace. Ver `EliminacionPersonaServicio`.
+
+**Decisión del usuario (2026-10-03): eliminar la propia cuenta.** Cualquier persona, sea cual sea su rol (también un coordinador), puede eliminar su propia cuenta desde «Mi cuenta», confirmando con su contraseña; es además un requisito de las tiendas de aplicaciones. Se borra siempre la cuenta completa, con las mismas consecuencias descritas arriba. Si una empresa queda sin coordinador, el administrador de plataforma le asigna uno nuevo. No puede hacerlo quien tiene una ruta en curso ni el único administrador de plataforma (la plataforma quedaría sin nadie que la administre). Para que esto sea posible, las importaciones de Excel y las invitaciones conservan su registro aunque desaparezca quien las hizo: `ImportacionExcel.CoordinadorId` e `InvitacionEmpresa.UsuarioInvitadorId` pasan a ser opcionales y quedan vacíos; por lo mismo, un coordinador ya puede eliminar a un antiguo coordinador que dejó esos registros. La web publica dos páginas sin sesión: `/privacidad` (política de tratamiento de datos, responsable Luis Fernando Ramírez Castaño) y `/eliminar-cuenta` (cómo eliminar la cuenta y qué se borra).
+
+**Decisión del usuario (2026-10-05): facturación por conductor.** La plataforma se cobra por mes y por conductor que **finalizó al menos una ruta** en ese mes para la empresa; un conductor que trabaja para dos empresas cuenta en cada una. El mes se determina por el día en que se finalizó la ruta, en hora de Colombia. Al finalizar una ruta se anota un registro (`UsoConductor`) con una copia de los datos del conductor (cédula, nombre, placa) y los pasajeros recogidos; ese registro no se modifica ni se borra, tampoco cuando se elimina al conductor, de modo que este sigue contando en el mes en que trabajó y deja de aparecer desde el siguiente. A una misma persona se la identifica por su cédula. El administrador de plataforma dispone de una pantalla de Facturación, **de solo lectura sobre la operación**, con el resumen por empresa y mes, el detalle por conductor, un Excel de soporte y el **cierre mensual** (`CierreMensual`), que deja fijos los totales y solo puede hacerse una vez y sobre un mes ya terminado. La pantalla no maneja precios ni genera facturas. Es una excepción acotada a la regla de que el administrador no participa en la gestión operativa: ve nombres y cédulas de conductores únicamente para facturar. Ver `FacturacionServicio`.
+
+**Decisión del usuario (2026-10-05): corregir y eliminar empresas.** El administrador de plataforma puede corregir el nombre, el CIF y la dirección de una empresa, y eliminarla por completo. Eliminar borra la empresa con **todo su historial**, también el de facturación: sedes, zonas, macrozonas, corredores, barreras, jornadas, rutas, pasajeros, chats, incidencias y evidencias, programaciones, importaciones, invitaciones, registros de uso y cierres mensuales. Las personas **conservan su cuenta**, ya sin empresa: el rol `EMPLEADO` queda sin empresa, el de `COORDINADOR` de esa empresa desaparece y los conductores conservan su ficha, sus vehículos y sus unidades (pierden solo la vinculación). Se borran únicamente las cuentas que nunca se activaron (sin contraseña) y no tienen otra relación, normalmente pasajeros creados por una importación. No se puede eliminar una empresa con una ruta en curso. Es una excepción expresa a la regla de no modificar el histórico. Ver `EdicionEmpresaServicio`.
+
+**Decisión del usuario (2026-10-06): registro de llamadas del conductor al pasajero.** Para poder comprobar si el conductor llamó a un pasajero, cada vez que pulsa "Llamar" en la tarjeta del pasajero se anota un `RegistroLlamada` con el instante (UTC, puesto por el servidor), la ubicación del conductor si está disponible y una **duración aproximada**: el tiempo que estuvo fuera de la aplicación hasta volver, que incluye lo que timbró. La llamada ocurre en el marcador del teléfono, así que el registro **no indica si el pasajero contestó**; no se lee el historial de llamadas del dispositivo ni se usa una central telefónica. Una duración de más de 30 minutos se descarta por inverosímil y la duración se guarda una sola vez. El botón "Llamar" abre dos opciones: llamar y ver el historial de llamadas. El historial lo ven **los tres implicados**: el conductor asignado, el empleado que es el pasajero y los coordinadores de la empresa (en el detalle de la ruta), y se muestra además dentro de la incidencia de tipo "No contesta". Solo el conductor asignado puede registrar llamadas. Ver `RegistroLlamadaServicio`.
+
 ---
 
 # 40. Reglas de integridad
@@ -1073,9 +1094,9 @@ Las siguientes decisiones todavía no están cerradas y no deben ser inventadas 
 
 El método de activación inicial (código generado por el conductor) ya no es una decisión pendiente: quedó cerrado en `data-model.md` §28 y en esta sección §10.
 
-La estrategia de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, almacenan y comparan en UTC, sin conversión a hora local en el backend; la presentación en hora local es responsabilidad exclusiva del frontend. Ver `AGENTS.md` §41.
+La estrategia de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30, sustituye a la del 2026-09-18 que ponía todo en UTC): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia. Ver `AGENTS.md` §41.
 
-La estrategia definitiva de claims JWT ya no es una decisión pendiente (decisión cerrada, 2026-09-18): cada rol activo del usuario se codifica como un claim `rol` independiente, con formato `"ROL:EmpresaId"` para roles con empresa (`COORDINADOR`, `EMPLEADO`) o `"ROL"` para roles globales (`CONDUCTOR`, `ADMINISTRADOR_PLATAFORMA`). Ver `GeneradorTokenJwt` (`TransportApp.Infrastructure.Autenticacion`) y `docs/sdd/03-architecture/overview.md` §4.
+La estrategia definitiva de claims JWT ya no es una decisión pendiente (decisión cerrada, 2026-09-18): cada rol activo del usuario se codifica como un claim `rol` independiente, con formato `"ROL:EmpresaId"` para roles con empresa (`COORDINADOR`, `EMPLEADO`) o `"ROL"` para roles globales (`CONDUCTOR`, `ADMINISTRADOR_PLATAFORMA`). Ver `GeneradorTokenJwt` (`LFMova.Infrastructure.Autenticacion`) y `docs/sdd/03-architecture/overview.md` §4.
 
 La estrategia definitiva para pruebas de integración ya no es una decisión pendiente (decisión cerrada, 2026-09-18): un único contenedor PostgreSQL (Testcontainers.PostgreSql, imagen `postgres:16-alpine`) compartido por colección xUnit, migrado una sola vez, ejercitado mediante `WebApplicationFactory` con HTTP real. Ver `tasks.md` T114-T118.
 

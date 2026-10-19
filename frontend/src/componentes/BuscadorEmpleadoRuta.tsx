@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { PasajeroEmpresa } from '../modelos/estadisticas'
-import './BuscadorEmpleadoRuta.css'
+import '../estilos/componentes/BuscadorEmpleadoRuta.css'
 
 interface PropiedadesBuscadorEmpleadoRuta {
   pasajeros: PasajeroEmpresa[]

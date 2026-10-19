@@ -11,11 +11,6 @@ export function crearCorredorVial(empresaId: number, datos: DatosCorredorVial, t
   return solicitarApi<CorredorVial>(`/api/empresas/${empresaId}/corredores-viales`, { metodo: 'POST', cuerpo: datos, token })
 }
 
-/** Consume PUT /api/empresas/{empresaId}/corredores-viales/{corredorVialId}. Requiere rol COORDINADOR de esa empresa. */
-export function actualizarCorredorVial(empresaId: number, corredorVialId: number, datos: DatosCorredorVial, token: string): Promise<void> {
-  return solicitarApi<void>(`/api/empresas/${empresaId}/corredores-viales/${corredorVialId}`, { metodo: 'PUT', cuerpo: datos, token })
-}
-
 /** Consume POST /api/empresas/{empresaId}/corredores-viales/{corredorVialId}/activar. Requiere rol COORDINADOR de esa empresa. */
 export function activarCorredorVial(empresaId: number, corredorVialId: number, token: string): Promise<void> {
   return solicitarApi<void>(`/api/empresas/${empresaId}/corredores-viales/${corredorVialId}/activar`, { metodo: 'POST', token })

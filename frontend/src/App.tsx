@@ -1,11 +1,16 @@
+import { useState } from 'react'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import './App.css'
+import './estilos/App.css'
 import { BarraLateral } from './componentes/BarraLateral'
+import { AvisoActualizacion } from './componentes/AvisoActualizacion'
 import { BarraSuperior } from './componentes/BarraSuperior'
 import { ProveedorAutenticacion } from './contexto/ContextoAutenticacion'
 import { ProveedorNotificaciones } from './contexto/ContextoNotificaciones'
 import { ProveedorTema } from './contexto/ContextoTema'
 import { PaginaConfirmarCorreo } from './paginas/PaginaConfirmarCorreo'
+import { PaginaDescargar } from './paginas/PaginaDescargar'
+import { PaginaEliminarCuenta } from './paginas/PaginaEliminarCuenta'
+import { PaginaFacturacion } from './paginas/PaginaFacturacion'
 import { PaginaCrearCuenta } from './paginas/PaginaCrearCuenta'
 import { PaginaEmpresaSegunRol } from './paginas/PaginaEmpresaSegunRol'
 import { PaginaEmpresas } from './paginas/PaginaEmpresas'
@@ -15,6 +20,8 @@ import { PaginaMiJornada } from './paginas/PaginaMiJornada'
 import { PaginaMiCuenta } from './paginas/PaginaMiCuenta'
 import { PaginaMiTransporte } from './paginas/PaginaMiTransporte'
 import { PaginaNuevaEmpresa } from './paginas/PaginaNuevaEmpresa'
+import { PaginaPrivacidad } from './paginas/PaginaPrivacidad'
+import { PaginaProbar } from './paginas/PaginaProbar'
 import { PaginaOlvideContrasena } from './paginas/PaginaOlvideContrasena'
 import { PaginaRestablecerContrasena } from './paginas/PaginaRestablecerContrasena'
 import { PaginaConductores } from './paginas/PaginaConductores'
@@ -37,15 +44,19 @@ import { RutaProtegida } from './rutas/RutaProtegida'
 
 /** Componente raíz: configura los proveedores globales (tema, autenticación) y las rutas. */
 function App() {
+  // Al cambiar, la pantalla actual se vuelve a montar y recarga sus datos (botón de actualizar de la barra superior).
+  const [recarga, setRecarga] = useState(0)
+
   return (
     <ProveedorTema>
       <ProveedorAutenticacion>
         <ProveedorNotificaciones>
         <Router>
-          <BarraSuperior />
+          <AvisoActualizacion />
+          <BarraSuperior alRefrescar={() => setRecarga((valor) => valor + 1)} />
           <div className="app-cuerpo">
             <BarraLateral />
-            <div className="app-contenido">
+            <div className="app-contenido" key={recarga}>
               <Routes>
                 <Route path="/iniciar-sesion" element={<PaginaIniciarSesion />} />
                 <Route path="/crear-cuenta" element={<PaginaCrearCuenta />} />
@@ -53,6 +64,10 @@ function App() {
                 <Route path="/olvide-contrasena" element={<PaginaOlvideContrasena />} />
                 <Route path="/restablecer-contrasena" element={<PaginaRestablecerContrasena />} />
                 <Route path="/invitacion" element={<PaginaInvitacion />} />
+                <Route path="/descargar" element={<PaginaDescargar />} />
+                <Route path="/privacidad" element={<PaginaPrivacidad />} />
+                <Route path="/probar" element={<PaginaProbar />} />
+                <Route path="/eliminar-cuenta" element={<PaginaEliminarCuenta />} />
                 <Route
                   path="/conductor"
                   element={
@@ -114,6 +129,14 @@ function App() {
                   element={
                     <RutaProtegida>
                       <PaginaMiTransporte />
+                    </RutaProtegida>
+                  }
+                />
+                <Route
+                  path="/facturacion"
+                  element={
+                    <RutaProtegida>
+                      <PaginaFacturacion />
                     </RutaProtegida>
                   }
                 />

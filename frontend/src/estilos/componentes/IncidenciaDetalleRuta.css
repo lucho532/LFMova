@@ -1,0 +1,42 @@
+.incidencia-ruta {
+  font-size: 13px;
+  color: var(--text-h);
+  display: grid;
+  gap: 6px;
+}
+
+.incidencia-ruta__descripcion {
+  margin: 0;
+  color: var(--text);
+}
+
+/* Foto y mapa lado a lado; en pantallas angostas el mapa pasa debajo de la foto. */
+.incidencia-ruta__evidencia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.incidencia-ruta__fotos {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 220px;
+  max-width: 320px;
+}
+
+.incidencia-ruta__foto img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.incidencia-ruta__foto button {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 13px;
+}

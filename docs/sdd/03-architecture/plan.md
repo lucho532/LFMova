@@ -77,17 +77,17 @@ El frontend no se considera un mecanismo de seguridad.
 La solución utilizará una estructura similar a:
 
 ```text
-TransportApp/
+LFMova/
 │
 ├── src/
 │   │
-│   ├── TransportApp.Api/
+│   ├── LFMova.Api/
 │   │   ├── Controllers/
 │   │   ├── Middleware/
 │   │   ├── Configuration/
 │   │   └── Program.cs
 │   │
-│   ├── TransportApp.Application/
+│   ├── LFMova.Application/
 │   │   ├── DTOs/
 │   │   ├── Interfaces/
 │   │   ├── Services/
@@ -96,12 +96,12 @@ TransportApp/
 │   │   ├── Validators/
 │   │   └── Utils/
 │   │
-│   ├── TransportApp.Domain/
+│   ├── LFMova.Domain/
 │   │   ├── Entities/
 │   │   ├── Enums/
 │   │   └── Rules/
 │   │
-│   └── TransportApp.Infrastructure/
+│   └── LFMova.Infrastructure/
 │       ├── Data/
 │       ├── Repositories/
 │       ├── Configurations/
@@ -118,7 +118,7 @@ TransportApp/
 ├── .gitignore
 ├── docker-compose.yml
 ├── README.md
-└── TransportApp.sln
+└── LFMova.sln
 ```
 
 La estructura puede ajustarse si una necesidad técnica real lo justifica, pero no se deben crear proyectos o capas adicionales sin necesidad.
@@ -1404,7 +1404,7 @@ Los índices definitivos deben basarse en las consultas reales y no agregarse in
 
 # 48. Zona horaria
 
-**Decisión cerrada (2026-09-18):** toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, se almacenan y se comparan en UTC (`DateTime.UtcNow` en el backend), sin conversión a hora local en ninguna capa del servidor. La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
+**Decisión anterior (2026-09-18), sustituida por la actualización del 2026-09-30 que aparece más abajo:** toda la plataforma opera en UTC. `Fecha`, `HoraProgramada`, `FechaOperativa`, `HoraInicioReal`, `HoraFinReal` y cualquier otro campo de fecha/hora se interpretan, se almacenan y se comparan en UTC (`DateTime.UtcNow` en el backend), sin conversión a hora local en ninguna capa del servidor. La conversión a hora local para mostrarla al usuario es responsabilidad exclusiva del frontend.
 
 Se diferencia:
 
@@ -1694,7 +1694,7 @@ Las siguientes decisiones permanecen abiertas y no deben ser inventadas:
 
 La validación de identidad durante la activación se resuelve mediante un enlace enviado por correo (revisado el 2026-09-19; antes: código de activación generado por el conductor, ya eliminado). Ver AGENTS.md §16 (ver §28 de `data-model.md` y §10 de `spec.md`).
 
-La estrategia de zona horaria ya no es una decisión pendiente (decisión cerrada, 2026-09-18): toda la plataforma opera en UTC (ver `AGENTS.md` §41 y `spec.md` §47).
+La estrategia de zona horaria ya no es una decisión pendiente (decisión vigente, 2026-09-30): la aplicación opera en hora de Colombia (UTC−5 fijo): las fechas y horas programadas (`Fecha`, `HoraProgramada`, `FechaOperativa`) se guardan y comparan en hora de Colombia, y los instantes reales (`HoraInicioReal`, `HoraFinReal`, `FechaHora`) se guardan en UTC y el frontend los muestra en hora de Colombia (ver `AGENTS.md` §41 y `spec.md` §47).
 
 La estrategia exacta de roles activos en JWT ya no es una decisión pendiente (decisión cerrada, 2026-09-18): ver `spec.md` §47 y `GeneradorTokenJwt`.
 
@@ -1757,17 +1757,17 @@ La prioridad será construir primero una base sólida y sencilla antes de incorp
 * React.
 * Vite (herramienta de compilación y servidor de desarrollo).
 * TypeScript.
-* Cliente HTTP para consumir la API REST de `TransportApp.Api`.
+* Cliente HTTP para consumir la API REST de `LFMova.Api`.
 
 No se introducen frameworks de gestión de estado, UI kits ni librerías adicionales sin una necesidad concreta (coherente con `AGENTS.md` §34, no sobreingeniería).
 
 ## 57.3 Ubicación e independencia de la solución .NET
 
-El frontend vive en una carpeta independiente `frontend/` en la raíz del repositorio, **fuera** de `TransportApp.sln`. No es un proyecto .NET y no se agrega a la solución. Tiene su propio `package.json`, control de dependencias y ciclo de vida de build, separado del backend.
+El frontend vive en una carpeta independiente `frontend/` en la raíz del repositorio, **fuera** de `LFMova.sln`. No es un proyecto .NET y no se agrega a la solución. Tiene su propio `package.json`, control de dependencias y ciclo de vida de build, separado del backend.
 
 ```text
-TransportApp/
-├── src/            (backend .NET, dentro de TransportApp.sln)
+LFMova/
+├── src/            (backend .NET, dentro de LFMova.sln)
 ├── tests/          (backend .NET)
 ├── docs/
 └── frontend/       (React + Vite + TypeScript, independiente del .sln)

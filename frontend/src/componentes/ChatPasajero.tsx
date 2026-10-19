@@ -1,16 +1,19 @@
-import { Fragment, useEffect, useState, type FormEvent } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import type { Mensaje } from '../modelos/mensaje'
 import { ErrorApi } from '../servicios/clienteHttp'
-import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
 import { RespuestasRapidas } from './RespuestasRapidas'
 import { MensajeAlerta } from './MensajeAlerta'
-import './ChatPasajero.css'
+import '../estilos/componentes/ChatPasajero.css'
 
 interface PropiedadesChatPasajero {
   miUsuarioId: number | null
   cargarMensajes: () => Promise<Mensaje[]>
-  enviar: (contenido: string) => Promise<Mensaje>
+  /**
+   * Envía un mensaje predeterminado. Solo lo recibe el conductor: el pasajero únicamente lee, por lo que
+   * no se le pasa y no ve ningún control para escribir.
+   */
+  enviar?: (contenido: string) => Promise<Mensaje>
   /** El conductor ve, dentro del chat, el desplegable con mensajes predeterminados de un toque. */
   conRespuestasRapidas?: boolean
   /** La ruta ya finalizó: se puede seguir viendo la conversación, pero no enviar más mensajes. */
@@ -42,14 +45,14 @@ function etiquetaHora(fecha: Date): string {
 
 /**
  * Conversación individual (conductor ↔ empleado) de un pasajero. No es un chat
- * grupal ni en tiempo real: se carga al abrir y se puede refrescar a mano.
+ * grupal ni en tiempo real: se carga al abrir y se puede refrescar a mano. Es de
+ * un solo sentido: el conductor envía solo mensajes predeterminados y el pasajero
+ * únicamente los lee.
  * Las horas llegan en UTC y se muestran en la hora local del dispositivo.
  */
 export function ChatPasajero({ miUsuarioId, cargarMensajes, enviar, conRespuestasRapidas = false, soloLectura = false }: PropiedadesChatPasajero) {
   const [mensajes, setMensajes] = useState<Mensaje[]>([])
-  const [texto, setTexto] = useState('')
   const [mensajeError, setMensajeError] = useState<string | null>(null)
-  const [ocupado, setOcupado] = useState(false)
 
   async function refrescar() {
     try {
@@ -68,22 +71,6 @@ export function ChatPasajero({ miUsuarioId, cargarMensajes, enviar, conRespuesta
     return () => clearInterval(temporizador)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  async function alEnviar(evento: FormEvent) {
-    evento.preventDefault()
-    if (!texto.trim()) return
-    setOcupado(true)
-    setMensajeError(null)
-    try {
-      await enviar(texto.trim())
-      setTexto('')
-      await refrescar()
-    } catch (error) {
-      setMensajeError(error instanceof ErrorApi ? error.message : 'No se pudo enviar el mensaje.')
-    } finally {
-      setOcupado(false)
-    }
-  }
 
   return (
     <div className="chat-pasajero">
@@ -109,19 +96,19 @@ export function ChatPasajero({ miUsuarioId, cargarMensajes, enviar, conRespuesta
         <p className="chat-pasajero__solo-lectura">Esta ruta ya finalizó: el chat quedó cerrado, solo puedes ver los mensajes.</p>
       ) : (
         <>
-          {conRespuestasRapidas && (
+          {conRespuestasRapidas && enviar ? (
             <RespuestasRapidas
               enviar={async (mensaje) => {
                 await enviar(mensaje)
                 await refrescar()
               }}
             />
+          ) : (
+            <p className="chat-pasajero__solo-lectura">Solo puedes leer los mensajes de tu conductor.</p>
           )}
-          <form className="chat-pasajero__formulario" onSubmit={alEnviar}>
-            <input value={texto} onChange={(evento) => setTexto(evento.target.value)} placeholder="Escribe un mensaje…" aria-label="Mensaje" />
-            <BotonPrimario disabled={ocupado}>Enviar</BotonPrimario>
+          <div className="chat-pasajero__acciones">
             <BotonSecundario onClick={refrescar}>Actualizar</BotonSecundario>
-          </form>
+          </div>
         </>
       )}
     </div>

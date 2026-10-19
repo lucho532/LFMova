@@ -1,4 +1,4 @@
-/** Refleja EmpleadoDto (TransportApp.Application). */
+/** Refleja EmpleadoDto (LFMova.Application). */
 export interface Empleado {
   empleadoId: number
   usuarioId: number
@@ -13,7 +13,7 @@ export interface Empleado {
   activo: boolean
 }
 
-/** Refleja ActualizarEmpleadoDto (TransportApp.Application): datos actuales que un coordinador puede cambiar (no incluye cédula ni empresa). */
+/** Refleja ActualizarEmpleadoDto (LFMova.Application): datos actuales que un coordinador puede cambiar (no incluye cédula ni empresa). */
 export interface DatosActualizarEmpleado {
   nombreCompleto: string
   telefono: string

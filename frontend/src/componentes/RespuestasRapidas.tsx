@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './RespuestasRapidas.css'
+import '../estilos/componentes/RespuestasRapidas.css'
 
 /** Mensajes predeterminados del conductor, para avisar al pasajero con un toque sin escribir mientras conduce. */
 export const MENSAJES_RAPIDOS_CONDUCTOR = ['Estoy en camino', 'Voy un poco tarde', 'Estoy llegando', 'Puedes salir', 'He llegado', 'Gracias']

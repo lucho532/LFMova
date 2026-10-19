@@ -1,4 +1,4 @@
-/** Refleja CorredorVialDto (TransportApp.Application). */
+/** Refleja CorredorVialDto (LFMova.Application). */
 export interface CorredorVial {
   corredorVialId: number
   empresaId: number
@@ -6,7 +6,7 @@ export interface CorredorVial {
   activo: boolean
 }
 
-/** Refleja CrearCorredorVialDto / ActualizarCorredorVialDto (TransportApp.Application). */
+/** Refleja CrearCorredorVialDto / ActualizarCorredorVialDto (LFMova.Application). */
 export interface DatosCorredorVial {
   nombre: string
 }

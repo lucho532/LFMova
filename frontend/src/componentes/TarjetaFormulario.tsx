@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react'
-import './TarjetaFormulario.css'
+import '../estilos/componentes/TarjetaFormulario.css'
 
 interface PropiedadesTarjetaFormulario {
   alEnviar: (evento: FormEvent) => void

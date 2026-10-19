@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react'
-import './BotonSecundario.css'
+import '../estilos/componentes/BotonSecundario.css'
 
 type PropiedadesBotonSecundario = ButtonHTMLAttributes<HTMLButtonElement>
 

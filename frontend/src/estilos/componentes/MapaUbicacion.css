@@ -1,0 +1,16 @@
+.mapa-ubicacion {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1 1 220px;
+  max-width: 320px;
+  font-size: 12px;
+}
+
+.mapa-ubicacion__marco {
+  width: 100%;
+  height: 165px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-pagina);
+}

@@ -6,7 +6,7 @@ import { buscarPersona } from '../servicios/servicioPersonas'
 import { BotonSecundario } from './BotonSecundario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './BuscadorPersona.css'
+import '../estilos/componentes/BuscadorPersona.css'
 
 interface PropiedadesBuscadorPersona {
   /** Botones de acción que se ofrecen una vez confirmada la identidad de la persona encontrada. */

@@ -30,12 +30,12 @@ Crear la solución principal de la aplicación utilizando .NET y C#.
 
 Debe existir una solución con los siguientes proyectos:
 
-* `TransportApp.Api`
-* `TransportApp.Application`
-* `TransportApp.Domain`
-* `TransportApp.Infrastructure`
-* `TransportApp.UnitTests`
-* `TransportApp.IntegrationTests`
+* `LFMova.Api`
+* `LFMova.Application`
+* `LFMova.Domain`
+* `LFMova.Infrastructure`
+* `LFMova.UnitTests`
+* `LFMova.IntegrationTests`
 
 Dependencias:
 
@@ -785,7 +785,7 @@ No bloquear una sede si el mecanismo de geocodificación aún no está integrado
 
 # Fase 7B — Frontend inicial (React)
 
-Ver `plan.md` §57 para la arquitectura completa. El frontend vive en `frontend/`, fuera de `TransportApp.sln`, y avanza en paralelo con el backend: cada tarea de esta fase consume únicamente endpoints ya implementados y probados.
+Ver `plan.md` §57 para la arquitectura completa. El frontend vive en `frontend/`, fuera de `LFMova.sln`, y avanza en paralelo con el backend: cada tarea de esta fase consume únicamente endpoints ya implementados y probados.
 
 ## [X] T048A — Crear proyecto frontend (Vite + React + TypeScript)
 
@@ -1514,7 +1514,7 @@ Crear DTOs para todas las operaciones públicas.
 
 No exponer entidades EF directamente desde los Controllers.
 
-**Auditoría (2026-09-18):** verificadas las 15 controllers / ~60 acciones públicas existentes; ninguna recibe ni devuelve una entidad de `TransportApp.Domain.Entities` (siempre DTOs de `TransportApp.Application.DTOs`). Sin cambios necesarios.
+**Auditoría (2026-09-18):** verificadas las 15 controllers / ~60 acciones públicas existentes; ninguna recibe ni devuelve una entidad de `LFMova.Domain.Entities` (siempre DTOs de `LFMova.Application.DTOs`). Sin cambios necesarios.
 
 ---
 
@@ -1611,7 +1611,7 @@ Una fase funcional no se considera completada mientras la tarea de prueba corres
 
 Configurar proyecto de pruebas unitarias.
 
-**Auditoría (2026-09-18):** `TransportApp.UnitTests` configurado desde Fase 1, xUnit operativo con 265 pruebas en verde.
+**Auditoría (2026-09-18):** `LFMova.UnitTests` configurado desde Fase 1, xUnit operativo con 265 pruebas en verde.
 
 ---
 
@@ -1705,7 +1705,7 @@ Preparar entorno reproducible de integración.
 
 Preferentemente mediante Docker.
 
-**Evidencia (2026-09-18):** `tests/Integration/TransportApp.IntegrationTests/Fixtures/IntegrationTestFixture.cs` levanta un `PostgreSqlContainer` (Testcontainers.PostgreSql, imagen `postgres:16-alpine`) compartido por colección xUnit (`IntegrationTestCollection`, `ICollectionFixture`), migrado una sola vez por ejecución.
+**Evidencia (2026-09-18):** `tests/Integration/LFMova.IntegrationTests/Fixtures/IntegrationTestFixture.cs` levanta un `PostgreSqlContainer` (Testcontainers.PostgreSql, imagen `postgres:16-alpine`) compartido por colección xUnit (`IntegrationTestCollection`, `ICollectionFixture`), migrado una sola vez por ejecución.
 
 ---
 
@@ -1713,7 +1713,7 @@ Preferentemente mediante Docker.
 
 Verificar que una base limpia pueda crearse mediante migraciones.
 
-**Evidencia (2026-09-18):** `MigracionesTests.cs` aplica `Database.MigrateAsync()` contra el contenedor Postgres limpio y verifica ausencia de errores. Pasa en la suite completa (`dotnet test tests/Integration/TransportApp.IntegrationTests`).
+**Evidencia (2026-09-18):** `MigracionesTests.cs` aplica `Database.MigrateAsync()` contra el contenedor Postgres limpio y verifica ausencia de errores. Pasa en la suite completa (`dotnet test tests/Integration/LFMova.IntegrationTests`).
 
 ---
 
@@ -1783,9 +1783,9 @@ Además de los dos defectos descritos en T116, esta prueba (al ser la única que
 
 ## [X] T119 — Crear Dockerfile API
 
-Crear Dockerfile para `TransportApp.Api`.
+Crear Dockerfile para `LFMova.Api`.
 
-**Evidencia (2026-09-18):** `src/TransportApp.Api/Dockerfile` (multi-stage: SDK 8.0 para build/publish, ASP.NET 8.0 runtime para ejecución). Verificado con `docker build`: build exitoso.
+**Evidencia (2026-09-18):** `src/LFMova.Api/Dockerfile` (multi-stage: SDK 8.0 para build/publish, ASP.NET 8.0 runtime para ejecución). Verificado con `docker build`: build exitoso.
 
 ---
 
@@ -1808,7 +1808,7 @@ Externalizar:
 
 No incluir secretos en Git.
 
-**Evidencia (2026-09-18):** la configuración ya estaba externalizada desde T037 (`appsettings.json` con valores vacíos; `ConnectionStrings`, `Jwt`, `Cors` se resuelven vía configuración estándar de ASP.NET Core, que `docker-compose.yml` sobrescribe con variables de entorno `ConnectionStrings__TransportAppDb`, `Jwt__*`, `Cors__OrigenesPermitidos__0`). Se creó `.env.example` (raíz) documentando las variables sin valores reales. Se corrigió una fuga real: `appsettings.Development.json` (con credenciales reales de la base de desarrollo local) no estaba cubierto por ninguna regla de `.gitignore` — se agregó junto con `appsettings.Production.json`, y se creó `appsettings.Development.json.example` como plantilla. Almacenamiento de evidencias: no aplica todavía (solo se guarda `ReferenciaArchivo`, sin proveedor de almacenamiento externo integrado; ver decisión pendiente en `spec.md` §47).
+**Evidencia (2026-09-18):** la configuración ya estaba externalizada desde T037 (`appsettings.json` con valores vacíos; `ConnectionStrings`, `Jwt`, `Cors` se resuelven vía configuración estándar de ASP.NET Core, que `docker-compose.yml` sobrescribe con variables de entorno `ConnectionStrings__LFMovaDb`, `Jwt__*`, `Cors__OrigenesPermitidos__0`). Se creó `.env.example` (raíz) documentando las variables sin valores reales. Se corrigió una fuga real: `appsettings.Development.json` (con credenciales reales de la base de desarrollo local) no estaba cubierto por ninguna regla de `.gitignore` — se agregó junto con `appsettings.Production.json`, y se creó `appsettings.Development.json.example` como plantilla. Almacenamiento de evidencias: no aplica todavía (solo se guarda `ReferenciaArchivo`, sin proveedor de almacenamiento externo integrado; ver decisión pendiente en `spec.md` §47).
 
 ---
 
@@ -1820,7 +1820,7 @@ Configurar Swagger/OpenAPI.
 
 Documentar endpoints principales.
 
-**Evidencia (2026-09-18):** `Program.cs` configura `AddSwaggerGen` con: información del contrato (título, versión, descripción incluyendo la convención UTC), esquema de seguridad `Bearer` (JWT) con requisito de seguridad global (habilita el botón "Authorize" en Swagger UI para probar endpoints autenticados), e inclusión del XML de documentación generado por el proyecto (`GenerateDocumentationFile`, ya activo desde T037) mediante `IncludeXmlComments`, de modo que los comentarios `<summary>` ya existentes en todos los Controllers se muestran como descripciones reales de cada endpoint — sin necesidad de duplicar esa documentación en otro lugar. Verificado ejecutando la API y consultando `/swagger/v1/swagger.json`: título "TransportApp API" presente, esquema `Bearer` presente en `components.securitySchemes`, y los `summary` de `POST /api/empresas` y `GET /api/empresas/{empresaId}` coinciden exactamente con los comentarios XML de `EmpresasController`. Suite completa (265 unitarias + 10 integración) verificada sin regresiones tras el cambio.
+**Evidencia (2026-09-18):** `Program.cs` configura `AddSwaggerGen` con: información del contrato (título, versión, descripción incluyendo la convención UTC), esquema de seguridad `Bearer` (JWT) con requisito de seguridad global (habilita el botón "Authorize" en Swagger UI para probar endpoints autenticados), e inclusión del XML de documentación generado por el proyecto (`GenerateDocumentationFile`, ya activo desde T037) mediante `IncludeXmlComments`, de modo que los comentarios `<summary>` ya existentes en todos los Controllers se muestran como descripciones reales de cada endpoint — sin necesidad de duplicar esa documentación en otro lugar. Verificado ejecutando la API y consultando `/swagger/v1/swagger.json`: título "LFMova API" presente, esquema `Bearer` presente en `components.securitySchemes`, y los `summary` de `POST /api/empresas` y `GET /api/empresas/{empresaId}` coinciden exactamente con los comentarios XML de `EmpresasController`. Suite completa (265 unitarias + 10 integración) verificada sin regresiones tras el cambio.
 
 ---
 

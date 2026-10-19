@@ -4,7 +4,7 @@ const path = require('path')
 const ORIGEN = path.join(__dirname, '..', 'public', 'ChatGPT Image 18 sept 2026, 23_08_13.png')
 const RES_DIR = path.join(__dirname, '..', 'android', 'app', 'src', 'main', 'res')
 
-// Recorte cuadrado del emblema (bus + pin + carretera), sin el texto "TransportApp" debajo.
+// Recorte cuadrado del emblema (bus + pin + carretera), sin el texto "LFMova" debajo.
 const RECORTE = { left: 441, top: 46, width: 614, height: 614 }
 const FONDO = { r: 255, g: 255, b: 255 }
 

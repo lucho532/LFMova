@@ -6,7 +6,7 @@ import { BotonPrimario } from './BotonPrimario'
 import { BotonSecundario } from './BotonSecundario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
-import './SeccionMacroZonas.css'
+import '../estilos/componentes/SeccionMacroZonas.css'
 
 interface PropiedadesSeccionMacroZonas {
   empresaId: number

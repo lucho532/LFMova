@@ -1,0 +1,63 @@
+.lista-zonas__ayuda {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.lista-zonas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Aviso de lo que se está moviendo: fijo abajo para verlo (y poder cancelar) mientras se busca la zona de
+   destino. No se usa "sticky" porque html y body recortan el desborde horizontal y eso lo desactiva. */
+.lista-zonas__aviso {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 15;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--accent-border);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+/* Mientras se arrastra, nada dentro de la lista debe poder seleccionarse como texto. */
+.lista-zonas--arrastrando {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Etiqueta que sigue al cursor con lo que se está arrastrando; no intercepta el ratón. */
+.lista-zonas__etiqueta {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  max-width: 280px;
+  padding: 6px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  will-change: transform;
+}

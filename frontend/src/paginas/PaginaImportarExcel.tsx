@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react'
 import { useParams } from 'react-router-dom'
+import { BotonDescargarProgramacion } from '../componentes/BotonDescargarProgramacion'
 import { BotonPrimario } from '../componentes/BotonPrimario'
 import { BotonSecundario } from '../componentes/BotonSecundario'
 import { ContenedorPagina } from '../componentes/ContenedorPagina'
@@ -10,6 +11,7 @@ import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
 import { PanelBarriosSinZona } from '../componentes/PanelBarriosSinZona'
 import { PanelCrearRutaPegado } from '../componentes/PanelCrearRutaPegado'
 import { PanelVistaPreviaImportacion } from '../componentes/PanelVistaPreviaImportacion'
+import { SelectorFormulario } from '../componentes/SelectorFormulario'
 import { ZonaArrastreArchivo } from '../componentes/ZonaArrastreArchivo'
 import { useAutenticacion } from '../contexto/useAutenticacion'
 import { EstadoServicio } from '../modelos/enumeraciones'
@@ -35,7 +37,7 @@ import {
   publicarJornada,
 } from '../servicios/servicioOperacion'
 import { obtenerSedes } from '../servicios/servicioSedes'
-import './PaginaImportarExcel.css'
+import '../estilos/paginas/PaginaImportarExcel.css'
 
 const MESES: Record<string, string> = {
   ENE: '01',
@@ -122,6 +124,8 @@ export function PaginaImportarExcel() {
   const [serviciosReales, setServiciosReales] = useState<Servicio[]>([])
   const [vistaReal, setVistaReal] = useState<VistaPreviaImportacion | null>(null)
   const [resultado, setResultado] = useState<ResultadoImportacion | null>(null)
+  /** Sede elegida para los pasajeros del Excel que no traen sede (o cuya sede no se reconoce). */
+  const [sedeGeneral, setSedeGeneral] = useState('')
   const [mensajeError, setMensajeError] = useState<string | null>(null)
   const [ocupado, setOcupado] = useState(false)
 
@@ -451,7 +455,7 @@ export function PaginaImportarExcel() {
     setOcupado(true)
     setMensajeError(null)
     try {
-      setResultado(await importarExcel(idEmpresa, archivo, fechaExcel, unidadId, repartir, null, token))
+      setResultado(await importarExcel(idEmpresa, archivo, fechaExcel, unidadId, repartir, sedeGeneral ? Number(sedeGeneral) : null, token))
       // La vista previa (armada antes de importar) no sabe cómo quedó el reparto real por zona ni
       // si algún grupo quedó sin unidad por falta de cupo: se descarta para que se muestre "vistaReal",
       // construida a partir de los servicios ya guardados, uno por cada ruta real (incluida la de "sin asignar").
@@ -466,13 +470,15 @@ export function PaginaImportarExcel() {
   // Sigue habilitado después de importar (a propósito): si el reparto automático no quedó como
   // se esperaba, el coordinador puede volver a hacer clic para intentarlo de nuevo (por ejemplo,
   // después de ajustar las Zonas) sin tener que volver a elegir el archivo desde cero.
-  const listo = Boolean(archivo && fechaExcel) && !ocupado
+  const faltaSede = Boolean(vista?.servicios.some((servicio) => !servicio.sedeEncontrada && !servicio.sedeEnHoja.trim()))
+  const listo = Boolean(archivo && fechaExcel) && !ocupado && (!faltaSede || sedeGeneral !== '')
 
   return (
     <ContenedorPagina ancho="amplio">
       <EncabezadoPagina
         titulo="Programación"
         subtitulo="Arma las rutas (con Excel o a mano), cada una con su propia fecha, y publícalas todas juntas cuando estén listas, sin importar el día de cada una."
+        acciones={<BotonDescargarProgramacion empresaId={idEmpresa} jornadaIds={[...new Set(serviciosReales.map((s) => s.jornadaId))]} />}
       />
       <div className="pagina-importar-excel__enviar">
         <BotonPrimario className="pagina-importar-excel__boton-enviar" type="button" disabled={publicando} onClick={alPublicar}>
@@ -537,6 +543,18 @@ export function PaginaImportarExcel() {
           pendientes, también al volver a la pantalla sin el archivo. */}
       {(archivo || jornadasActivas.length > 0) && (
         <div className="programacion-acciones">
+          {archivo && faltaSede && (
+            <div className="programacion-acciones__fila">
+              <SelectorFormulario
+                id="sede-general"
+                etiqueta="Sede para los pasajeros que no la traen en el Excel"
+                valor={sedeGeneral}
+                opciones={sedes.filter((sede) => sede.activa).map((sede) => ({ valor: String(sede.sedeId), texto: sede.nombre }))}
+                alCambiar={setSedeGeneral}
+                requerido
+              />
+            </div>
+          )}
           {archivo && (
             <div className="programacion-acciones__fila">
               <BotonPrimario type="button" disabled={!listo || unidades.length === 0} onClick={() => alImportar(true, null)}>

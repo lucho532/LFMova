@@ -2,12 +2,11 @@ import type {
   DatosProgramacion,
   DeshacerReparto,
   EliminarRastro,
-  Jornada,
   Programacion,
-  PropuestaPlanificacion,
   Servicio,
   ServicioPasajero,
 } from '../modelos/operacion'
+import type { FiltroAsistencia } from './ordenRuta'
 import { solicitarApi } from './clienteHttp'
 
 const base = (empresaId: number) => `/api/empresas/${empresaId}`
@@ -26,6 +25,42 @@ export function obtenerProgramacion(empresaId: number, id: number, token: string
   return solicitarApi<Programacion>(`${base(empresaId)}/programaciones/${id}`, { token })
 }
 
+/**
+ * Consume GET /api/empresas/{empresaId}/jornadas/{jornadaId}/soporte: el Excel con toda la programación
+ * de la jornada (las rutas de todos los conductores con sus pasajeros). Devuelve el archivo y el nombre
+ * que le puso el servidor; requiere el token en la cabecera, así que no sirve como enlace directo.
+ */
+export async function descargarSoporteJornada(empresaId: number, jornadaId: number, token: string): Promise<{ nombre: string; archivo: Blob }> {
+  const respuesta = await fetch(`${urlBaseApi}${base(empresaId)}/jornadas/${jornadaId}/soporte`, { headers: { Authorization: `Bearer ${token}` } })
+  if (!respuesta.ok) {
+    throw new Error('No se pudo descargar la programación.')
+  }
+  const nombre = /filename="?([^";]+)"?/.exec(respuesta.headers.get('Content-Disposition') ?? '')?.[1]
+  return { nombre: nombre ?? `programacion-${jornadaId}.xlsx`, archivo: await respuesta.blob() }
+}
+
+/**
+ * Consume GET .../servicios/{servicioId}/informe-asistencia: el Excel con los pasajeros de la ruta que
+ * cumplen el filtro (todos, los que asistieron o los que no), para enviarlo a la empresa. Devuelve el
+ * archivo y el nombre que le puso el servidor.
+ */
+export async function descargarInformeAsistencia(
+  empresaId: number,
+  jornadaId: number,
+  servicioId: number,
+  filtro: FiltroAsistencia,
+  token: string,
+): Promise<{ nombre: string; archivo: Blob }> {
+  const respuesta = await fetch(`${urlBaseApi}${rutaServicio(empresaId, jornadaId, servicioId)}/informe-asistencia?filtro=${filtro}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!respuesta.ok) {
+    throw new Error('No se pudo descargar el informe.')
+  }
+  const nombre = /filename="?([^";]+)"?/.exec(respuesta.headers.get('Content-Disposition') ?? '')?.[1]
+  return { nombre: nombre ?? 'informe-asistencia.xlsx', archivo: await respuesta.blob() }
+}
+
 /** Consume POST /api/empresas/{empresaId}/programaciones. */
 export function crearProgramacion(empresaId: number, datos: DatosProgramacion & { empleadoId: number }, token: string): Promise<Programacion> {
   return solicitarApi<Programacion>(`${base(empresaId)}/programaciones`, { metodo: 'POST', cuerpo: datos, token })
@@ -37,11 +72,6 @@ export function actualizarProgramacion(empresaId: number, id: number, datos: Dat
 }
 
 // --- Jornadas ---
-
-/** Consume GET /api/empresas/{empresaId}/jornadas. */
-export function obtenerJornadas(empresaId: number, token: string): Promise<Jornada[]> {
-  return solicitarApi<Jornada[]>(`${base(empresaId)}/jornadas`, { token })
-}
 
 /** Consume POST /api/empresas/{empresaId}/jornadas/{jornadaId}/publicar. */
 export function publicarJornada(empresaId: number, jornadaId: number, token: string): Promise<void> {
@@ -76,29 +106,14 @@ export function obtenerServiciosPendientes(empresaId: number, desde: string, tok
   return solicitarApi<Servicio[]>(`${base(empresaId)}/jornadas/servicios-pendientes?desde=${desde}`, { token })
 }
 
-/** Consume GET .../jornadas/{jornadaId}/servicios. */
-export function obtenerServicios(empresaId: number, jornadaId: number, token: string): Promise<Servicio[]> {
-  return solicitarApi<Servicio[]>(`${base(empresaId)}/jornadas/${jornadaId}/servicios`, { token })
-}
-
 /** Consume GET .../jornadas/{jornadaId}/servicios/{servicioId}: un servicio concreto, con sus horas y ubicación reales. */
 export function obtenerServicio(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<Servicio> {
   return solicitarApi<Servicio>(rutaServicio(empresaId, jornadaId, servicioId), { token })
 }
 
-/** Consume POST .../servicios/{servicioId}/cambiar-estado. */
-export function cambiarEstadoServicio(empresaId: number, jornadaId: number, servicioId: number, nuevoEstado: number, token: string): Promise<void> {
-  return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/cambiar-estado`, { metodo: 'POST', cuerpo: { nuevoEstado }, token })
-}
-
 /** Consume POST .../servicios/{servicioId}/asignar-unidad. */
 export function asignarUnidad(empresaId: number, jornadaId: number, servicioId: number, unidadOperativaId: number, token: string): Promise<void> {
   return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/asignar-unidad`, { metodo: 'POST', cuerpo: { unidadOperativaId }, token })
-}
-
-/** Consume POST .../servicios/{servicioId}/retirar-unidad. */
-export function retirarUnidad(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<void> {
-  return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/retirar-unidad`, { metodo: 'POST', token })
 }
 
 /**
@@ -115,11 +130,6 @@ export function despublicarServicio(empresaId: number, jornadaId: number, servic
  */
 export function eliminarServicio(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<void> {
   return solicitarApi<void>(rutaServicio(empresaId, jornadaId, servicioId), { metodo: 'DELETE', token })
-}
-
-/** Consume GET .../servicios/{servicioId}/propuesta-planificacion: solo una recomendación de lectura. */
-export function obtenerPropuestaPlanificacion(empresaId: number, jornadaId: number, servicioId: number, token: string): Promise<PropuestaPlanificacion> {
-  return solicitarApi<PropuestaPlanificacion>(`${rutaServicio(empresaId, jornadaId, servicioId)}/propuesta-planificacion`, { token })
 }
 
 // --- Pasajeros del servicio ---

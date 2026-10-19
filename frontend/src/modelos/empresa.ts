@@ -1,4 +1,4 @@
-/** Refleja EmpresaDto (TransportApp.Application). */
+/** Refleja EmpresaDto (LFMova.Application). */
 export interface Empresa {
   empresaId: number
   nombre: string
@@ -9,7 +9,7 @@ export interface Empresa {
   activa: boolean
 }
 
-/** Refleja CrearEmpresaDto (TransportApp.Application). */
+/** Refleja CrearEmpresaDto (LFMova.Application). */
 export interface CrearEmpresaDatos {
   nombre: string
   cif: string
@@ -20,7 +20,7 @@ export interface CrearEmpresaDatos {
   correoCoordinador: string
 }
 
-/** Refleja CoordinadorDto (TransportApp.Application). */
+/** Refleja CoordinadorDto (LFMova.Application). */
 export interface Coordinador {
   usuarioRolId: number
   cedula: string
@@ -30,7 +30,7 @@ export interface Coordinador {
   activo: boolean
 }
 
-/** Refleja AsignarCoordinadorDto (TransportApp.Application). Nombre, teléfono y correo solo se usan si la persona aún no tiene cuenta. */
+/** Refleja AsignarCoordinadorDto (LFMova.Application). Nombre, teléfono y correo solo se usan si la persona aún no tiene cuenta. */
 export interface AsignarCoordinadorDatos {
   cedula: string
   nombreCoordinador: string

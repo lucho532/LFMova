@@ -1,0 +1,100 @@
+.lista-pasajeros-ruta {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* Encabezado y filas comparten las mismas columnas fijas para que queden alineados. */
+.lista-pasajeros-ruta__encabezado,
+.lista-pasajeros-ruta__fila {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 96px 76px 56px 84px;
+  align-items: center;
+  gap: 10px;
+}
+
+.lista-pasajeros-ruta__encabezado {
+  padding: 0 12px 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lista-pasajeros-ruta__filas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.lista-pasajeros-ruta__fila {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.lista-pasajeros-ruta__numero {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.lista-pasajeros-ruta__datos {
+  display: grid;
+  min-width: 0;
+}
+
+.lista-pasajeros-ruta__sub {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.lista-pasajeros-ruta__hora {
+  font-variant-numeric: tabular-nums;
+}
+
+.lista-pasajeros-ruta__fila .lista-pasajeros-ruta__hora {
+  color: var(--text-h);
+}
+
+.lista-pasajeros-ruta__accion {
+  text-align: right;
+}
+
+.lista-pasajeros-ruta__detalle {
+  border: 1px solid var(--border);
+  background: var(--bg-pagina);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-h);
+  font-size: 12px;
+}
+
+.lista-pasajeros-ruta__vacio {
+  margin: 16px 0 0;
+  color: var(--text);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* En pantallas angostas no caben las columnas: se quita el encabezado y cada fila se parte en líneas. */
+@media (max-width: 560px) {
+  .lista-pasajeros-ruta__encabezado {
+    display: none;
+  }
+
+  .lista-pasajeros-ruta__fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .lista-pasajeros-ruta__datos {
+    flex: 1 1 calc(100% - 48px);
+  }
+
+  .lista-pasajeros-ruta__accion {
+    margin-left: auto;
+  }
+}

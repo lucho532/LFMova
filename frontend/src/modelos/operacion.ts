@@ -1,4 +1,4 @@
-/** Refleja ProgramacionDto (TransportApp.Application). */
+/** Refleja ProgramacionDto (LFMova.Application). */
 export interface Programacion {
   programacionTransporteId: number
   empresaId: number
@@ -21,20 +21,13 @@ export interface DatosProgramacion {
   barrioRecogida: string
 }
 
-/** Refleja JornadaDto (TransportApp.Application). */
-export interface Jornada {
-  jornadaId: number
-  empresaId: number
-  fechaOperativa: string
-}
-
-/** Refleja DeshacerRepartoDto (TransportApp.Application). */
+/** Refleja DeshacerRepartoDto (LFMova.Application). */
 export interface DeshacerReparto {
   serviciosEliminados: number
   pasajerosLiberados: number
 }
 
-/** Refleja EliminarRastroDto (TransportApp.Application). */
+/** Refleja EliminarRastroDto (LFMova.Application). */
 export interface EliminarRastro {
   serviciosEliminados: number
   pasajerosEliminados: number
@@ -42,7 +35,7 @@ export interface EliminarRastro {
   jornadaEliminada: boolean
 }
 
-/** Refleja ServicioDto (TransportApp.Application). */
+/** Refleja ServicioDto (LFMova.Application). */
 export interface Servicio {
   servicioId: number
   empresaId: number
@@ -63,7 +56,7 @@ export interface Servicio {
   cantidadPasajeros: number
 }
 
-/** Refleja ServicioPasajeroDto (TransportApp.Application). */
+/** Refleja ServicioPasajeroDto (LFMova.Application). */
 export interface ServicioPasajero {
   servicioPasajeroId: number
   servicioId: number
@@ -76,19 +69,14 @@ export interface ServicioPasajero {
   direccionRecogida: string
   latitud: number | null
   longitud: number | null
+  /** Punto que el propio empleado compartió para este servicio (no el que guarda el conductor). */
+  latitudCompartida: number | null
+  longitudCompartida: number | null
+  /** Instante (UTC) en que el empleado compartió su ubicación por última vez. */
+  fechaHoraUbicacionCompartida: string | null
   nombreCompletoEmpleado: string
   telefonoEmpleado: string
   cedulaEmpleado: string
   barrioEmpleado: string
 }
 
-/** Refleja PropuestaPlanificacionDto (TransportApp.Application). */
-export interface PropuestaPlanificacion {
-  servicioId: number
-  ordenPropuesto: { servicioPasajeroId: number; empleadoId: number; orden: number; distanciaALaSedeKm: number | null }[]
-  horaLimiteLlegadaSede: string | null
-  horaSugeridaInicioRecogida: string | null
-  distanciaDesdeServicioAnteriorKm: number | null
-  distanciaHaciaServicioSiguienteKm: number | null
-  advertencias: string[]
-}

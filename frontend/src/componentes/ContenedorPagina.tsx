@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import './ContenedorPagina.css'
+import '../estilos/componentes/ContenedorPagina.css'
 
 interface PropiedadesContenedorPagina {
   children: ReactNode

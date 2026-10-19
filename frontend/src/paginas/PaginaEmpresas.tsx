@@ -15,7 +15,7 @@ import { useAutenticacion } from '../contexto/useAutenticacion'
 import type { Empresa } from '../modelos/empresa'
 import { ErrorApi } from '../servicios/clienteHttp'
 import { activarEmpresa, desactivarEmpresa, obtenerEmpresas } from '../servicios/servicioEmpresas'
-import './PaginaEmpresas.css'
+import '../estilos/paginas/PaginaEmpresas.css'
 
 /**
  * Panel del administrador de plataforma: indicadores calculados sobre las

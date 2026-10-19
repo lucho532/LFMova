@@ -1,5 +1,5 @@
 import { useRef, useState, type DragEvent } from 'react'
-import './ZonaArrastreArchivo.css'
+import '../estilos/componentes/ZonaArrastreArchivo.css'
 
 interface PropiedadesZonaArrastreArchivo {
   archivo: File | null
