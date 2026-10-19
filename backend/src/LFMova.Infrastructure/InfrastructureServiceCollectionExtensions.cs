@@ -58,6 +58,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IEliminacionEmpresaRepositorio, EliminacionEmpresaRepositorio>();
         servicios.AddScoped<IImportacionExcelRepositorio, ImportacionExcelRepositorio>();
         servicios.AddScoped<IEstadisticasRepositorio, EstadisticasRepositorio>();
+        servicios.AddScoped<IPanoramaOperacionRepositorio, PanoramaOperacionRepositorio>();
         servicios.AddScoped<IFacturacionRepositorio, FacturacionRepositorio>();
         servicios.AddSingleton<IAlmacenamientoArchivos, AlmacenamientoLocalArchivos>();
         servicios.AddSingleton<IExcelProgramacionLector, ExcelProgramacionLectorClosedXml>();

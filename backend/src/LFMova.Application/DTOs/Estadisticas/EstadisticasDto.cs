@@ -1,31 +1,5 @@
 namespace LFMova.Application.DTOs.Estadisticas;
 
-/// <summary>Rutas y pasajeros de un día, para la gráfica del inicio.</summary>
-public class RutasDiaDto
-{
-    /// <summary>Día del servicio.</summary>
-    public DateOnly Fecha { get; set; }
-
-    /// <summary>Rutas programadas (no canceladas) ese día.</summary>
-    public int Rutas { get; set; }
-
-    /// <summary>Pasajeros transportados ese día.</summary>
-    public int PasajerosTransportados { get; set; }
-}
-
-/// <summary>Rutas y pasajeros de una sede.</summary>
-public class RutasSedeDto
-{
-    /// <summary>Nombre de la sede.</summary>
-    public string Sede { get; set; } = string.Empty;
-
-    /// <summary>Rutas programadas (no canceladas).</summary>
-    public int Rutas { get; set; }
-
-    /// <summary>Pasajeros transportados.</summary>
-    public int PasajerosTransportados { get; set; }
-}
-
 /// <summary>Resumen histórico de la empresa para la pantalla de inicio del coordinador.</summary>
 public class ResumenEmpresaDto
 {
@@ -55,12 +29,6 @@ public class ResumenEmpresaDto
 
     /// <summary>Sedes activas.</summary>
     public int Sedes { get; set; }
-
-    /// <summary>Últimos días con rutas, del más antiguo al más reciente.</summary>
-    public List<RutasDiaDto> UltimosDias { get; set; } = new();
-
-    /// <summary>Rutas y pasajeros por sede.</summary>
-    public List<RutasSedeDto> PorSede { get; set; } = new();
 }
 
 /// <summary>Actividad de un conductor en un rango de fechas.</summary>

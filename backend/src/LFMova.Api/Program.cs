@@ -98,6 +98,8 @@ builder.Services.AddCors(opciones =>
 
 var app = builder.Build();
 
+await app.AplicarMigracionesSiCorrespondeAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,0 +1,33 @@
+.panorama-inicio {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+}
+
+.panorama-inicio__grafica {
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.panorama-inicio__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 14px;
+}
+
+.panorama-inicio__cabecera h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+@media (max-width: 960px) {
+  .panorama-inicio {
+    grid-template-columns: 1fr;
+  }
+}
