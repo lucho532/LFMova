@@ -55,6 +55,13 @@ public interface IServicioServicio
     Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos);
 
     /// <summary>
+    /// Asigna la unidad sin rechazar que ya tenga otro servicio a la misma fecha y hora. Existe solo para la
+    /// importación de rutas armadas, donde el archivo declara rutas dobles de un mismo vehículo; ningún
+    /// endpoint la expone y la asignación manual sigue verificando el cruce.
+    /// </summary>
+    Task AsignarUnidadDeRutaArmadaAsync(int empresaId, int servicioId, int unidadOperativaId);
+
+    /// <summary>
     /// "Despublica" una ruta ya enviada (<c>PUBLICADO → ASIGNADO</c>) para
     /// que el coordinador pueda seguir editándola (por ejemplo, agregarle un
     /// pasajero de última hora arrastrándolo o asignándolo directo).

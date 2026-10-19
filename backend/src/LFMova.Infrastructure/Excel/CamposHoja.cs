@@ -19,6 +19,25 @@ internal static class CamposHoja
     internal const string Salida = "SALIDA";
     internal const string Fecha = "FECHA";
     internal const string Sede = "SEDE";
+    internal const string NumeroRuta = "NUMERORUTA";
+    internal const string Placa = "PLACA";
+
+    /// <summary>
+    /// Registra la columna de un campo reconocido. Si ya había una del mismo campo se conserva la primera, salvo en
+    /// los teléfonos: una hoja puede traer «TELEFONO» y «CELULAR», y las columnas repetidas se guardan como
+    /// <c>CELULAR#1</c>, <c>CELULAR#2</c>… para elegir luego, fila por fila, el número que sirva.
+    /// </summary>
+    internal static void RegistrarColumna(Dictionary<string, int> columnas, string campo, int columna)
+    {
+        if (!columnas.ContainsKey(campo))
+        {
+            columnas[campo] = columna;
+        }
+        else if (campo == Celular)
+        {
+            columnas[$"{Celular}#{columnas.Keys.Count(k => k.StartsWith(Celular + "#")) + 1}"] = columna;
+        }
+    }
 
     /// <summary>Campos sin los que una fila no se considera de encabezados.</summary>
     internal static readonly string[] Obligatorios = { Cedula, Nombre, Direccion, Barrio };
@@ -46,7 +65,7 @@ internal static class CamposHoja
         var reglas = new (string Campo, string[] Palabras)[]
         {
             (Apellidos, new[] { "APELLIDO" }),
-            (Cedula, new[] { "CEDULA", "DOCUMENTO", "IDENTIFICACION", "CC", "ID" }),
+            (Cedula, new[] { "CEDULA", "DOCUMENTO", "IDENTIFICACION", "IDEMPLEADO", "CC", "ID" }),
             (Celular, new[] { "CELULAR", "TELEFONO", "MOVIL", "WHATSAPP" }),
             (Direccion, new[] { "DIRECCION", "RECOGIDA", "DOMICILIO" }),
             (Barrio, new[] { "BARRIO", "LOCALIDAD", "ZONA" }),
@@ -54,6 +73,8 @@ internal static class CamposHoja
             (Fecha, new[] { "FECHA", "DIA" }),
             (Entrada, new[] { "ENTRADA", "ENTRA", "INGRESO" }),
             (Salida, new[] { "SALIDA", "SALE", "EGRESO" }),
+            (NumeroRuta, new[] { "RUTA" }),
+            (Placa, new[] { "PLACA" }),
             (Nombre, new[] { "NOMBRE" }),
         };
 

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using ClosedXML.Excel;
 using LFMova.Application.DTOs.Importaciones;
+using LFMova.Application.Utils;
 using static LFMova.Infrastructure.Excel.CamposHoja;
 
 namespace LFMova.Infrastructure.Excel;
@@ -32,7 +33,8 @@ internal static class CeldasHoja
             NombreCompleto = $"{Leer(Nombre)} {Leer(Apellidos)}".Trim().Replace("  ", " "),
             Direccion = Leer(Direccion),
             Barrio = Leer(Barrio),
-            Celular = columnas.TryGetValue(Celular, out var columnaCelular) ? LimpiarNumero(hoja.Cell(fila, columnaCelular)) : string.Empty
+            Celular = SeleccionadorTelefono.ElegirMejor(
+                columnas.Where(c => c.Key == Celular || c.Key.StartsWith(Celular + "#")).Select(c => LimpiarNumero(hoja.Cell(fila, c.Value))))
         };
     }
 

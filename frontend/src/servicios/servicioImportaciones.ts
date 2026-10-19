@@ -1,9 +1,11 @@
 import type {
   DatosRutaPegada,
+  ModoSeparacionRutas,
   DatosRutaVacia,
   PlantillaColumnasPegado,
   ResultadoImportacion,
   VistaPreviaImportacion,
+  VistaPreviaRutasArmadas,
 } from '../modelos/importacion'
 import { solicitarApi } from './clienteHttp'
 
@@ -75,4 +77,40 @@ export function guardarPlantillaColumnasPegado(
     cuerpo: { columnasEnOrden },
     token,
   })
+}
+
+function formularioRutasArmadas(archivo: File, modo: ModoSeparacionRutas, textoInicioRuta: string): FormData {
+  const datos = new FormData()
+  datos.append('archivo', archivo)
+  datos.append('modo', modo)
+  if (textoInicioRuta.trim()) datos.append('textoInicioRuta', textoInicioRuta.trim())
+  return datos
+}
+
+/** Consume POST /api/empresas/{empresaId}/importaciones/rutas-armadas/validar: lee un Excel con rutas armadas sin guardar nada. */
+export function validarRutasArmadas(empresaId: number, archivo: File, modo: ModoSeparacionRutas, textoInicioRuta: string, token: string): Promise<VistaPreviaRutasArmadas> {
+  return solicitarApi<VistaPreviaRutasArmadas>(`/api/empresas/${empresaId}/importaciones/rutas-armadas/validar`, {
+    metodo: 'POST',
+    cuerpo: formularioRutasArmadas(archivo, modo, textoInicioRuta),
+    token,
+  })
+}
+
+/**
+ * Consume POST /api/empresas/{empresaId}/importaciones/rutas-armadas: crea una ruta por cada ruta del archivo,
+ * tal como viene y sin publicarla. `fechaOperativa` es la de las rutas sin fecha y `sedeGeneralId` la de las rutas sin sede.
+ */
+export function importarRutasArmadas(
+  empresaId: number,
+  archivo: File,
+  modo: ModoSeparacionRutas,
+  textoInicioRuta: string,
+  fechaOperativa: string,
+  sedeGeneralId: number | null,
+  token: string,
+): Promise<ResultadoImportacion> {
+  const datos = formularioRutasArmadas(archivo, modo, textoInicioRuta)
+  datos.append('fechaOperativa', fechaOperativa)
+  if (sedeGeneralId !== null) datos.append('sedeGeneralId', String(sedeGeneralId))
+  return solicitarApi<ResultadoImportacion>(`/api/empresas/${empresaId}/importaciones/rutas-armadas`, { metodo: 'POST', cuerpo: datos, token })
 }

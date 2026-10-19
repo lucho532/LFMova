@@ -1,0 +1,60 @@
+.vista-rutas-armadas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.vista-rutas-armadas__ruta {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.vista-rutas-armadas__ruta > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.vista-rutas-armadas__titulo {
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.vista-rutas-armadas__conductor {
+  color: var(--exito);
+}
+
+.vista-rutas-armadas__sin-conductor {
+  color: var(--advertencia);
+}
+
+.vista-rutas-armadas__cantidad {
+  margin-left: auto;
+}
+
+.vista-rutas-armadas__pasajeros {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 14px 12px 36px;
+  font-size: 13px;
+}
+
+.vista-rutas-armadas__pasajeros li span {
+  display: block;
+  color: var(--text);
+}
+
+.vista-rutas-armadas__pasajeros li em {
+  color: var(--text);
+  font-size: 12px;
+}

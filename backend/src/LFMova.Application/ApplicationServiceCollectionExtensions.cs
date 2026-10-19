@@ -37,6 +37,8 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IConductorServicio, ConductorServicio>();
         servicios.AddScoped<IVehiculoServicio, VehiculoServicio>();
         servicios.AddScoped<IUnidadOperativaServicio, UnidadOperativaServicio>();
+        servicios.AddScoped<INumeroInternoUnidadServicio, NumeroInternoUnidadServicio>();
+        servicios.AddScoped<ICambioSedeServicio, CambioSedeServicio>();
         servicios.AddScoped<IEmpleadoServicio, EmpleadoServicio>();
         servicios.AddScoped<IEliminacionPersonaServicio, EliminacionPersonaServicio>();
         servicios.AddScoped<IFacturacionServicio, FacturacionServicio>();
@@ -47,6 +49,7 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IServicioPasajeroServicio, ServicioPasajeroServicio>();
         servicios.AddScoped<IPersonaServicio, PersonaServicio>();
         servicios.AddScoped<IImportacionExcelServicio, ImportacionExcelServicio>();
+        servicios.AddScoped<IImportacionRutasArmadasServicio, ImportacionRutasArmadasServicio>();
         servicios.AddScoped<ICuentaServicio, CuentaServicio>();
         servicios.AddScoped<IRegistroServicio, RegistroServicio>();
         servicios.AddScoped<IInvitacionEmpresaServicio, InvitacionEmpresaServicio>();
@@ -104,5 +107,9 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<ResolutorSedeImportacion>();
         servicios.AddScoped<CreadorRutaVacia>();
         servicios.AddScoped<CreadorRutaPegada>();
+        servicios.AddScoped<AgregadorPasajeroServicio>();
+        servicios.AddScoped<ResolutorUnidadPorPlaca>();
+        servicios.AddScoped<AnalizadorRutasArmadas>();
+        servicios.AddScoped<EjecutorRutasArmadas>();
     }
 }

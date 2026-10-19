@@ -1,0 +1,40 @@
+.campo-numero-interno {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.campo-numero-interno input {
+  width: 120px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 14px;
+}
+
+.campo-numero-interno button {
+  padding: 6px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.campo-numero-interno button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.campo-numero-interno__error {
+  flex-basis: 100%;
+  color: var(--error);
+  font-size: 12px;
+}

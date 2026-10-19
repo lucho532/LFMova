@@ -496,6 +496,38 @@ namespace LFMova.Infrastructure.Migrations
                     b.ToTable("Notificaciones");
                 });
 
+            modelBuilder.Entity("LFMova.Domain.Entities.NumeroInternoUnidad", b =>
+                {
+                    b.Property<int>("NumeroInternoUnidadId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("NumeroInternoUnidadId"));
+
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int>("UnidadOperativaId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("NumeroInternoUnidadId");
+
+                    b.HasIndex("UnidadOperativaId");
+
+                    b.HasIndex("EmpresaId", "Numero")
+                        .IsUnique();
+
+                    b.HasIndex("EmpresaId", "UnidadOperativaId")
+                        .IsUnique();
+
+                    b.ToTable("NumerosInternosUnidad");
+                });
+
             modelBuilder.Entity("LFMova.Domain.Entities.PlantillaColumnasPegado", b =>
                 {
                     b.Property<int>("PlantillaColumnasPegadoId")
@@ -1280,6 +1312,25 @@ namespace LFMova.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("LFMova.Domain.Entities.NumeroInternoUnidad", b =>
+                {
+                    b.HasOne("LFMova.Domain.Entities.Empresa", "Empresa")
+                        .WithMany()
+                        .HasForeignKey("EmpresaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LFMova.Domain.Entities.UnidadOperativa", "UnidadOperativa")
+                        .WithMany()
+                        .HasForeignKey("UnidadOperativaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empresa");
+
+                    b.Navigation("UnidadOperativa");
                 });
 
             modelBuilder.Entity("LFMova.Domain.Entities.PlantillaColumnasPegado", b =>

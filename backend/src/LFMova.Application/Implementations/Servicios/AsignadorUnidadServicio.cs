@@ -42,8 +42,12 @@ public class AsignadorUnidadServicio
         _notificacionServicio = notificacionServicio;
     }
 
-    /// <summary>Asigna la unidad al servicio; si todavía no tenía conductor, pasa a ASIGNADO.</summary>
-    public async Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos)
+    /// <summary>
+    /// Asigna la unidad al servicio; si todavía no tenía conductor, pasa a ASIGNADO. Con <paramref name="permitirCruce"/>
+    /// no se rechaza que la unidad ya tenga otro servicio a la misma fecha y hora (solo lo usa la importación de rutas
+    /// armadas, donde el archivo declara rutas dobles; la asignación manual siempre lo verifica).
+    /// </summary>
+    public async Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos, bool permitirCruce = false)
     {
         var servicio = await _acceso.ObtenerDeLaEmpresaAsync(empresaId, servicioId);
         if (servicio is null)
@@ -55,7 +59,7 @@ public class AsignadorUnidadServicio
             ? (int?)null
             : (await _unidadOperativaRepositorio.ObtenerPorIdAsync(servicio.UnidadOperativaId.Value))?.ConductorId;
 
-        var conductorNuevo = await AsegurarUnidadAsignableAsync(empresaId, datos.UnidadOperativaId, servicio);
+        var conductorNuevo = await AsegurarUnidadAsignableAsync(empresaId, datos.UnidadOperativaId, servicio, permitirCruce);
 
         // La reasignación modifica exclusivamente UnidadOperativaId; JornadaId no cambia. Si el servicio
         // todavía no tenía conductor (recién creado o sin unidad hasta ahora), esta asignación lo resuelve:
@@ -112,10 +116,10 @@ public class AsignadorUnidadServicio
     /// Valida que la unidad operativa indicada pueda asignarse al servicio:
     /// debe existir y estar activa, su conductor debe tener una vinculación
     /// activa con la empresa, y no debe generar conflicto temporal con otro
-    /// servicio ya asignado a esa misma unidad. Devuelve el conductor
+    /// servicio ya asignado a esa misma unidad (salvo con <paramref name="permitirCruce"/>). Devuelve el conductor
     /// resuelto para evitar volver a consultarlo.
     /// </summary>
-    public async Task<Conductor> AsegurarUnidadAsignableAsync(int empresaId, int unidadOperativaId, Servicio candidato)
+    public async Task<Conductor> AsegurarUnidadAsignableAsync(int empresaId, int unidadOperativaId, Servicio candidato, bool permitirCruce = false)
     {
         var unidadOperativa = await _unidadOperativaRepositorio.ObtenerPorIdAsync(unidadOperativaId);
         if (unidadOperativa is null || !unidadOperativa.Activa)
@@ -128,6 +132,11 @@ public class AsignadorUnidadServicio
         {
             throw new InvalidOperationException(
                 "El conductor de la unidad operativa no tiene una vinculación activa con esta empresa.");
+        }
+
+        if (permitirCruce)
+        {
+            return conductor;
         }
 
         var otrosServiciosDeLaUnidad = await _servicioRepositorio.ObtenerPorUnidadOperativaAsync(unidadOperativaId);

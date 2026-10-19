@@ -53,6 +53,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IConductorRepositorio, ConductorRepositorio>();
         servicios.AddScoped<IVehiculoRepositorio, VehiculoRepositorio>();
         servicios.AddScoped<IUnidadOperativaRepositorio, UnidadOperativaRepositorio>();
+        servicios.AddScoped<INumeroInternoUnidadRepositorio, NumeroInternoUnidadRepositorio>();
         servicios.AddScoped<IEmpleadoRepositorio, EmpleadoRepositorio>();
         servicios.AddScoped<IEliminacionPersonaRepositorio, EliminacionPersonaRepositorio>();
         servicios.AddScoped<IEliminacionEmpresaRepositorio, EliminacionEmpresaRepositorio>();
@@ -62,6 +63,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IFacturacionRepositorio, FacturacionRepositorio>();
         servicios.AddSingleton<IAlmacenamientoArchivos, AlmacenamientoLocalArchivos>();
         servicios.AddSingleton<IExcelProgramacionLector, ExcelProgramacionLectorClosedXml>();
+        servicios.AddSingleton<IExcelRutasArmadasLector, ExcelRutasArmadasLectorClosedXml>();
         servicios.AddSingleton<IGeneradorSoporteRutas, GeneradorSoporteRutasClosedXml>();
         servicios.AddSingleton<IGeneradorInformeAsistencia, GeneradorInformeAsistenciaClosedXml>();
         servicios.AddSingleton<IGeneradorInformeAsistenciaPeriodo, GeneradorInformeAsistenciaPeriodoClosedXml>();

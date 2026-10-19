@@ -1,0 +1,99 @@
+.tarjeta-vehiculo-conductor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.tarjeta-vehiculo-conductor header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.tarjeta-vehiculo-conductor__placa {
+  color: var(--text-h);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+}
+
+.tarjeta-vehiculo-conductor__lapiz {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tarjeta-vehiculo-conductor__lapiz:hover,
+.tarjeta-vehiculo-conductor__lapiz:focus-visible {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  outline: none;
+}
+
+.tarjeta-vehiculo-conductor dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 20px;
+  margin: 0;
+}
+
+.tarjeta-vehiculo-conductor dt {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tarjeta-vehiculo-conductor dd {
+  margin: 2px 0 0;
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.tarjeta-vehiculo-conductor__vacio {
+  color: var(--text);
+}
+
+.tarjeta-vehiculo-conductor__edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tarjeta-vehiculo-conductor__numero-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tarjeta-vehiculo-conductor footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.tarjeta-vehiculo-conductor footer > span {
+  margin-right: auto;
+}

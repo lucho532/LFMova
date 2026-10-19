@@ -79,6 +79,11 @@ public class AseguradorEmpleadoImportacion
 
         if (empleado is not null && empleado.EmpresaId == empresaId)
         {
+            if (ActualizadorDatosEmpleado.Aplicar(empleado, usuario, fila, resultado))
+            {
+                await _empleadoRepositorio.GuardarCambiosAsync();
+            }
+
             return empleado;
         }
 
@@ -125,6 +130,7 @@ public class AseguradorEmpleadoImportacion
         else
         {
             empleado.EmpresaId = empresaId;
+            ActualizadorDatosEmpleado.Aplicar(empleado, usuario, fila, resultado);
             resultado.EmpleadosVinculados++;
         }
 

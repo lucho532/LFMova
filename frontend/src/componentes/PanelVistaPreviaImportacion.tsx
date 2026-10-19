@@ -5,6 +5,7 @@ import { formatearBarrioConCiudad, useBarriosVillamaria } from '../hooks/useBarr
 import { EstadoServicio } from '../modelos/enumeraciones'
 import type { PasajeroPrevia, VistaPreviaImportacion } from '../modelos/importacion'
 import type { Servicio } from '../modelos/operacion'
+import type { Sede } from '../modelos/sede'
 import { ErrorApi } from '../servicios/clienteHttp'
 import type { OpcionUnidadOperativa } from '../servicios/servicioConductores'
 import { BotonPrimario } from './BotonPrimario'
@@ -12,6 +13,7 @@ import { BotonSecundario } from './BotonSecundario'
 import { CampoFormulario } from './CampoFormulario'
 import { MensajeAlerta } from './MensajeAlerta'
 import { ModalConfirmacion } from './ModalConfirmacion'
+import { SedeEditable } from './SedeEditable'
 import { SelectorFormulario } from './SelectorFormulario'
 import { TablaDatos } from './TablaDatos'
 import '../estilos/componentes/PanelVistaPreviaImportacion.css'
@@ -49,6 +51,10 @@ interface PropiedadesPanelVistaPreviaImportacion {
    * notifica.
    */
   alDespublicar: (servicio: Servicio) => Promise<void>
+  /** Sedes de la empresa, para poder cambiar la de una ruta ya creada. */
+  sedes: Sede[]
+  /** El coordinador eligió otra sede para una ruta que todavía no ha salido. */
+  alCambiarSede: (servicio: Servicio, sedeId: number) => Promise<void>
 }
 
 const ESTADOS_SIN_CAMBIOS = new Set<number>([EstadoServicio.CANCELADO, EstadoServicio.EN_CURSO, EstadoServicio.FINALIZADO])
@@ -98,6 +104,8 @@ export function PanelVistaPreviaImportacion({
   alEliminarPasajero,
   alEditarPasajero,
   alDespublicar,
+  sedes,
+  alCambiarSede,
 }: PropiedadesPanelVistaPreviaImportacion) {
   const [desplegado, setDesplegado] = useState<number | null>(null)
   const [unidadElegida, setUnidadElegida] = useState('')
@@ -453,7 +461,13 @@ export function PanelVistaPreviaImportacion({
           >
             <div className="vista-previa-importacion__cabecera">
               <h3>
-                {servicio.tipo === 0 ? 'Entrada' : 'Salida'} · {servicio.sedeEnHoja} · {servicio.fecha ? `${servicio.fecha} · ` : ''}{servicio.hora.slice(0, 5)}
+                {servicio.tipo === 0 ? 'Entrada' : 'Salida'} ·{' '}
+                {real && !ESTADOS_SIN_CAMBIOS.has(real.estado) ? (
+                  <SedeEditable nombre={servicio.sedeEnHoja} sedeIdActual={real.sedeId} sedes={sedes} alCambiar={(sedeId) => alCambiarSede(real, sedeId)} />
+                ) : (
+                  servicio.sedeEnHoja
+                )}{' '}
+                · {servicio.fecha ? `${servicio.fecha} · ` : ''}{servicio.hora.slice(0, 5)}
                 {!servicio.sedeEncontrada && <span className="vista-previa-importacion__sin-sede"> (sede no encontrada)</span>}
                 {real?.estado === EstadoServicio.EN_CURSO && <span className="vista-previa-importacion__etiqueta-en-curso"> 🟠 En curso</span>}
               </h3>

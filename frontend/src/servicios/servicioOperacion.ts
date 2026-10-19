@@ -117,6 +117,14 @@ export function asignarUnidad(empresaId: number, jornadaId: number, servicioId: 
 }
 
 /**
+ * Consume POST .../servicios/{servicioId}/cambiar-sede: cambia la sede de una ruta que todavía no ha salido (y la de la
+ * programación de sus pasajeros). Si estaba publicada vuelve a Asignado.
+ */
+export function cambiarSedeServicio(empresaId: number, jornadaId: number, servicioId: number, sedeId: number, token: string): Promise<void> {
+  return solicitarApi<void>(`${rutaServicio(empresaId, jornadaId, servicioId)}/cambiar-sede`, { metodo: 'POST', cuerpo: { sedeId }, token })
+}
+
+/**
  * Consume POST .../servicios/{servicioId}/despublicar: "despublica" una ruta ya enviada (vuelve a
  * Asignado) para poder seguir editándola. Conserva el conductor; si tiene, se le notifica.
  */

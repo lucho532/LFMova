@@ -1,0 +1,50 @@
+.sede-editable__nombre {
+  padding: 0;
+  border: 0;
+  border-bottom: 2px dashed var(--accent-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sede-editable__nombre:hover,
+.sede-editable__nombre:focus-visible {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.sede-editable {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.sede-editable select {
+  padding: 4px 8px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.sede-editable__cancelar {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.sede-editable__error {
+  flex-basis: 100%;
+  color: var(--error);
+  font-size: 12px;
+}
