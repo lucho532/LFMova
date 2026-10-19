@@ -839,3 +839,27 @@ No se agregan librerías de UI, gestión de estado, CSS-in-JS ni utilidades adic
 Cuando un archivo se acerca a ese límite se divide por responsabilidad, no de forma arbitraria: en backend, extrayendo colaboradores a `Rules`, `Validators`, `Utils` o servicios más pequeños; en frontend, extrayendo lógica a hooks (`use*`) y bloques de pantalla a subcomponentes (ver §42.2). Dividir un archivo no debe cambiar su comportamiento ni sus contratos públicos.
 
 Quedan fuera del límite las migraciones de Entity Framework Core y el código generado.
+
+---
+
+# 44. Ubicación GPS obligatoria del conductor
+
+**Decisión vigente (2026-10-17):** inicio y fin de ruta, cada incidencia (y por tanto su foto de evidencia) y cada llamada del conductor a un pasajero se registran siempre con la ubicación GPS del dispositivo. El backend rechaza con `400` la solicitud sin coordenadas válidas (`UbicacionValidador`) y el frontend no la envía: si falta el permiso o el GPS está apagado, muestra `AvisoPermiso` con el botón que abre la configuración del teléfono (plugin `capacitor-native-settings`). Esto incluye bloquear la llamada: sin ubicación no se abre el marcador.
+
+Las columnas siguen siendo nulables solo porque existen registros históricos sin ubicación (§17); no se migran ni se rellenan. En el detalle de una ruta finalizada, el coordinador ve además el tiempo de espera registrado con cada pasajero (de «He llegado» al resultado, haya sido recogido o no) y, junto a la foto de cada incidencia, un mapa del lugar donde se reportó.
+
+Si `spec.md`, `data-model.md` o `tasks.md` todavía dicen que estas coordenadas son opcionales, prevalece esta sección.
+
+---
+
+# 45. Chat de un solo sentido
+
+**Decisión vigente (2026-10-17, a pedido del cliente), modifica §30:** para evitar que el conductor se distraiga conversando con el pasajero, el chat por `ServicioPasajero` es de un solo sentido. El conductor solo envía los mensajes predeterminados (`ReglasChat.MensajesPredeterminadosConductor`, igual a `MENSAJES_RAPIDOS_CONDUCTOR` del frontend) y el pasajero únicamente los lee y recibe la notificación. Se aplica en backend (`ChatServicio.EnviarMensajeAsync` rechaza con `409` al pasajero y cualquier texto libre) y el frontend ya no muestra campo de escritura. Los mensajes anteriores se conservan y siguen visibles. Si cambia la lista, hay que actualizarla en los dos lugares.
+
+---
+
+# 46. Informe de asistencia de una ruta
+
+**Decisión vigente (2026-10-17):** el coordinador puede filtrar los pasajeros de una ruta finalizada y descargar en Excel el informe que la empresa pide enviar a diario. **Asistió** quien quedó `RECOGIDO`; **no asistió** quien quedó `NO_RECOGIDO` o avisó que no asistiría (`NO_ASISTIRA`). `PROGRAMADO`, `CONFIRMADO`, `CONDUCTOR_LLEGO` y `CANCELADO` solo salen en «Todos». La regla vive en `ReglasAsistenciaRuta` (backend) y se replica en `ordenRuta.ts` (frontend); si cambia, hay que actualizarla en los dos. La lista va en orden cronológico de registro y el número de recogida (`#`) es la posición en la ruta completa: no cambia al filtrar y queda vacío para quien no llegó a procesarse. La espera es de «He llegado» al resultado y se considera a tiempo hasta 2 minutos. Endpoint: `GET .../servicios/{id}/informe-asistencia?filtro=TODOS|ASISTIERON|NO_ASISTIERON` (solo coordinador de la empresa).
+
+**Ampliación (2026-10-18): informe de toda la jornada.** Además del informe por ruta, el coordinador descarga un único Excel con todos los que no asistieron en las rutas de una jornada (un día) o de un rango de días, con su ruta, conductor, placa, datos del pasajero, estado, hora de registro y espera. Se abre desde el botón «Informe de inasistencias» de la pantalla de Rutas, que muestra una vista previa (por defecto la fecha de hoy en Colombia, con selector Desde/Hasta) y desde ella se descarga el Excel con exactamente esos datos. Endpoints (solo coordinador de la empresa): `GET /api/empresas/{empresaId}/informe-asistencia/vista-previa?desde=&hasta=&filtro=` (JSON) y `GET /api/empresas/{empresaId}/informe-asistencia?desde=&hasta=&filtro=` (Excel) (`400` si `hasta` es anterior a `desde`; excluye rutas canceladas). Usa la misma regla de asistencia (`ReglasAsistenciaRuta`).
