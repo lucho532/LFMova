@@ -2,6 +2,7 @@ import type {
   Conductor,
   CrearConductorDatos,
   CrearVehiculoDatos,
+  NumeroInternoUnidad,
   UnidadOperativa,
   Vehiculo,
   VincularConductorDatos,
@@ -93,6 +94,20 @@ export function desactivarUnidadOperativa(conductorId: number, unidadOperativaId
   })
 }
 
+/** Consume GET /api/empresas/{empresaId}/unidades-operativas/numeros-internos: el número interno que la empresa le dio a cada unidad. */
+export function obtenerNumerosInternos(empresaId: number, token: string): Promise<NumeroInternoUnidad[]> {
+  return solicitarApi<NumeroInternoUnidad[]>(`/api/empresas/${empresaId}/unidades-operativas/numeros-internos`, { token })
+}
+
+/** Consume PUT /api/empresas/{empresaId}/unidades-operativas/{unidadId}/numero-interno: asigna el número interno; vacío lo quita. */
+export function asignarNumeroInterno(empresaId: number, unidadOperativaId: number, numero: string, token: string): Promise<void> {
+  return solicitarApi<void>(`/api/empresas/${empresaId}/unidades-operativas/${unidadOperativaId}/numero-interno`, {
+    metodo: 'PUT',
+    cuerpo: { numero },
+    token,
+  })
+}
+
 /** Una unidad operativa activa, ya identificada por el conductor y la placa, para elegirla como "ruta". */
 export interface OpcionUnidadOperativa {
   unidadOperativaId: number
@@ -105,13 +120,15 @@ export interface OpcionUnidadOperativa {
  * para elegir a qué unidad pertenece una ruta.
  */
 export async function obtenerOpcionesDeUnidades(empresaId: number, token: string): Promise<OpcionUnidadOperativa[]> {
-  const conductores = await obtenerConductores(empresaId, token)
+  const [conductores, numeros] = await Promise.all([obtenerConductores(empresaId, token), obtenerNumerosInternos(empresaId, token)])
   const opciones: OpcionUnidadOperativa[] = []
   for (const conductor of conductores) {
     const [unidades, vehiculos] = await Promise.all([obtenerUnidadesOperativas(conductor.conductorId, token), obtenerVehiculos(conductor.conductorId, token)])
     for (const unidad of unidades.filter((u) => u.activa)) {
       const placa = vehiculos.find((v) => v.vehiculoId === unidad.vehiculoId)?.placa
-      opciones.push({ unidadOperativaId: unidad.unidadOperativaId, texto: placa ? `${conductor.nombreCompleto} · ${placa}` : conductor.nombreCompleto })
+      const numeroInterno = numeros.find((n) => n.unidadOperativaId === unidad.unidadOperativaId)?.numero
+      const detalle = [placa, numeroInterno ? `N.º interno ${numeroInterno}` : null].filter(Boolean).join(' · ')
+      opciones.push({ unidadOperativaId: unidad.unidadOperativaId, texto: detalle ? `${conductor.nombreCompleto} · ${detalle}` : conductor.nombreCompleto })
     }
   }
   return opciones

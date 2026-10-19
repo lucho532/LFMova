@@ -53,6 +53,7 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddScoped<IConductorRepositorio, ConductorRepositorio>();
         servicios.AddScoped<IVehiculoRepositorio, VehiculoRepositorio>();
         servicios.AddScoped<IUnidadOperativaRepositorio, UnidadOperativaRepositorio>();
+        servicios.AddScoped<INumeroInternoUnidadRepositorio, NumeroInternoUnidadRepositorio>();
         servicios.AddScoped<IEmpleadoRepositorio, EmpleadoRepositorio>();
         servicios.AddScoped<IEliminacionPersonaRepositorio, EliminacionPersonaRepositorio>();
         servicios.AddScoped<IEliminacionEmpresaRepositorio, EliminacionEmpresaRepositorio>();

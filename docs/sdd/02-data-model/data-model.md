@@ -1486,3 +1486,16 @@ Estos puntos deben resolverse en `plan.md` sin inventar requisitos de negocio qu
 # Registro de llamadas (2026-10-06)
 
 `RegistroLlamada` (tabla `RegistrosLlamada`): una fila por cada vez que el conductor pulsa "Llamar" sobre un pasajero. `ServicioPasajeroId` (relación, **borrado en cascada**: es la única relación del modelo que no es restrictiva, porque la llamada no significa nada sin su pasajero), `FechaHora` (UTC), `DuracionAproximadaSegundos` (nulo si no se midió), `Latitud`, `Longitud` (nulos si no hay ubicación).
+
+# Número interno de la unidad (2026-10-19)
+
+`NumeroInternoUnidad`: número con el que una **empresa** identifica internamente a una `UnidadOperativa` (su vehículo), por ejemplo «103». Es por empresa porque un mismo vehículo puede trabajar para varias y cada una lo numera distinto; por eso no es una columna de `Vehiculo` ni de `UnidadOperativa`.
+
+| Campo | Descripción |
+|---|---|
+| `NumeroInternoUnidadId` | Identificador. |
+| `EmpresaId` | Empresa que usa el número (FK, borrado en cascada). |
+| `UnidadOperativaId` | Unidad numerada (FK, borrado en cascada). |
+| `Numero` | Texto de hasta 30 caracteres, sin espacios a los lados. |
+
+Restricciones: una unidad tiene como máximo un número por empresa (`EmpresaId` + `UnidadOperativaId` únicos) y dos unidades de una misma empresa no comparten número (`EmpresaId` + `Numero` únicos; la validación del servicio no distingue mayúsculas). Solo el coordinador de la empresa lo ve y lo cambia, y solo para unidades de conductores con vinculación activa a esa empresa.

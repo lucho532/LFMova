@@ -55,6 +55,12 @@ export interface UnidadOperativa {
   activa: boolean
 }
 
+/** Refleja NumeroInternoUnidadDto (LFMova.Application): número con el que la empresa identifica a una de sus unidades. */
+export interface NumeroInternoUnidad {
+  unidadOperativaId: number
+  numero: string
+}
+
 /** Refleja UnidadDeTrabajoDto (LFMova.Application): unidad operativa con los datos de su vehículo. */
 export interface UnidadDeTrabajo {
   unidadOperativaId: number

@@ -1,0 +1,28 @@
+.detalle-conductor__titulo-seccion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-top: 24px;
+}
+
+.detalle-conductor__titulo-seccion h2 {
+  margin: 0;
+}
+
+.detalle-conductor__formulario-alta {
+  margin: 14px 0;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.detalle-conductor__vehiculos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}

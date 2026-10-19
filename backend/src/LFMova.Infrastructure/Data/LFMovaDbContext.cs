@@ -62,6 +62,7 @@ public class LFMovaDbContext : DbContext
 
     /// <summary>Unidades operativas (conductor + vehículo).</summary>
     public DbSet<UnidadOperativa> UnidadesOperativas => Set<UnidadOperativa>();
+    public DbSet<NumeroInternoUnidad> NumerosInternosUnidad => Set<NumeroInternoUnidad>();
 
     /// <summary>Importaciones de archivos Excel.</summary>
     public DbSet<ImportacionExcel> ImportacionesExcel => Set<ImportacionExcel>();
