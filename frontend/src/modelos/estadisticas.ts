@@ -81,6 +81,8 @@ export interface RutaEmpresa {
   placa: string | null
   pasajeros: number
   pasajerosTransportados: number
+  horaInicioReal: string | null
+  horaFinReal: string | null
 }
 
 /** Refleja PasajeroEmpresaDto (LFMova.Application). */

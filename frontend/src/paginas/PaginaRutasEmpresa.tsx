@@ -8,8 +8,11 @@ import { ContenedorPagina } from '../componentes/ContenedorPagina'
 import { DetalleRuta, type EncabezadoDetalleRuta } from '../componentes/DetalleRuta'
 import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { FilaTablaSeleccionable } from '../componentes/FilaTablaSeleccionable'
+import { HorarioRealRuta } from '../componentes/HorarioRealRuta'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
+import { FiltroJornadaConductor } from '../componentes/FiltroJornadaConductor'
+import { hoyColombia } from '../modelos/fechaColombia'
 import { EstadoServicio, NOMBRES_ESTADO_SERVICIO, NOMBRES_TIPO_SERVICIO, formatearHora, nombreDe } from '../modelos/enumeraciones'
 import type { PasajeroEmpresa, RutaEmpresa } from '../modelos/estadisticas'
 import { useAutenticacion } from '../contexto/useAutenticacion'
@@ -42,6 +45,8 @@ export function PaginaRutasEmpresa() {
   const filtro = parametros.get('filtro') ?? 'programadas'
   const [desde, setDesde] = useState('')
   const [hasta, setHasta] = useState('')
+  const [filtroFechasAbierto, setFiltroFechasAbierto] = useState(false)
+  const [conductor, setConductor] = useState('')
   const [rutas, setRutas] = useState<RutaEmpresa[]>([])
   const [cargando, setCargando] = useState(true)
   const [mensajeError, setMensajeError] = useState<string | null>(null)
@@ -102,7 +107,16 @@ export function PaginaRutasEmpresa() {
     }
   }
 
-  const totalPasajeros = rutas.reduce((suma, r) => suma + r.pasajeros, 0)
+  const conductores = [...new Set(rutas.map((r) => r.conductor).filter((c): c is string => !!c))].sort()
+  const rutasVisibles = conductor ? rutas.filter((r) => r.conductor === conductor) : rutas
+  const totalPasajeros = rutasVisibles.reduce((suma, r) => suma + r.pasajeros, 0)
+
+  function elegirJornadaHoy() {
+    const hoy = hoyColombia()
+    setDesde(hoy)
+    setHasta(hoy)
+    setParametros({ filtro: '' })
+  }
 
   return (
     <ContenedorPagina ancho="amplio" volverA={`/empresas/${empresaId}`} textoVolver="← Inicio">
@@ -124,8 +138,9 @@ export function PaginaRutasEmpresa() {
       </div>
 
       <div className="rutas-empresa__fechas">
-        <CampoFormulario id="rutasDesde" etiqueta="Desde" tipo="date" valor={desde} alCambiar={setDesde} />
-        <CampoFormulario id="rutasHasta" etiqueta="Hasta" tipo="date" valor={hasta} alCambiar={setHasta} />
+        <BotonSecundario type="button" onClick={() => setFiltroFechasAbierto((abierto) => !abierto)} aria-expanded={filtroFechasAbierto}>
+          Filtro{desde || hasta ? ' (activo)' : ''}
+        </BotonSecundario>
         {(desde || hasta) && (
           <BotonSecundario
             type="button"
@@ -137,18 +152,26 @@ export function PaginaRutasEmpresa() {
             Quitar fechas
           </BotonSecundario>
         )}
+        <FiltroJornadaConductor conductores={conductores} conductor={conductor} alCambiarConductor={setConductor} alElegirJornadaHoy={elegirJornadaHoy} />
         <BotonInformeInasistencias empresaId={Number(empresaId)} token={token ?? ''} />
         <p className="rutas-empresa__total">
-          {rutas.length} rutas · {totalPasajeros} pasajeros
+          {rutasVisibles.length} rutas · {totalPasajeros} pasajeros
         </p>
       </div>
+
+      {filtroFechasAbierto && (
+        <div className="rutas-empresa__fechas">
+          <CampoFormulario id="rutasDesde" etiqueta="Desde" tipo="date" valor={desde} alCambiar={setDesde} />
+          <CampoFormulario id="rutasHasta" etiqueta="Hasta" tipo="date" valor={hasta} alCambiar={setHasta} />
+        </div>
+      )}
 
       {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
       {errorEliminar && <MensajeAlerta tipo="error">{errorEliminar}</MensajeAlerta>}
 
       {cargando ? (
         <p className="contenedor-pagina__estado">Cargando…</p>
-      ) : rutas.length === 0 ? (
+      ) : rutasVisibles.length === 0 ? (
         <p className="contenedor-pagina__estado">No hay rutas con este filtro.</p>
       ) : (
         <div className="tabla-datos">
@@ -166,10 +189,13 @@ export function PaginaRutasEmpresa() {
               </tr>
             </thead>
             <tbody>
-              {rutas.map((ruta) => (
+              {rutasVisibles.map((ruta) => (
                 <FilaTablaSeleccionable key={ruta.servicioId} alSeleccionar={() => abrirDetalleDeRuta(ruta)}>
                   <td>{ruta.fecha}</td>
-                  <td>{formatearHora(ruta.hora)}</td>
+                  <td>
+                    {formatearHora(ruta.hora)}
+                    <HorarioRealRuta ruta={ruta} />
+                  </td>
                   <td>{nombreDe(NOMBRES_TIPO_SERVICIO, ruta.tipo)}</td>
                   <td>{ruta.sede}</td>
                   <td>

@@ -4,8 +4,8 @@ const DIAS_AVISO = 30
 
 /**
  * Muestra la fecha de vigencia de un documento del vehículo (SOAT,
- * técnico-mecánica) con un aviso visual cuando está vencido o próximo a
- * vencer. Es solo informativo: la plataforma no bloquea nada por esta fecha.
+ * técnico-mecánica): en verde si está vigente (con aviso de los días que
+ * faltan cuando está próximo a vencer) y en rojo si está vencido. Es solo informativo: la plataforma no bloquea nada por esta fecha.
  */
 export function VigenciaDocumento({ fecha }: { fecha: string | null }) {
   if (!fecha) return <span className="vigencia-documento">—</span>
@@ -30,5 +30,5 @@ export function VigenciaDocumento({ fecha }: { fecha: string | null }) {
     )
   }
 
-  return <span className="vigencia-documento">{fecha}</span>
+  return <span className="vigencia-documento vigencia-documento--vigente">{fecha}</span>
 }

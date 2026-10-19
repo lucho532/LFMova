@@ -150,6 +150,12 @@ public class RutaEmpresaDto
 
     /// <summary>Pasajeros transportados.</summary>
     public int PasajerosTransportados { get; set; }
+
+    /// <summary>Instante real (UTC) en que el conductor inició la ruta, o <c>null</c> si no ha iniciado.</summary>
+    public DateTime? HoraInicioReal { get; set; }
+
+    /// <summary>Instante real (UTC) en que el conductor finalizó la ruta, o <c>null</c> si no ha finalizado.</summary>
+    public DateTime? HoraFinReal { get; set; }
 }
 
 /// <summary>Un pasajero de una ruta de la empresa.</summary>

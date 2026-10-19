@@ -160,7 +160,9 @@ public class EstadisticasRepositorio : IEstadisticasRepositorio
                 Conductor = s.UnidadOperativa == null ? null : s.UnidadOperativa.Conductor!.Usuario!.NombreCompleto,
                 Placa = s.UnidadOperativa == null ? null : s.UnidadOperativa.Vehiculo!.Placa,
                 Pasajeros = s.ServiciosPasajero.Count,
-                PasajerosTransportados = s.ServiciosPasajero.Count(p => p.Estado == EstadoServicioPasajero.RECOGIDO)
+                PasajerosTransportados = s.ServiciosPasajero.Count(p => p.Estado == EstadoServicioPasajero.RECOGIDO),
+                HoraInicioReal = s.HoraInicioReal,
+                HoraFinReal = s.HoraFinReal
             })
             .ToListAsync();
     }
