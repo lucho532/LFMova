@@ -96,6 +96,9 @@ public partial class ServicioPasajeroServicioTests
             return Task.CompletedTask;
         }
 
+        public Task AsignarUnidadDeRutaArmadaAsync(int empresaId, int servicioId, int unidadOperativaId)
+            => AsignarUnidadAsync(empresaId, servicioId, new AsignarUnidadServicioDto { UnidadOperativaId = unidadOperativaId });
+
         public Task AsignarUnidadAsync(int empresaId, int servicioId, AsignarUnidadServicioDto datos)
         {
             var entidad = _entidadesCompartidas?.FirstOrDefault(s => s.ServicioId == servicioId);

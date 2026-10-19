@@ -1,4 +1,4 @@
-/* Dos fuentes para armar rutas, una al lado de la otra: subir un Excel o pegar filas copiadas de uno. El recuadro punteado de cada una empieza justo debajo del título, sin nada en medio, para que las dos cajas coincidan visualmente a la misma altura; la fecha de "Cargar Excel" va embebida en su propio título (no en un campo aparte que desalinee las cajas). */
+/* Contenedor de «Adjuntar rutas»: un único desprendible; cada forma de traer las rutas (Excel que se reparte, rutas ya armadas o filas pegadas) se muestra solo al elegirla en su desplegable. */
 .pagina-importar-excel__fuentes {
   display: grid;
   /* minmax(0, …): sin el 0, una columna nunca se encoge por debajo de su contenido y en el celular
@@ -7,12 +7,6 @@
   gap: 24px;
   align-items: stretch;
   margin-bottom: 8px;
-}
-
-@media (min-width: 860px) {
-  .pagina-importar-excel__fuentes {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
 }
 
 .pagina-importar-excel__fuente {
@@ -27,30 +21,6 @@
 .pagina-importar-excel__fuente .zona-arrastre {
   flex: 1;
   justify-content: center;
-}
-
-/* Campo de fecha embebido en "Cargar Excel para el día …": se ve como parte del título, no como un campo
-   de formulario aparte, pero sigue siendo el mismo <input type="date"> nativo y editable. */
-.pagina-importar-excel__fecha-excel-inline {
-  border: none;
-  border-bottom: 2px solid var(--accent-border);
-  border-radius: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-weight: inherit;
-  padding: 0 2px;
-  cursor: pointer;
-}
-
-.pagina-importar-excel__fecha-excel-inline:hover,
-.pagina-importar-excel__fecha-excel-inline:focus-visible {
-  border-bottom-color: var(--accent);
-  outline: none;
-}
-
-.pagina-importar-excel__fecha-excel-inline::-webkit-calendar-picker-indicator {
-  cursor: pointer;
 }
 
 .programacion-acciones {

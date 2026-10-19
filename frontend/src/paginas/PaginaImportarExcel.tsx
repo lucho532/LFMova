@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { BotonDescargarProgramacion } from '../componentes/BotonDescargarProgramacion'
 import { BotonPrimario } from '../componentes/BotonPrimario'
@@ -8,6 +8,7 @@ import { EncabezadoPagina } from '../componentes/EncabezadoPagina'
 import { IndicadorCarga } from '../componentes/IndicadorCarga'
 import { MensajeAlerta } from '../componentes/MensajeAlerta'
 import { ModalConfirmacion } from '../componentes/ModalConfirmacion'
+import { PanelAdjuntarRutas } from '../componentes/PanelAdjuntarRutas'
 import { PanelBarriosSinZona } from '../componentes/PanelBarriosSinZona'
 import { PanelCrearRutaPegado } from '../componentes/PanelCrearRutaPegado'
 import { PanelVistaPreviaImportacion } from '../componentes/PanelVistaPreviaImportacion'
@@ -25,6 +26,7 @@ import { actualizarEmpleado, obtenerEmpleado } from '../servicios/servicioEmplea
 import { crearRutaVacia, importarExcel, validarImportacion } from '../servicios/servicioImportaciones'
 import {
   asignarUnidad,
+  cambiarSedeServicio,
   deshacerReparto,
   despublicarServicio,
   editarDireccionPasajero,
@@ -74,15 +76,6 @@ function sumarDias(fechaIso: string, dias: number): string {
 function fechaLegible(fechaIso: string): string {
   const [anio, mes, dia] = fechaIso.split('-')
   return `${dia}/${mes}/${anio}`
-}
-
-/** En el campo de fecha embebido en el título "Cargar Excel para el día …", un clic en cualquier parte despliega el selector nativo. */
-function abrirSelectorFecha(evento: MouseEvent<HTMLInputElement>) {
-  try {
-    evento.currentTarget.showPicker()
-  } catch {
-    // Navegadores sin showPicker: queda el icono nativo del calendario.
-  }
 }
 
 /**
@@ -248,6 +241,13 @@ export function PaginaImportarExcel() {
   async function alEliminarPasajero(servicio: Servicio, servicioPasajeroId: number) {
     if (!token) return
     await eliminarPasajero(idEmpresa, servicio.jornadaId, servicio.servicioId, servicioPasajeroId, token)
+    await cargarServiciosReales()
+  }
+
+  /** El coordinador cambia la sede de una ruta que todavía no ha salido; si falla, el panel muestra el mensaje del backend. */
+  async function alCambiarSede(servicio: Servicio, sedeId: number) {
+    if (!token) return
+    await cambiarSedeServicio(idEmpresa, servicio.jornadaId, servicio.servicioId, sedeId, token)
     await cargarServiciosReales()
   }
 
@@ -514,29 +514,28 @@ export function PaginaImportarExcel() {
 
       <div className="pagina-importar-excel__fuentes">
         <section className="pagina-importar-excel__fuente">
-          <h2>
-            Cargar Excel para el día{' '}
-            <input
-              className="pagina-importar-excel__fecha-excel-inline"
-              type="date"
-              value={fechaExcel}
-              onChange={(evento) => setFechaExcel(evento.target.value)}
-              onClick={abrirSelectorFecha}
-              required
-            />
-          </h2>
-          <ZonaArrastreArchivo archivo={archivo} alElegir={alElegirArchivo} deshabilitada={ocupado} />
-          {ocupado && !vista && <p className="contenedor-pagina__estado">Leyendo el archivo…</p>}
-          {archivo && fechaExcel < hoyColombia() && (
-            <MensajeAlerta tipo="error">
-              Ojo: la fecha es el {fechaLegible(fechaExcel)}, que ya pasó (se tomó del archivo). Si las rutas son para otro día, cámbiala arriba antes de
-              repartir.
-            </MensajeAlerta>
-          )}
-          {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
+          <PanelAdjuntarRutas
+            empresaId={idEmpresa}
+            sedes={sedes}
+            fecha={fechaExcel}
+            alCambiarFecha={setFechaExcel}
+            alTerminar={cargarServiciosReales}
+            repartir={
+              <>
+                <ZonaArrastreArchivo archivo={archivo} alElegir={alElegirArchivo} deshabilitada={ocupado} />
+                {ocupado && !vista && <p className="contenedor-pagina__estado">Leyendo el archivo…</p>}
+                {archivo && fechaExcel < hoyColombia() && (
+                  <MensajeAlerta tipo="error">
+                    Ojo: la fecha es el {fechaLegible(fechaExcel)}, que ya pasó (se tomó del archivo). Si las rutas son para otro día, cámbiala arriba antes de
+                    repartir.
+                  </MensajeAlerta>
+                )}
+                {mensajeError && <MensajeAlerta tipo="error">{mensajeError}</MensajeAlerta>}
+              </>
+            }
+            pegado={<PanelCrearRutaPegado empresaId={idEmpresa} opcionesUnidad={unidades} alTerminar={cargarServiciosReales} />}
+          />
         </section>
-
-        <PanelCrearRutaPegado empresaId={idEmpresa} opcionesUnidad={unidades} alTerminar={cargarServiciosReales} />
       </div>
 
       {/* "Repartir" necesita el Excel cargado; "Más acciones" (deshacer, eliminar) sirve siempre que haya rutas
@@ -649,6 +648,8 @@ export function PaginaImportarExcel() {
           alEliminarPasajero={alEliminarPasajero}
           alEditarPasajero={alEditarPasajero}
           alDespublicar={alDespublicar}
+          sedes={sedes}
+          alCambiarSede={alCambiarSede}
         />
       )}
     </ContenedorPagina>

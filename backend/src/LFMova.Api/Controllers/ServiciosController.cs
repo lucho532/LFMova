@@ -19,11 +19,13 @@ namespace LFMova.Api.Controllers;
 public class ServiciosController : ControllerBase
 {
     private readonly IServicioServicio _servicioServicio;
+    private readonly ICambioSedeServicio _cambioSedeServicio;
 
-    /// <summary>Crea el controlador con su servicio.</summary>
-    public ServiciosController(IServicioServicio servicioServicio)
+    /// <summary>Crea el controlador con sus servicios.</summary>
+    public ServiciosController(IServicioServicio servicioServicio, ICambioSedeServicio cambioSedeServicio)
     {
         _servicioServicio = servicioServicio;
+        _cambioSedeServicio = cambioSedeServicio;
     }
 
     /// <summary>Crea un servicio en la jornada. Solo un coordinador de esa empresa puede hacerlo.</summary>
@@ -94,6 +96,29 @@ public class ServiciosController : ControllerBase
         try
         {
             await _servicioServicio.AsignarUnidadAsync(empresaId, servicioId, datos);
+            return NoContent();
+        }
+        catch (InvalidOperationException excepcion)
+        {
+            return Conflict(new { mensaje = excepcion.Message });
+        }
+    }
+
+    /// <summary>
+    /// Cambia la sede de una ruta que todavía no ha salido (y la de la programación de sus pasajeros). Si estaba
+    /// publicada vuelve a Asignado. Solo un coordinador de esa empresa puede hacerlo.
+    /// </summary>
+    [HttpPost("{servicioId:int}/cambiar-sede")]
+    public async Task<IActionResult> CambiarSedeAsync(int empresaId, int jornadaId, int servicioId, CambiarSedeServicioDto datos)
+    {
+        if (!User.TieneRolEnEmpresa(Rol.COORDINADOR, empresaId))
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            await _cambioSedeServicio.CambiarSedeAsync(empresaId, servicioId, datos.SedeId);
             return NoContent();
         }
         catch (InvalidOperationException excepcion)

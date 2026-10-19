@@ -104,3 +104,33 @@ export interface PlantillaColumnasPegado {
   plantillaColumnasPegadoId: number
   columnasEnOrden: CampoPasajeroPegado[]
 }
+
+/** Cómo indica un Excel con rutas armadas dónde empieza cada ruta (refleja ModoSeparacionRutas en el backend). */
+export type ModoSeparacionRutas = 'COLUMNA_NUMERO_RUTA' | 'LINEA_INICIO'
+
+/** Refleja RutaArmadaPreviaDto (LFMova.Application). */
+export interface RutaArmadaPrevia {
+  referencia: string
+  tipo: number
+  hora: string
+  fecha: string | null
+  sedeEnHoja: string
+  sedeEncontrada: string | null
+  placa: string
+  conductor: string | null
+  /** Número interno que la empresa le dio al vehículo de la unidad, o null. */
+  numeroInterno: string | null
+  capacidad: number | null
+  pasajeros: PasajeroPrevia[]
+}
+
+/** Refleja VistaPreviaRutasArmadasDto (LFMova.Application). */
+export interface VistaPreviaRutasArmadas {
+  rutas: RutaArmadaPrevia[]
+  totalPasajeros: number
+  fechaOperativaSugerida: string | null
+  faltaSede: boolean
+  advertencias: string[]
+  errores: string[]
+  puedeImportar: boolean
+}

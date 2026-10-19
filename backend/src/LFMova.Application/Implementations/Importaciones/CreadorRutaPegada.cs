@@ -20,29 +20,20 @@ public class CreadorRutaPegada
 {
     private readonly IJornadaServicio _jornadaServicio;
     private readonly IServicioServicio _servicioServicio;
-    private readonly IServicioPasajeroServicio _servicioPasajeroServicio;
     private readonly IProgramacionTransporteServicio _programacionServicio;
-    private readonly IServicioPasajeroRepositorio _servicioPasajeroRepositorio;
-    private readonly INotificacionServicio _notificacionServicio;
-    private readonly AseguradorEmpleadoImportacion _aseguradorEmpleado;
+    private readonly AgregadorPasajeroServicio _agregador;
 
     /// <summary>Crea el colaborador con sus dependencias.</summary>
     public CreadorRutaPegada(
         IJornadaServicio jornadaServicio,
         IServicioServicio servicioServicio,
-        IServicioPasajeroServicio servicioPasajeroServicio,
         IProgramacionTransporteServicio programacionServicio,
-        IServicioPasajeroRepositorio servicioPasajeroRepositorio,
-        INotificacionServicio notificacionServicio,
-        AseguradorEmpleadoImportacion aseguradorEmpleado)
+        AgregadorPasajeroServicio agregador)
     {
         _jornadaServicio = jornadaServicio;
         _servicioServicio = servicioServicio;
-        _servicioPasajeroServicio = servicioPasajeroServicio;
         _programacionServicio = programacionServicio;
-        _servicioPasajeroRepositorio = servicioPasajeroRepositorio;
-        _notificacionServicio = notificacionServicio;
-        _aseguradorEmpleado = aseguradorEmpleado;
+        _agregador = agregador;
     }
 
     /// <summary>
@@ -85,6 +76,7 @@ public class CreadorRutaPegada
 
         // Filas inválidas o con una cédula repetida dentro del mismo pegado no abortan toda la creación:
         // se omiten con un aviso (mismo criterio que la importación por Excel) y el resto sí se agrega.
+        var programaciones = await _programacionServicio.ObtenerPorEmpresaAsync(empresaId);
         var cedulasYaProcesadas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         for (var indice = 0; indice < datos.Pasajeros.Count; indice++)
         {
@@ -110,7 +102,7 @@ public class CreadorRutaPegada
                 // Si se indicó unidad, todos estos pasajeros son parte de la ruta recién creada (no avisos
                 // de "pasajero de última hora" uno por uno): si el conductor necesita enterarse de su ruta
                 // nueva, eso se resuelve aparte, no con N notificaciones repetidas.
-                await AgregarPasajeroAlServicioAsync(empresaId, servicio, fila, resultado, notificarConductorSiTieneUnidad: datos.UnidadOperativaId is null);
+                await _agregador.AgregarAsync(empresaId, servicio, fila, programaciones, resultado, notificarConductorSiTieneUnidad: datos.UnidadOperativaId is null);
             }
             catch (InvalidOperationException excepcion)
             {
@@ -141,59 +133,6 @@ public class CreadorRutaPegada
         if (string.IsNullOrWhiteSpace(nombreCompleto) || string.IsNullOrWhiteSpace(direccion) || string.IsNullOrWhiteSpace(barrio))
         {
             throw new InvalidOperationException("El nombre, la dirección y el barrio son obligatorios.");
-        }
-    }
-
-    /// <summary>
-    /// Asegura al empleado (lo crea o lo vincula) y su programación de
-    /// transporte, y lo asigna como pasajero del servicio indicado. Falla si
-    /// esa persona ya está asignada a una ruta de ese mismo horario.
-    /// </summary>
-    private async Task AgregarPasajeroAlServicioAsync(int empresaId, ServicioDto servicio, FilaHoja fila, ResultadoImportacionDto resultado, bool notificarConductorSiTieneUnidad = true)
-    {
-        var empleado = await _aseguradorEmpleado.AsegurarAsync(empresaId, fila, resultado);
-
-        var programaciones = await _programacionServicio.ObtenerPorEmpresaAsync(empresaId);
-        var programacion = programaciones.FirstOrDefault(p =>
-            p.EmpleadoId == empleado.EmpleadoId && p.SedeId == servicio.SedeId && p.Fecha == servicio.Fecha && p.Hora == servicio.HoraProgramada && p.Tipo == servicio.Tipo);
-
-        if (programacion is not null && await _servicioPasajeroRepositorio.ObtenerPorProgramacionAsync(programacion.ProgramacionTransporteId) is not null)
-        {
-            throw new InvalidOperationException("Esa persona ya está asignada a una ruta de ese horario.");
-        }
-
-        programacion ??= await _programacionServicio.CrearAsync(empresaId, new CrearProgramacionDto
-        {
-            EmpleadoId = empleado.EmpleadoId,
-            SedeId = servicio.SedeId,
-            Fecha = servicio.Fecha,
-            Hora = servicio.HoraProgramada,
-            Tipo = servicio.Tipo,
-            DireccionRecogida = fila.Direccion,
-            BarrioRecogida = fila.Barrio
-        });
-        resultado.ProgramacionesCreadas++;
-
-        var pasajeroCreado = await _servicioPasajeroServicio.CrearAsync(
-            empresaId, servicio.ServicioId, new CrearServicioPasajeroDto { ProgramacionTransporteId = programacion.ProgramacionTransporteId });
-        resultado.PasajerosAsignados++;
-
-        // Si la ruta ya tenía conductor, agregar un pasajero de última hora la modifica: se le avisa para
-        // que no se entere solo al llegar y encontrar una parada que no esperaba. No aplica cuando el
-        // pasajero se agrega como parte de la creación inicial de la ruta (ver notificarConductorSiTieneUnidad):
-        // ahí no es "de última hora", es la ruta completa recién armada.
-        if (servicio.UnidadOperativaId is not null && notificarConductorSiTieneUnidad
-            && ReglasEstadoServicio.EsVisibleParaConductorYEmpleado(servicio.Estado))
-        {
-            var usuarioIdConductor = await _servicioPasajeroServicio.ObtenerUsuarioIdConductorAsync(empresaId, pasajeroCreado.ServicioPasajeroId);
-            if (usuarioIdConductor is not null)
-            {
-                await _notificacionServicio.CrearAsync(
-                    usuarioIdConductor.Value,
-                    "RUTA_MODIFICADA",
-                    "Tu ruta cambió",
-                    $"Se agregó un pasajero de última hora a tu {FormatoOperacion.DescribirRuta(servicio.Tipo, servicio.HoraProgramada, servicio.Fecha, servicio.NombreSede)}.");
-            }
         }
     }
 }

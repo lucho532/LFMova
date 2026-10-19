@@ -498,7 +498,7 @@ Sin embargo, un servicio no puede publicarse como servicio operativo resuelto si
 
 La asignación de servicios a unidades debe respetar conflictos de solapamiento.
 
-**Decisión vigente (2026-09-30):** una misma unidad no puede tener dos servicios a la misma fecha y hora, salvo una ruta de `ENTRADA` y otra de `SALIDA` de la **misma sede** a la misma hora (el conductor llega a la sede con quienes entran y sale con quienes terminan turno). Dos rutas del mismo tipo, o de sedes distintas, a la misma hora siguen siendo conflicto. La regla vive en `ReglasUnidadOperativa.SeCruzan` y la usan por igual la asignación manual, el reparto automático de la importación y la lista de conductores disponibles del frontend.
+**Decisión vigente (2026-09-30):** una misma unidad no puede tener dos servicios a la misma fecha y hora, salvo una ruta de `ENTRADA` y otra de `SALIDA` de la **misma sede** a la misma hora (el conductor llega a la sede con quienes entran y sale con quienes terminan turno). Dos rutas del mismo tipo, o de sedes distintas, a la misma hora siguen siendo conflicto. **Excepción (2026-10-18):** la importación de rutas ya armadas (`spec.md` §15) respeta las rutas dobles que declara el archivo —un mismo vehículo con dos rutas a la misma hora, que el conductor cobra por separado— y las asigna a la misma unidad sin rechazar el cruce; la asignación manual no cambia. La regla vive en `ReglasUnidadOperativa.SeCruzan` y la usan por igual la asignación manual, el reparto automático de la importación y la lista de conductores disponibles del frontend.
 
 No bloquear automáticamente una asignación únicamente por:
 

@@ -173,6 +173,10 @@ public class ServicioServicio : IServicioServicio
         => _asignadorUnidad.AsignarUnidadAsync(empresaId, servicioId, datos);
 
     /// <inheritdoc />
+    public Task AsignarUnidadDeRutaArmadaAsync(int empresaId, int servicioId, int unidadOperativaId)
+        => _asignadorUnidad.AsignarUnidadAsync(empresaId, servicioId, new AsignarUnidadServicioDto { UnidadOperativaId = unidadOperativaId }, permitirCruce: true);
+
+    /// <inheritdoc />
     public Task DespublicarAsync(int empresaId, int servicioId)
         => _modificadorRuta.DespublicarAsync(empresaId, servicioId);
 

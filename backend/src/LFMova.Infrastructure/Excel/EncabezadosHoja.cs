@@ -56,9 +56,9 @@ internal static class EncabezadosHoja
             for (var columna = 1; columna <= ultimaColumna; columna++)
             {
                 var campo = ReconocerCampo(Texto(hoja.Cell(fila, columna)));
-                if (campo is not null && !columnas.ContainsKey(campo))
+                if (campo is not null)
                 {
-                    columnas[campo] = columna;
+                    RegistrarColumna(columnas, campo, columna);
                 }
             }
 

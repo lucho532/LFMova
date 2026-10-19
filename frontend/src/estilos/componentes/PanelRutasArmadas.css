@@ -1,0 +1,46 @@
+.panel-rutas-armadas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.panel-rutas-armadas__ayuda,
+.panel-rutas-armadas__resumen {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.panel-rutas-armadas__resumen {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.panel-rutas-armadas__linea {
+  display: block;
+}
+
+.panel-rutas-armadas__campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.panel-rutas-armadas__avisos {
+  padding: 10px 14px;
+  border: 1px solid var(--advertencia-border);
+  border-radius: 12px;
+  background: var(--advertencia-bg);
+  color: var(--advertencia);
+  font-size: 13px;
+}
+
+.panel-rutas-armadas__avisos summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.panel-rutas-armadas__avisos p {
+  margin: 6px 0 0;
+}
