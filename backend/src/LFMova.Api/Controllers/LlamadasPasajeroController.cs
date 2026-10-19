@@ -43,6 +43,10 @@ public class LlamadasPasajeroController : ControllerBase
 
             return Ok(await _llamadaServicio.RegistrarAsync(empresaId, servicioPasajeroId, datos));
         }
+        catch (ArgumentException excepcion)
+        {
+            return BadRequest(new { mensaje = excepcion.Message });
+        }
         catch (InvalidOperationException excepcion)
         {
             return NotFound(new { mensaje = excepcion.Message });

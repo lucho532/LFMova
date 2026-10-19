@@ -2,14 +2,14 @@ namespace LFMova.Application.DTOs.Servicios;
 
 /// <summary>
 /// Ubicación real del dispositivo del conductor al finalizar el servicio.
-/// Ambos campos son opcionales: si el dispositivo no entrega ubicación, el
-/// servicio se finaliza igual sin ese dato.
+/// Es obligatoria: sin ambas coordenadas el servicio no se finaliza (los tipos
+/// admiten nulo solo para poder rechazar un cuerpo incompleto con un mensaje claro).
 /// </summary>
 public class FinalizarServicioDto
 {
-    /// <summary>Latitud del conductor al finalizar, si se pudo obtener.</summary>
+    /// <summary>Latitud del conductor al finalizar. Obligatoria.</summary>
     public double? Latitud { get; set; }
 
-    /// <summary>Longitud del conductor al finalizar, si se pudo obtener.</summary>
+    /// <summary>Longitud del conductor al finalizar. Obligatoria.</summary>
     public double? Longitud { get; set; }
 }

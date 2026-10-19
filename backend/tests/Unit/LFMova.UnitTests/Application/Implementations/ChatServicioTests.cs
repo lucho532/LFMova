@@ -217,30 +217,58 @@ public class ChatServicioTests
     }
 
     [Fact]
-    public async Task EnviarMensajeAsync_CreaLaConversacionYElMensaje_CuandoElRemitenteEsElEmpleado()
+    public async Task EnviarMensajeAsync_CreaLaConversacionYElMensaje_CuandoElConductorEnviaUnoPredeterminado()
     {
         var (servicio, conversaciones, mensajes) = CrearServicio();
 
-        var mensaje = await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdEmpleado, new EnviarMensajeDto { Contenido = "¿Dónde estás?" });
+        var mensaje = await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdConductor, new EnviarMensajeDto { Contenido = "Estoy en camino" });
 
         Assert.Single(conversaciones.Conversaciones);
         Assert.Single(mensajes.Mensajes);
-        Assert.Equal("¿Dónde estás?", mensaje.Contenido);
-        Assert.Equal(UsuarioIdEmpleado, mensaje.UsuarioId);
+        Assert.Equal("Estoy en camino", mensaje.Contenido);
+        Assert.Equal(UsuarioIdConductor, mensaje.UsuarioId);
     }
 
     [Fact]
-    public async Task EnviarMensajeAsync_PermiteAlConductorResponderEnLaMismaConversacion()
+    public async Task EnviarMensajeAsync_UsaLaMismaConversacion_ParaVariosMensajesDelConductor()
     {
         var (servicio, conversaciones, _) = CrearServicio();
-        await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdEmpleado, new EnviarMensajeDto { Contenido = "¿Dónde estás?" });
+        await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdConductor, new EnviarMensajeDto { Contenido = "Estoy en camino" });
 
-        await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdConductor, new EnviarMensajeDto { Contenido = "Ya llego." });
+        await servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdConductor, new EnviarMensajeDto { Contenido = "He llegado" });
 
         Assert.Single(conversaciones.Conversaciones);
         var mensajesDeLaConversacion = await servicio.ObtenerMensajesAsync(EmpresaId, 1);
         Assert.Equal(2, mensajesDeLaConversacion.Count);
-        Assert.Equal(UsuarioIdConductor, mensajesDeLaConversacion[1].UsuarioId);
+    }
+
+    [Theory]
+    [InlineData("¿Dónde estás?")]
+    [InlineData("Estoy en camino")]
+    public async Task EnviarMensajeAsync_LanzaExcepcion_YNoGuardaNada_CuandoElRemitenteEsElPasajero(string contenido)
+    {
+        var (servicio, conversaciones, mensajes) = CrearServicio();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdEmpleado, new EnviarMensajeDto { Contenido = contenido }));
+
+        Assert.Empty(conversaciones.Conversaciones);
+        Assert.Empty(mensajes.Mensajes);
+    }
+
+    [Theory]
+    [InlineData("Hola, ¿dónde estás?")]
+    [InlineData("")]
+    [InlineData("estoy en camino por la 80")]
+    public async Task EnviarMensajeAsync_LanzaExcepcion_CuandoElConductorEscribeTextoLibre(string contenido)
+    {
+        var (servicio, conversaciones, mensajes) = CrearServicio();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            servicio.EnviarMensajeAsync(EmpresaId, 1, UsuarioIdConductor, new EnviarMensajeDto { Contenido = contenido }));
+
+        Assert.Empty(conversaciones.Conversaciones);
+        Assert.Empty(mensajes.Mensajes);
     }
 
     [Fact]

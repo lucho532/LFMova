@@ -1,6 +1,7 @@
 using LFMova.Application.DTOs.Incidencias;
 using LFMova.Application.Interfaces;
 using LFMova.Application.Mappers;
+using LFMova.Application.Validators;
 using LFMova.Domain.Entities;
 using LFMova.Domain.Enums;
 using LFMova.Domain.Rules;
@@ -81,14 +82,16 @@ public class IncidenciaServicio : IIncidenciaServicio
             throw new InvalidOperationException("Solo se puede reportar una incidencia después de marcar la llegada al pasajero (\"He llegado\").");
         }
 
+        var ubicacion = UbicacionValidador.Exigir(datos.Latitud, datos.Longitud, "reportar la incidencia");
+
         var incidencia = new Incidencia
         {
             ServicioPasajeroId = servicioPasajero.ServicioPasajeroId,
             Tipo = datos.Tipo,
             Descripcion = datos.Descripcion,
             FechaHora = DateTime.UtcNow,
-            Latitud = datos.Latitud,
-            Longitud = datos.Longitud
+            Latitud = ubicacion.Latitud,
+            Longitud = ubicacion.Longitud
         };
 
         await _incidenciaRepositorio.AgregarAsync(incidencia);

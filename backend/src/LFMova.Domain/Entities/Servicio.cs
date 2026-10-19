@@ -47,16 +47,16 @@ public class Servicio
     /// <summary>Momento real en que el servicio finalizó. Nulo hasta que finaliza.</summary>
     public DateTime? HoraFinReal { get; set; }
 
-    /// <summary>Latitud real del dispositivo del conductor al iniciar el servicio. Nula si no se pudo obtener.</summary>
+    /// <summary>Latitud real del dispositivo del conductor al iniciar el servicio. Siempre se guarda con valor desde 2026-10-17; es nula solo en servicios anteriores a esa regla.</summary>
     public double? LatitudInicio { get; set; }
 
-    /// <summary>Longitud real del dispositivo del conductor al iniciar el servicio. Nula si no se pudo obtener.</summary>
+    /// <summary>Longitud real del dispositivo del conductor al iniciar el servicio. Siempre se guarda con valor desde 2026-10-17; es nula solo en servicios anteriores a esa regla.</summary>
     public double? LongitudInicio { get; set; }
 
-    /// <summary>Latitud real del dispositivo del conductor al finalizar el servicio. Nula si no se pudo obtener.</summary>
+    /// <summary>Latitud real del dispositivo del conductor al finalizar el servicio. Siempre se guarda con valor desde 2026-10-17; es nula solo en servicios anteriores a esa regla.</summary>
     public double? LatitudFinalizacion { get; set; }
 
-    /// <summary>Longitud real del dispositivo del conductor al finalizar el servicio. Nula si no se pudo obtener.</summary>
+    /// <summary>Longitud real del dispositivo del conductor al finalizar el servicio. Siempre se guarda con valor desde 2026-10-17; es nula solo en servicios anteriores a esa regla.</summary>
     public double? LongitudFinalizacion { get; set; }
 
     /// <summary>Jornada a la que pertenece el servicio.</summary>

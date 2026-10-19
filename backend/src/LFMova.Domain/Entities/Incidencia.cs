@@ -25,10 +25,10 @@ public class Incidencia
     /// <summary>Fecha y hora en que ocurrió la incidencia.</summary>
     public DateTime FechaHora { get; set; }
 
-    /// <summary>Latitud del lugar donde ocurrió la incidencia. Puede ser <c>null</c> si no está disponible.</summary>
+    /// <summary>Latitud del lugar donde ocurrió la incidencia. Siempre se guarda con valor desde 2026-10-17; es nula solo en registros anteriores a esa regla.</summary>
     public double? Latitud { get; set; }
 
-    /// <summary>Longitud del lugar donde ocurrió la incidencia. Puede ser <c>null</c> si no está disponible.</summary>
+    /// <summary>Longitud del lugar donde ocurrió la incidencia. Siempre se guarda con valor desde 2026-10-17; es nula solo en registros anteriores a esa regla.</summary>
     public double? Longitud { get; set; }
 
     /// <summary>Servicio pasajero sobre el que se registra la incidencia.</summary>

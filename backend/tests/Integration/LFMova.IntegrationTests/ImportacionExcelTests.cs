@@ -164,7 +164,7 @@ public partial class ImportacionExcelTests
         // --- Herramientas de campo del conductor: ubicación, historial, incidencia con foto y datos completos del pasajero. ---
         var servicioConductor = misServicios.First(x => x.JornadaId == resultado.JornadaId);
         // Reportar una incidencia solo se permite con el servicio en curso.
-        (await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{servicioConductor.JornadaId}/servicios/{servicioConductor.ServicioId}/iniciar", null)).EnsureSuccessStatusCode();
+        (await cliente.PostAsJsonAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{servicioConductor.JornadaId}/servicios/{servicioConductor.ServicioId}/iniciar", new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 })).EnsureSuccessStatusCode();
         var rutaPasajeros = $"/api/empresas/{empresa.EmpresaId}/jornadas/{servicioConductor.JornadaId}/servicios/{servicioConductor.ServicioId}/pasajeros";
         var pasajerosRuta = await cliente.GetFromJsonAsync<List<LFMova.Application.DTOs.ServiciosPasajero.ServicioPasajeroDto>>(rutaPasajeros);
         var primero = pasajerosRuta![0];
@@ -232,21 +232,20 @@ public partial class ImportacionExcelTests
         var rutaSuya = $"/api/empresas/{suyo.EmpresaId}/jornadas/{suyo.JornadaId}/servicios/{suyo.ServicioId}/pasajeros/{suyo.ServicioPasajeroId}";
         var confirmar = await cliente.PostAsJsonAsync($"{rutaSuya}/confirmar", new { });
         Assert.Equal(HttpStatusCode.NoContent, confirmar.StatusCode);
-        // El empleado le escribe al conductor.
+        // El pasajero solo puede leer: no puede escribirle al conductor.
         var mensajeEmpleado = await cliente.PostAsJsonAsync($"{rutaSuya}/mensajes", new { contenido = "Ya estoy listo" });
-        mensajeEmpleado.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.Conflict, mensajeEmpleado.StatusCode);
         var ajena = await cliente.PostAsJsonAsync($"{rutaPasajeros}/{primero.ServicioPasajeroId}/no-asistira", new { });
         if (primero.ServicioPasajeroId != suyo.ServicioPasajeroId)
         {
             Assert.Equal(HttpStatusCode.Forbidden, ajena.StatusCode);
         }
 
-        // El conductor recibe una notificación por la confirmación y otra por el mensaje.
+        // El conductor recibe una notificación por la confirmación del pasajero.
         await AutenticarAsync(cliente, "IMP-COND", "ClaveCond123");
         var idConductor = int.Parse(new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().ReadJwtToken(cliente.DefaultRequestHeaders.Authorization!.Parameter).Claims.First(c => c.Type == "usuarioId").Value);
         var notificaciones = await cliente.GetFromJsonAsync<List<LFMova.Application.DTOs.Notificaciones.NotificacionDto>>($"/api/usuarios/{idConductor}/notificaciones");
         Assert.Contains(notificaciones!, n => n.Tipo == "PASAJERO_CONFIRMO");
-        Assert.Contains(notificaciones!, n => n.Tipo == "MENSAJE_NUEVO" && n.Mensaje.Contains("Ya estoy listo") && n.Enlace != null && n.Enlace.StartsWith("/conductor/servicios/") && n.Enlace.Contains("/chat/"));
         Assert.Contains(notificaciones!, n => n.Tipo == "PASAJERO_CONFIRMO" && n.Enlace != null && n.Enlace.Contains("/chat/"));
     }
 

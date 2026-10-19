@@ -56,6 +56,8 @@ public static class ApplicationServiceCollectionExtensions
         servicios.AddScoped<IIncidenciaServicio, IncidenciaServicio>();
         servicios.AddScoped<IRegistroLlamadaServicio, RegistroLlamadaServicio>();
         servicios.AddScoped<IAlertaEjecucionServicio, AlertaEjecucionServicio>();
+        servicios.AddScoped<IInformeAsistenciaServicio, InformeAsistenciaServicio>();
+        servicios.AddScoped<IInformeAsistenciaPeriodoServicio, InformeAsistenciaPeriodoServicio>();
 
         AgregarColaboradores(servicios);
 

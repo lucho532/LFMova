@@ -199,7 +199,7 @@ public class FlujoCompletoTests
         // --- Ejecución del servicio como el propio conductor ---
         await AutenticarAsync(cliente, "E2E-COND", "ClaveCond123");
 
-        var respuestaIniciar = await cliente.PostAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/servicios/{servicio.ServicioId}/iniciar", content: null);
+        var respuestaIniciar = await cliente.PostAsJsonAsync($"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/servicios/{servicio.ServicioId}/iniciar", new IniciarServicioDto { Latitud = 4.6, Longitud = -74.1 });
         Assert.Equal(HttpStatusCode.NoContent, respuestaIniciar.StatusCode);
 
         var rutaPasajero = $"/api/empresas/{empresa.EmpresaId}/jornadas/{jornada.JornadaId}/servicios/{servicio.ServicioId}/pasajeros/{servicioPasajero.ServicioPasajeroId}";
@@ -250,7 +250,7 @@ public class FlujoCompletoTests
         Assert.Equal(EstadoServicioPasajero.RECOGIDO, pasajeroFinal.Estado);
 
         // Tras finalizar la ruta, el chat de ese pasajero queda solo de lectura: no se pueden enviar más mensajes.
-        var mensajeTrasFinalizar = await cliente.PostAsJsonAsync($"{rutaPasajero}/mensajes", new { contenido = "¿Ya llegamos?" });
+        var mensajeTrasFinalizar = await cliente.PostAsJsonAsync($"{rutaPasajero}/mensajes", new { contenido = "Gracias" });
         Assert.Equal(HttpStatusCode.Conflict, mensajeTrasFinalizar.StatusCode);
     }
 

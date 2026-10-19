@@ -27,10 +27,10 @@ public partial class ServicioServicioTests
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });
-        await servicio.IniciarAsync(1, creado.ServicioId);
+        await servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 });
         Assert.Empty(facturacion.Usos);
 
-        await servicio.FinalizarAsync(1, creado.ServicioId);
+        await servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 });
 
         var uso = Assert.Single(facturacion.Usos);
         Assert.Equal(1, uso.EmpresaId);
@@ -56,9 +56,9 @@ public partial class ServicioServicioTests
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });
-        await servicio.IniciarAsync(1, creado.ServicioId);
+        await servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 });
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 }));
 
         Assert.Empty(facturacion.Usos);
     }

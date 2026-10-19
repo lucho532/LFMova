@@ -11,9 +11,9 @@ public class CrearIncidenciaDto
     /// <summary>Descripción de la incidencia.</summary>
     public string Descripcion { get; set; } = string.Empty;
 
-    /// <summary>Latitud del lugar donde ocurrió la incidencia, si está disponible.</summary>
+    /// <summary>Latitud del lugar donde ocurrió la incidencia. Obligatoria: también ubica la evidencia.</summary>
     public double? Latitud { get; set; }
 
-    /// <summary>Longitud del lugar donde ocurrió la incidencia, si está disponible.</summary>
+    /// <summary>Longitud del lugar donde ocurrió la incidencia. Obligatoria: también ubica la evidencia.</summary>
     public double? Longitud { get; set; }
 }

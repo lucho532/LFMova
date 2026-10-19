@@ -229,7 +229,7 @@ public class IncidenciaServicioTests
         var (servicio, _, _) = CrearServicio();
         _pasajeroCreado.Estado = EstadoServicioPasajero.CONDUCTOR_LLEGO;
 
-        await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = tipo, Descripcion = "x" });
+        await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = tipo, Descripcion = "x" });
 
         Assert.Equal(EstadoServicioPasajero.NO_RECOGIDO, _pasajeroCreado.Estado);
         Assert.NotNull(_pasajeroCreado.HoraProcesado);
@@ -245,7 +245,7 @@ public class IncidenciaServicioTests
         var (servicio, _, _) = CrearServicio(estadoPasajero: estadoPasajero);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.NO_CONTESTA, Descripcion = "x" }));
+            servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.NO_CONTESTA, Descripcion = "x" }));
     }
 
     [Theory]
@@ -257,7 +257,21 @@ public class IncidenciaServicioTests
         var (servicio, _, _) = CrearServicio(estado: estado);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.OTRA }));
+            servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.OTRA }));
+    }
+
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData(5.06, null)]
+    [InlineData(null, -75.5)]
+    public async Task CrearAsync_LanzaArgumentException_YNoGuardaNada_CuandoFaltaLaUbicacion(double? latitud, double? longitud)
+    {
+        var (servicio, incidencias, _) = CrearServicio();
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = latitud, Longitud = longitud, Tipo = TipoIncidencia.NO_CONTESTA, Descripcion = "x" }));
+
+        Assert.Empty(incidencias.Incidencias);
     }
 
     [Fact]
@@ -266,14 +280,14 @@ public class IncidenciaServicioTests
         var (servicio, _, _) = CrearServicio();
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            servicio.CrearAsync(empresaId: 2, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.OTRA }));
+            servicio.CrearAsync(empresaId: 2, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.OTRA }));
     }
 
     [Fact]
     public async Task ObtenerPorServicioPasajeroAsync_IncluyeLasEvidenciasDeCadaIncidencia()
     {
         var (servicio, _, _) = CrearServicio();
-        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.NO_SE_ENCUENTRA });
+        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.NO_SE_ENCUENTRA });
         await servicio.AgregarEvidenciaAsync(EmpresaId, 1, incidencia.IncidenciaId, new AgregarEvidenciaDto { Tipo = TipoEvidencia.FOTOGRAFIA, ReferenciaArchivo = "foto-1.jpg" });
 
         var incidenciasDelPasajero = await servicio.ObtenerPorServicioPasajeroAsync(EmpresaId, 1);
@@ -287,7 +301,7 @@ public class IncidenciaServicioTests
     public async Task ObtenerPorServicioAsync_DevuelveLasIncidenciasDeTodosLosPasajerosDelServicio()
     {
         var (servicio, _, _) = CrearServicio();
-        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.NO_CONTESTA, Descripcion = "x" });
+        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.NO_CONTESTA, Descripcion = "x" });
         await servicio.AgregarEvidenciaAsync(EmpresaId, 1, incidencia.IncidenciaId, new AgregarEvidenciaDto { Tipo = TipoEvidencia.FOTOGRAFIA, ReferenciaArchivo = "foto-1.jpg" });
 
         var incidenciasDelServicio = await servicio.ObtenerPorServicioAsync(EmpresaId, jornadaId: 1, servicioId: 1);
@@ -318,7 +332,7 @@ public class IncidenciaServicioTests
     public async Task AgregarEvidenciaAsync_LanzaExcepcion_CuandoLaIncidenciaPerteneceAOtroPasajero()
     {
         var (servicio, _, _) = CrearServicio();
-        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Tipo = TipoIncidencia.OTRA });
+        var incidencia = await servicio.CrearAsync(EmpresaId, 1, new CrearIncidenciaDto { Latitud = 5.06, Longitud = -75.5, Tipo = TipoIncidencia.OTRA });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             servicio.AgregarEvidenciaAsync(EmpresaId, servicioPasajeroId: 2, incidencia.IncidenciaId,

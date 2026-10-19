@@ -90,12 +90,25 @@ public class RegistroLlamadaServicioTests
         Assert.Null(llamada.DuracionAproximadaSegundos);
     }
 
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData(5.06, null)]
+    [InlineData(null, -75.5)]
+    public async Task RegistrarAsync_SinUbicacion_Falla_YNoGuardaNada(double? latitud, double? longitud)
+    {
+        var (servicio, repositorio) = Crear();
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto { Latitud = latitud, Longitud = longitud }));
+        Assert.Empty(repositorio.Registros);
+    }
+
     [Fact]
     public async Task RegistrarAsync_PasajeroDeOtraEmpresa_Falla()
     {
         var (servicio, repositorio) = Crear();
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.RegistrarAsync(99, ServicioPasajeroId, new RegistrarLlamadaDto()));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.RegistrarAsync(99, ServicioPasajeroId, new RegistrarLlamadaDto { Latitud = 5.06, Longitud = -75.5 }));
         Assert.Empty(repositorio.Registros);
     }
 
@@ -103,7 +116,7 @@ public class RegistroLlamadaServicioTests
     public async Task RegistrarDuracionAsync_GuardaLaDuracionUnaSolaVez()
     {
         var (servicio, _) = Crear();
-        var llamada = await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto());
+        var llamada = await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto { Latitud = 5.06, Longitud = -75.5 });
 
         await servicio.RegistrarDuracionAsync(EmpresaId, ServicioPasajeroId, llamada.RegistroLlamadaId, 25);
         var resultado = await servicio.RegistrarDuracionAsync(EmpresaId, ServicioPasajeroId, llamada.RegistroLlamadaId, 400);
@@ -118,7 +131,7 @@ public class RegistroLlamadaServicioTests
     public async Task RegistrarDuracionAsync_DuracionNoVerosimil_QuedaSinDuracion(int segundos)
     {
         var (servicio, _) = Crear();
-        var llamada = await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto());
+        var llamada = await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto { Latitud = 5.06, Longitud = -75.5 });
 
         var resultado = await servicio.RegistrarDuracionAsync(EmpresaId, ServicioPasajeroId, llamada.RegistroLlamadaId, segundos);
 
@@ -139,7 +152,7 @@ public class RegistroLlamadaServicioTests
     {
         var (servicio, repositorio) = Crear();
         repositorio.Registros.Add(new RegistroLlamada { RegistroLlamadaId = 50, ServicioPasajeroId = 999 });
-        await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto());
+        await servicio.RegistrarAsync(EmpresaId, ServicioPasajeroId, new RegistrarLlamadaDto { Latitud = 5.06, Longitud = -75.5 });
 
         var llamadas = await servicio.ObtenerPorServicioPasajeroAsync(EmpresaId, ServicioPasajeroId);
 

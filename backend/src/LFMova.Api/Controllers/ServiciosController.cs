@@ -168,6 +168,10 @@ public class ServiciosController : ControllerBase
             await _servicioServicio.IniciarAsync(empresaId, servicioId, datos);
             return NoContent();
         }
+        catch (ArgumentException excepcion)
+        {
+            return BadRequest(new { mensaje = excepcion.Message });
+        }
         catch (InvalidOperationException excepcion)
         {
             return Conflict(new { mensaje = excepcion.Message });
@@ -192,6 +196,10 @@ public class ServiciosController : ControllerBase
         {
             await _servicioServicio.FinalizarAsync(empresaId, servicioId, datos);
             return NoContent();
+        }
+        catch (ArgumentException excepcion)
+        {
+            return BadRequest(new { mensaje = excepcion.Message });
         }
         catch (InvalidOperationException excepcion)
         {

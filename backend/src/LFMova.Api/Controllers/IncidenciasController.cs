@@ -43,6 +43,10 @@ public class IncidenciasController : ControllerBase
             var incidencia = await _incidenciaServicio.CrearAsync(empresaId, servicioPasajeroId, datos);
             return CreatedAtAction(nameof(ObtenerPorPasajeroAsync), new { empresaId, jornadaId, servicioId, servicioPasajeroId }, incidencia);
         }
+        catch (ArgumentException excepcion)
+        {
+            return BadRequest(new { mensaje = excepcion.Message });
+        }
         catch (InvalidOperationException excepcion)
         {
             return NotFound(new { mensaje = excepcion.Message });

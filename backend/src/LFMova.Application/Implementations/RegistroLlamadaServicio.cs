@@ -1,5 +1,6 @@
 using LFMova.Application.DTOs.Llamadas;
 using LFMova.Application.Interfaces;
+using LFMova.Application.Validators;
 using LFMova.Domain.Entities;
 using LFMova.Domain.Rules;
 
@@ -32,13 +33,14 @@ public class RegistroLlamadaServicio : IRegistroLlamadaServicio
     public async Task<RegistroLlamadaDto> RegistrarAsync(int empresaId, int servicioPasajeroId, RegistrarLlamadaDto datos)
     {
         await ValidarPasajeroDeLaEmpresaAsync(empresaId, servicioPasajeroId);
+        var ubicacion = UbicacionValidador.Exigir(datos.Latitud, datos.Longitud, "llamar al pasajero");
 
         var registro = new RegistroLlamada
         {
             ServicioPasajeroId = servicioPasajeroId,
             FechaHora = DateTime.UtcNow,
-            Latitud = datos.Latitud,
-            Longitud = datos.Longitud
+            Latitud = ubicacion.Latitud,
+            Longitud = ubicacion.Longitud
         };
 
         await _registroLlamadaRepositorio.AgregarAsync(registro);

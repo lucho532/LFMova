@@ -25,10 +25,10 @@ public class RegistroLlamada
     /// </summary>
     public int? DuracionAproximadaSegundos { get; set; }
 
-    /// <summary>Latitud del conductor al llamar. Puede ser <c>null</c> si no está disponible.</summary>
+    /// <summary>Latitud del conductor al llamar. Siempre se guarda con valor desde 2026-10-17; es nula solo en registros anteriores a esa regla.</summary>
     public double? Latitud { get; set; }
 
-    /// <summary>Longitud del conductor al llamar. Puede ser <c>null</c> si no está disponible.</summary>
+    /// <summary>Longitud del conductor al llamar. Siempre se guarda con valor desde 2026-10-17; es nula solo en registros anteriores a esa regla.</summary>
     public double? Longitud { get; set; }
 
     /// <summary>Pasajero del servicio al que se llamó.</summary>

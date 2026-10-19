@@ -667,7 +667,7 @@ public partial class ServicioServicioTests
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });
 
-        await servicio.IniciarAsync(1, creado.ServicioId);
+        await servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 });
         var actualizado = await servicio.ObtenerPorIdAsync(1, creado.ServicioId);
 
         Assert.Equal(EstadoServicio.EN_CURSO, actualizado!.Estado);
@@ -698,7 +698,7 @@ public partial class ServicioServicioTests
         var servicio = CrearServicio(servicios, jornadas, sedes, unidades, conductores);
         var creado = await servicio.CrearAsync(1, 1, DtoValido(UnidadActivaId));
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.IniciarAsync(1, creado.ServicioId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 }));
     }
 
     private async Task<(ServicioServicio servicio, ServicioDto creado)> CrearServicioEnCursoAsync(TipoServicio tipo = TipoServicio.ENTRADA)
@@ -716,7 +716,7 @@ public partial class ServicioServicioTests
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });
-        await servicio.IniciarAsync(1, creado.ServicioId);
+        await servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 });
 
         return (servicio, creado);
     }
@@ -726,7 +726,7 @@ public partial class ServicioServicioTests
     {
         var (servicio, creado) = await CrearServicioEnCursoAsync();
 
-        await servicio.FinalizarAsync(1, creado.ServicioId);
+        await servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 });
         var actualizado = await servicio.ObtenerPorIdAsync(1, creado.ServicioId);
 
         Assert.Equal(EstadoServicio.FINALIZADO, actualizado!.Estado);
@@ -750,7 +750,7 @@ public partial class ServicioServicioTests
     {
         var (servicio, creado) = await CrearServicioEnCursoAsync(TipoServicio.SALIDA);
 
-        await servicio.FinalizarAsync(1, creado.ServicioId);
+        await servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 });
         var actualizado = await servicio.ObtenerPorIdAsync(1, creado.ServicioId);
 
         Assert.Equal(EstadoServicio.FINALIZADO, actualizado!.Estado);
@@ -771,9 +771,9 @@ public partial class ServicioServicioTests
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PENDIENTE_ASIGNACION });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.ASIGNADO });
         await servicio.CambiarEstadoAsync(1, creado.ServicioId, new CambiarEstadoServicioDto { NuevoEstado = EstadoServicio.PUBLICADO });
-        await servicio.IniciarAsync(1, creado.ServicioId);
+        await servicio.IniciarAsync(1, creado.ServicioId, new IniciarServicioDto { Latitud = 4.65, Longitud = -74.05 });
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 }));
     }
 
     [Fact]
@@ -783,6 +783,6 @@ public partial class ServicioServicioTests
         var servicio = CrearServicio(servicios, jornadas, sedes, unidades, conductores);
         var creado = await servicio.CrearAsync(1, 1, DtoValido(UnidadActivaId));
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => servicio.FinalizarAsync(1, creado.ServicioId, new FinalizarServicioDto { Latitud = 4.65, Longitud = -74.05 }));
     }
 }

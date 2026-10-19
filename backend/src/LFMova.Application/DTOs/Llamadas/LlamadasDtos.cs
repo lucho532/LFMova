@@ -25,10 +25,10 @@ public class RegistroLlamadaDto
 /// <summary>Datos que envía el conductor al pulsar "Llamar". La fecha y hora las pone el servidor.</summary>
 public class RegistrarLlamadaDto
 {
-    /// <summary>Latitud del conductor en ese momento, si el dispositivo la entrega.</summary>
+    /// <summary>Latitud del conductor en ese momento. Obligatoria.</summary>
     public double? Latitud { get; set; }
 
-    /// <summary>Longitud del conductor en ese momento, si el dispositivo la entrega.</summary>
+    /// <summary>Longitud del conductor en ese momento. Obligatoria.</summary>
     public double? Longitud { get; set; }
 }
 

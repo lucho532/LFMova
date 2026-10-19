@@ -62,6 +62,9 @@ public static class InfrastructureServiceCollectionExtensions
         servicios.AddSingleton<IAlmacenamientoArchivos, AlmacenamientoLocalArchivos>();
         servicios.AddSingleton<IExcelProgramacionLector, ExcelProgramacionLectorClosedXml>();
         servicios.AddSingleton<IGeneradorSoporteRutas, GeneradorSoporteRutasClosedXml>();
+        servicios.AddSingleton<IGeneradorInformeAsistencia, GeneradorInformeAsistenciaClosedXml>();
+        servicios.AddSingleton<IGeneradorInformeAsistenciaPeriodo, GeneradorInformeAsistenciaPeriodoClosedXml>();
+        servicios.AddScoped<IInformeAsistenciaRepositorio, InformeAsistenciaRepositorio>();
         servicios.AddSingleton<IGeneradorCierreMensual, GeneradorCierreMensualClosedXml>();
         servicios.AddScoped<IProgramacionTransporteRepositorio, ProgramacionTransporteRepositorio>();
         servicios.AddScoped<IJornadaRepositorio, JornadaRepositorio>();

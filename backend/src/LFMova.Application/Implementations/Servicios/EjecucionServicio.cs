@@ -1,5 +1,6 @@
 using LFMova.Application.DTOs.Servicios;
 using LFMova.Application.Interfaces;
+using LFMova.Application.Validators;
 using LFMova.Domain.Enums;
 using LFMova.Domain.Rules;
 
@@ -43,10 +44,12 @@ public class EjecucionServicio
             throw new InvalidOperationException($"No se puede iniciar el servicio desde el estado {servicio.Estado}.");
         }
 
+        var ubicacion = UbicacionValidador.Exigir(datos?.Latitud, datos?.Longitud, "iniciar el servicio");
+
         servicio.Estado = EstadoServicio.EN_CURSO;
         servicio.HoraInicioReal = DateTime.UtcNow;
-        servicio.LatitudInicio = datos?.Latitud;
-        servicio.LongitudInicio = datos?.Longitud;
+        servicio.LatitudInicio = ubicacion.Latitud;
+        servicio.LongitudInicio = ubicacion.Longitud;
         await _servicioRepositorio.GuardarCambiosAsync();
     }
 
@@ -72,12 +75,14 @@ public class EjecucionServicio
                 "No se puede finalizar el servicio: existen pasajeros pendientes de procesar.");
         }
 
+        var ubicacion = UbicacionValidador.Exigir(datos?.Latitud, datos?.Longitud, "finalizar el servicio");
+
         servicio.Estado = EstadoServicio.FINALIZADO;
         servicio.HoraFinReal = DateTime.UtcNow;
         // El registro para facturación se guarda en el mismo guardado que la finalización: o quedan los dos o ninguno.
         await _registradorUso.RegistrarAsync(servicio, pasajeros, servicio.HoraFinReal.Value);
-        servicio.LatitudFinalizacion = datos?.Latitud;
-        servicio.LongitudFinalizacion = datos?.Longitud;
+        servicio.LatitudFinalizacion = ubicacion.Latitud;
+        servicio.LongitudFinalizacion = ubicacion.Longitud;
         await _servicioRepositorio.GuardarCambiosAsync();
     }
 }
