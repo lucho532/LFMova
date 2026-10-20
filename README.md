@@ -5,7 +5,7 @@ Plataforma de gestión y operación de transporte empresarial multiempresa.
 Este repositorio sigue un flujo de desarrollo guiado por especificación (SDD). Antes de leer o modificar código, consulta:
 
 * `AGENTS.md` — reglas obligatorias para la implementación.
-* `docs/sdd/00-governance/CONSTITUTION.md` — principios y reglas de negocio aprobadas.
+* `docs/sdd/00-governance/constitution.md` — principios y reglas de negocio aprobadas.
 * `docs/sdd/01-specification/spec.md` — especificación funcional.
 * `docs/sdd/02-data-model/data-model.md` — modelo de datos.
 * `docs/sdd/03-architecture/plan.md` — plan técnico de implementación.
@@ -15,8 +15,9 @@ Este repositorio sigue un flujo de desarrollo guiado por especificación (SDD). 
 
 ## Estado actual
 
-Esqueleto técnico inicial de la solución. Todavía **no** incluye entidades de negocio,
-endpoints funcionales, autenticación ni ninguna regla de negocio.
+Aplicación funcional y desplegada en Railway (API, web y PostgreSQL). Incluye autenticación con autorregistro y verificación por correo (Brevo), multiempresa y roles, importación de programaciones y de rutas ya armadas por Excel, planificación y asignación de rutas, ejecución de la ruta por el conductor (con ubicación GPS obligatoria), chat de un solo sentido, incidencias con evidencia, facturación por conductor e informes de asistencia. El detalle de cada decisión está en `AGENTS.md` y en `docs/sdd/`.
+
+El frontend (React) se sirve como web/PWA y como app de Android con Capacitor (ver `frontend/README.md`).
 
 ## Arquitectura
 
@@ -60,6 +61,8 @@ backend/
 * Entity Framework Core + Npgsql (PostgreSQL)
 * Swagger / OpenAPI (Swashbuckle)
 * xUnit
+* Frontend: React + Vite + TypeScript, empaquetado para Android con Capacitor
+* Correo transaccional: Brevo
 
 ## Requisitos previos
 
@@ -94,6 +97,16 @@ dotnet user-secrets set "ConnectionStrings:LFMovaDb" "Host=localhost;Port=5432;D
 
 Alternativa: copiar `backend/src/LFMova.Api/appsettings.Development.json.example` a
 `backend/src/LFMova.Api/appsettings.Development.json` (ignorado por git) y completar los valores reales.
+
+## Migraciones
+
+Toda modificación del modelo se refleja en una migración de EF Core (`backend/src/LFMova.Infrastructure/Migrations`). Para aplicarlas manualmente: `dotnet ef database update --project backend/src/LFMova.Infrastructure --startup-project backend/src/LFMova.Api`.
+
+Con `AplicarMigracionesAlIniciar=true` (variable de entorno del servicio) la API aplica las migraciones pendientes al arrancar, antes de atender solicitudes; por defecto no hace nada. Si una migración falla, el arranque se detiene.
+
+## Despliegue
+
+Producción corre en Railway: servicio `api` (`backend/src/LFMova.Api/Dockerfile`), servicio `web` (`frontend/Dockerfile`, Caddy) y PostgreSQL. La dirección de la API se graba en el frontend con `VITE_API_URL` (`frontend/.env.production.local`). La publicación de la app de Android (APK/AAB) se describe en `frontend/README.md`.
 
 ## Docker
 
