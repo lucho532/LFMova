@@ -8,10 +8,12 @@ Frontend de la Plataforma de Transporte Empresarial. React + Vite + TypeScript, 
 src/
 ├── componentes/  componentes de UI reutilizables
 ├── paginas/      pantallas de la aplicación
-├── servicios/    clientes de la API REST (uno por recurso del backend)
+├── hooks/        hooks (use*) con la lógica de las pantallas
+├── servicios/    clientes de la API REST (uno por recurso del backend) y utilidades de dominio
 ├── rutas/        enrutamiento y rutas protegidas
 ├── modelos/      tipos TypeScript que reflejan los DTOs de Application
-└── contexto/     contexto de autenticación (token JWT)
+├── contexto/     autenticación (token JWT), tema y notificaciones
+└── estilos/      CSS por componente y por página (componentes/, paginas/)
 ```
 
 ## Requisitos previos
@@ -30,7 +32,7 @@ La API debe tener configurado el origen del frontend en `Cors:OrigenesPermitidos
 En una terminal, iniciar el backend:
 
 ```bash
-dotnet run --project ../src/LFMova.Api
+dotnet run --project ../backend/src/LFMova.Api
 ```
 
 En otra terminal, iniciar el frontend:
@@ -40,7 +42,7 @@ npm install
 npm run dev
 ```
 
-Abrir `http://localhost:5173`. La pantalla inicial es el inicio de sesión (`/iniciar-sesion`); tras iniciar sesión redirige a `/empresas`.
+Abrir `http://localhost:5173`. La pantalla inicial es el inicio de sesión (`/iniciar-sesion`); tras iniciar sesión redirige según el rol (coordinador, conductor o empleado).
 
 ## Otros comandos
 
@@ -50,6 +52,17 @@ npm run lint      # linting con oxlint
 npm run preview   # sirve el build de producción localmente
 ```
 
-## Alcance actual
+## App de Android (Capacitor)
 
-Solo se implementan las pantallas que corresponden a funcionalidad ya existente en el backend: inicio de sesión y gestión de empresas (crear/listar). No se anticipan pantallas de funcionalidades todavía no implementadas.
+La misma base de código se empaqueta como app de Android (`frontend/android`). La dirección de la API se toma de `VITE_API_URL` al compilar; para producción vive en `.env.production.local` (fuera de git).
+
+Compilar exige Java 21 y el archivo `android/keystore.properties` con la firma (fuera de git). Antes de compilar hay que subir `versionCode` y `versionName` en `android/app/build.gradle`:
+
+```bash
+npm run build
+npx cap sync android
+cd android
+./gradlew assembleRelease bundleRelease
+```
+
+Resultados: `app/build/outputs/apk/release/app-release.apk` y `app/build/outputs/bundle/release/app-release.aab` (el que se sube a Google Play). La app instalada lleva el JavaScript empaquetado al compilar, así que cuando cambia la API hay que publicar una versión nueva.
